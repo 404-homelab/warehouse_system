@@ -1,0 +1,7 @@
+{
+  "update_server": "http://your-computer.local:8080",
+  "channel": "stable",
+  "auto_update": true,
+  "check_interval": 3600,
+  "backup_before_update": true
+}

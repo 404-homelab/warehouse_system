@@ -1,0 +1,748 @@
+{% extends "base.html" %}
+
+{% block title %}Update Management - Warehouse System{% endblock %}
+
+{% block extra_css %}
+<style>
+    .update-card {
+        transition: all 0.3s;
+    }
+    .update-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    .version-badge {
+        font-size: 1.2rem;
+        padding: 8px 16px;
+    }
+    .status-indicator {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        display: inline-block;
+        margin-right: 8px;
+    }
+    .status-online {
+        background-color: #28a745;
+        animation: pulse 2s infinite;
+    }
+    .status-offline {
+        background-color: #dc3545;
+    }
+    @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.5; }
+    }
+    .changelog {
+        background: #f8f9fa;
+        padding: 12px;
+        border-radius: 4px;
+        font-family: monospace;
+        white-space: pre-wrap;
+        max-height: 200px;
+        overflow-y: auto;
+    }
+    .schedule-preview {
+        background: #e7f3ff;
+        padding: 10px;
+        border-radius: 4px;
+        border-left: 4px solid #0066cc;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col">
+            <h1 class="display-5"><i class="bi bi-arrow-repeat"></i> Update Management</h1>
+            <p class="lead">Hantera systemuppdateringar och automatiska uppdateringar</p>
+        </div>
+    </div>
+
+    <!-- Current Status -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-3">
+            <div class="card update-card">
+                <div class="card-body text-center">
+                    <i class="bi bi-tag text-primary" style="font-size: 2rem;"></i>
+                    <h6 class="text-muted mt-2">Nuvarande Version</h6>
+                    <h3 class="mb-0" id="current-version">-</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card update-card">
+                <div class="card-body text-center">
+                    <i class="bi bi-broadcast text-info" style="font-size: 2rem;"></i>
+                    <h6 class="text-muted mt-2">Kanal</h6>
+                    <h3 class="mb-0" id="current-channel">-</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card update-card">
+                <div class="card-body text-center">
+                    <i class="bi bi-server text-success" style="font-size: 2rem;"></i>
+                    <h6 class="text-muted mt-2">Update Server</h6>
+                    <div id="server-status">
+                        <span class="status-indicator" id="status-dot"></span>
+                        <small id="status-text">-</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card update-card">
+                <div class="card-body text-center">
+                    <i class="bi bi-clock-history text-warning" style="font-size: 2rem;"></i>
+                    <h6 class="text-muted mt-2">Senaste Koll</h6>
+                    <small class="mb-0" id="last-check">-</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Available Update -->
+    <div class="row mb-4" id="available-update-section" style="display: none;">
+        <div class="col-md-12">
+            <div class="alert alert-info border-info">
+                <h5 class="alert-heading"><i class="bi bi-info-circle"></i> Ny Uppdatering Tillgänglig!</h5>
+                <p class="mb-2">Version <strong id="available-version">-</strong> finns tillgänglig för installation.</p>
+                <div class="changelog mb-3" id="available-changelog"></div>
+                <button class="btn btn-primary" onclick="installUpdate()">
+                    <i class="bi bi-download"></i> Installera Nu
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Configuration Tabs -->
+    <div class="row">
+        <div class="col-md-12">
+            <ul class="nav nav-tabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#settings-tab">
+                        <i class="bi bi-gear"></i> Inställningar
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#schedule-tab">
+                        <i class="bi bi-calendar-event"></i> Schema
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#history-tab">
+                        <i class="bi bi-clock-history"></i> Historik
+                    </button>
+                </li>
+            </ul>
+
+            <div class="tab-content border border-top-0 p-4">
+                <!-- Settings Tab -->
+                <div class="tab-pane fade show active" id="settings-tab">
+                    <h5><i class="bi bi-gear"></i> Update Inställningar</h5>
+                    <hr>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Update Server URL</label>
+                                <input type="text" class="form-control" id="server-url" placeholder="http://192.168.1.100:8080">
+                                <small class="text-muted">IP-adressen till din dator där update servern körs</small>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Kanal</label>
+                                <select class="form-select" id="update-channel">
+                                    <option value="stable">Stable (Produktion)</option>
+                                    <option value="testing">Testing (Beta)</option>
+                                </select>
+                                <small class="text-muted">Stable = Testad kod, Testing = Beta features</small>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Automatiska Uppdateringar</label>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="auto-update">
+                                    <label class="form-check-label" for="auto-update">
+                                        Aktivera automatiska uppdateringar
+                                    </label>
+                                </div>
+                                <small class="text-muted">Installera updates automatiskt enligt schema</small>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Backup före Uppdatering</label>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="backup-before-update" checked>
+                                    <label class="form-check-label" for="backup-before-update">
+                                        Skapa backup automatiskt
+                                    </label>
+                                </div>
+                            </div>
+
+                            <button class="btn btn-success" onclick="saveSettings()">
+                                <i class="bi bi-save"></i> Spara Inställningar
+                            </button>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="card bg-light">
+                                <div class="card-body">
+                                    <h6><i class="bi bi-info-circle"></i> Information</h6>
+                                    <p class="small mb-2"><strong>Stable:</strong> Välj denna kanal för produktionsservern. Innehåller endast testad och stabil kod.</p>
+                                    <p class="small mb-2"><strong>Testing:</strong> För test-servrar. Innehåller nya features som kan ha buggar.</p>
+                                    <hr>
+                                    <p class="small mb-0"><strong>Tips:</strong> Testa alltid updates på en test-server med "testing" kanalen innan du kör på produktion.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Schedule Tab -->
+                <div class="tab-pane fade" id="schedule-tab">
+                    <h5><i class="bi bi-calendar-event"></i> Update Schema</h5>
+                    <hr>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Kolla efter Updates</label>
+                                <select class="form-select" id="check-frequency">
+                                    <option value="3600">Varje timme</option>
+                                    <option value="21600">Var 6:e timme</option>
+                                    <option value="43200">Var 12:e timme</option>
+                                    <option value="86400">En gång per dag</option>
+                                    <option value="604800">En gång per vecka</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Föredragen Tid för Uppdatering</label>
+                                <input type="time" class="form-control" id="preferred-time" value="03:00">
+                                <small class="text-muted">Tid på dygnet då automatiska updates helst ska ske</small>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Veckodagar</label>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="1" id="day-mon" checked>
+                                    <label class="form-check-label" for="day-mon">Måndag</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="2" id="day-tue" checked>
+                                    <label class="form-check-label" for="day-tue">Tisdag</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="3" id="day-wed" checked>
+                                    <label class="form-check-label" for="day-wed">Onsdag</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="4" id="day-thu" checked>
+                                    <label class="form-check-label" for="day-thu">Torsdag</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="5" id="day-fri">
+                                    <label class="form-check-label" for="day-fri">Fredag</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="6" id="day-sat">
+                                    <label class="form-check-label" for="day-sat">Lördag</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="0" id="day-sun">
+                                    <label class="form-check-label" for="day-sun">Söndag</label>
+                                </div>
+                            </div>
+
+                            <button class="btn btn-success" onclick="saveSchedule()">
+                                <i class="bi bi-save"></i> Spara Schema
+                            </button>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="schedule-preview mb-3">
+                                <h6><i class="bi bi-info-circle"></i> Schema Förhandsvisning</h6>
+                                <p class="mb-1" id="schedule-summary">-</p>
+                            </div>
+
+                            <div class="card bg-light">
+                                <div class="card-body">
+                                    <h6><i class="bi bi-exclamation-triangle"></i> Viktigt!</h6>
+                                    <p class="small mb-2">Updates kör endast under vald tid om automatiska uppdateringar är aktiverade.</p>
+                                    <p class="small mb-0">Systemet kollar efter updates regelbundet, men installerar endast under schemalagd tid.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- History Tab -->
+                <div class="tab-pane fade" id="history-tab">
+                    <h5><i class="bi bi-clock-history"></i> Update Historik</h5>
+                    <hr>
+
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Datum & Tid</th>
+                                    <th>Version</th>
+                                    <th>Kanal</th>
+                                    <th>Status</th>
+                                    <th>Åtgärd</th>
+                                </tr>
+                            </thead>
+                            <tbody id="update-history">
+                                <tr>
+                                    <td colspan="5" class="text-center text-muted">
+                                        <i class="bi bi-inbox"></i> Ingen historik ännu
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h6 class="mt-4">Tillgängliga Backups</h6>
+                    <div class="table-responsive">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Backup</th>
+                                    <th>Storlek</th>
+                                    <th>Åtgärd</th>
+                                </tr>
+                            </thead>
+                            <tbody id="backup-list">
+                                <tr>
+                                    <td colspan="3" class="text-center text-muted">Laddar backups...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="bi bi-lightning"></i> Snabbåtgärder</h5>
+                </div>
+                <div class="card-body">
+                    <button class="btn btn-info me-2" onclick="checkForUpdates()">
+                        <i class="bi bi-arrow-clockwise"></i> Kolla efter Updates
+                    </button>
+                    <button class="btn btn-warning me-2" onclick="forceUpdate()">
+                        <i class="bi bi-exclamation-triangle"></i> Tvinga Uppdatering
+                    </button>
+                    <button class="btn btn-secondary me-2" onclick="testConnection()">
+                        <i class="bi bi-wifi"></i> Testa Anslutning
+                    </button>
+                    <button class="btn btn-danger" onclick="rollbackUpdate()">
+                        <i class="bi bi-arrow-counterclockwise"></i> Återställ (Rollback)
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Force Update Modal -->
+<div class="modal fade" id="forceUpdateModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-warning">
+                <h5 class="modal-title"><i class="bi bi-exclamation-triangle"></i> Tvinga Uppdatering</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p><strong>VARNING:</strong> Detta kommer att installera den senaste versionen omedelbart, oavsett schema.</p>
+                <p>En backup kommer att skapas automatiskt.</p>
+                <hr>
+                <p class="mb-1">Tillgänglig version: <strong id="force-version">-</strong></p>
+                <p class="mb-1">Kanal: <strong id="force-channel">-</strong></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Avbryt</button>
+                <button type="button" class="btn btn-warning" onclick="confirmForceUpdate()">
+                    <i class="bi bi-download"></i> Installera Nu
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+let updateConfig = {};
+let availableUpdate = null;
+
+$(document).ready(function() {
+    loadConfiguration();
+    checkServerStatus();
+    loadUpdateHistory();
+    loadBackups();
+    
+    // Auto-refresh every 5 minutes
+    setInterval(checkServerStatus, 300000);
+    
+    // Update schedule preview when settings change
+    $('#check-frequency, #preferred-time, input[id^="day-"]').on('change', updateSchedulePreview);
+});
+
+function loadConfiguration() {
+    $.get('/api/update/config', function(data) {
+        if (data.success) {
+            updateConfig = data.config;
+            
+            $('#current-version').text(data.config.current_version || '1.0.0');
+            $('#current-channel').text(data.config.channel || 'stable');
+            $('#server-url').val(data.config.update_server || '');
+            $('#update-channel').val(data.config.channel || 'stable');
+            $('#auto-update').prop('checked', data.config.auto_update || false);
+            $('#backup-before-update').prop('checked', data.config.backup_before_update !== false);
+            $('#check-frequency').val(data.config.check_interval || 3600);
+            $('#preferred-time').val(data.config.preferred_time || '03:00');
+            
+            // Load allowed days
+            if (data.config.allowed_days) {
+                $('input[id^="day-"]').prop('checked', false);
+                data.config.allowed_days.forEach(day => {
+                    $(`#day-${getDayName(day)}`).prop('checked', true);
+                });
+            }
+            
+            if (data.config.last_check) {
+                $('#last-check').text(new Date(data.config.last_check).toLocaleString('sv-SE'));
+            }
+            
+            updateSchedulePreview();
+        }
+    });
+}
+
+function getDayName(dayNum) {
+    const days = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
+    return days[dayNum];
+}
+
+function getDayNumber(dayName) {
+    const days = {sun: 0, mon: 1, tue: 2, wed: 3, thu: 4, fri: 5, sat: 6};
+    return days[dayName];
+}
+
+function checkServerStatus() {
+    $.ajax({
+        url: '/api/update/check',
+        type: 'GET',
+        timeout: 5000,
+        success: function(data) {
+            if (data.success) {
+                $('#status-dot').removeClass('status-offline').addClass('status-online');
+                $('#status-text').text('Online');
+                
+                if (data.update_available) {
+                    availableUpdate = data.latest_version;
+                    showAvailableUpdate(data.latest_version);
+                } else {
+                    $('#available-update-section').hide();
+                }
+            } else {
+                setOfflineStatus();
+            }
+        },
+        error: function() {
+            setOfflineStatus();
+        }
+    });
+}
+
+function setOfflineStatus() {
+    $('#status-dot').removeClass('status-online').addClass('status-offline');
+    $('#status-text').text('Offline');
+}
+
+function showAvailableUpdate(versionInfo) {
+    $('#available-version').text(versionInfo.version);
+    $('#available-changelog').text(versionInfo.changelog || 'Ingen changelog tillgänglig');
+    $('#available-update-section').show();
+}
+
+function saveSettings() {
+    const config = {
+        update_server: $('#server-url').val(),
+        channel: $('#update-channel').val(),
+        auto_update: $('#auto-update').is(':checked'),
+        backup_before_update: $('#backup-before-update').is(':checked')
+    };
+    
+    $.ajax({
+        url: '/api/update/config',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(config),
+        success: function(data) {
+            if (data.success) {
+                showToast('✓ Inställningar sparade', 'success');
+                loadConfiguration();
+                checkServerStatus();
+            } else {
+                showToast('❌ Fel: ' + data.error, 'error');
+            }
+        }
+    });
+}
+
+function saveSchedule() {
+    const allowedDays = [];
+    $('input[id^="day-"]:checked').each(function() {
+        const dayName = $(this).attr('id').replace('day-', '');
+        allowedDays.push(getDayNumber(dayName));
+    });
+    
+    const schedule = {
+        check_interval: parseInt($('#check-frequency').val()),
+        preferred_time: $('#preferred-time').val(),
+        allowed_days: allowedDays
+    };
+    
+    $.ajax({
+        url: '/api/update/schedule',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(schedule),
+        success: function(data) {
+            if (data.success) {
+                showToast('✓ Schema sparat', 'success');
+                loadConfiguration();
+            } else {
+                showToast('❌ Fel: ' + data.error, 'error');
+            }
+        }
+    });
+}
+
+function updateSchedulePreview() {
+    const freq = $('#check-frequency').val();
+    const time = $('#preferred-time').val();
+    const days = [];
+    
+    $('input[id^="day-"]:checked').each(function() {
+        const label = $(this).next('label').text();
+        days.push(label);
+    });
+    
+    let freqText = '';
+    switch(freq) {
+        case '3600': freqText = 'varje timme'; break;
+        case '21600': freqText = 'var 6:e timme'; break;
+        case '43200': freqText = 'var 12:e timme'; break;
+        case '86400': freqText = 'en gång per dag'; break;
+        case '604800': freqText = 'en gång per vecka'; break;
+    }
+    
+    const summary = `Systemet kollar efter updates ${freqText}. Automatiska uppdateringar installeras kl ${time} på ${days.join(', ')}.`;
+    $('#schedule-summary').text(summary);
+}
+
+function checkForUpdates() {
+    showToast('🔍 Kollar efter uppdateringar...', 'info');
+    
+    $.get('/api/update/check', function(data) {
+        if (data.success) {
+            if (data.update_available) {
+                showAvailableUpdate(data.latest_version);
+                showToast('🎉 Ny uppdatering tillgänglig!', 'success');
+            } else {
+                showToast('✓ Systemet är uppdaterat', 'success');
+            }
+        } else {
+            showToast('❌ Kunde inte kolla: ' + data.error, 'error');
+        }
+    });
+}
+
+function installUpdate() {
+    if (!availableUpdate) {
+        showToast('❌ Ingen uppdatering tillgänglig', 'error');
+        return;
+    }
+    
+    if (!confirm('Installera uppdatering till version ' + availableUpdate.version + '?')) {
+        return;
+    }
+    
+    showToast('📥 Installerar uppdatering...', 'info');
+    
+    $.ajax({
+        url: '/api/update/install',
+        type: 'POST',
+        success: function(data) {
+            if (data.success) {
+                showToast('✓ Uppdatering installerad! Startar om...', 'success');
+                setTimeout(() => location.reload(), 3000);
+            } else {
+                showToast('❌ Installation misslyckades: ' + data.error, 'error');
+            }
+        }
+    });
+}
+
+function forceUpdate() {
+    $.get('/api/update/check', function(data) {
+        if (data.success && data.update_available) {
+            $('#force-version').text(data.latest_version.version);
+            $('#force-channel').text(updateConfig.channel || 'stable');
+            availableUpdate = data.latest_version;
+            $('#forceUpdateModal').modal('show');
+        } else {
+            showToast('❌ Ingen uppdatering tillgänglig att tvinga', 'error');
+        }
+    });
+}
+
+function confirmForceUpdate() {
+    $('#forceUpdateModal').modal('hide');
+    installUpdate();
+}
+
+function testConnection() {
+    showToast('🔌 Testar anslutning...', 'info');
+    
+    $.ajax({
+        url: '/api/update/test',
+        type: 'GET',
+        timeout: 5000,
+        success: function(data) {
+            if (data.success) {
+                showToast('✓ Anslutning OK! Server: ' + data.server_url, 'success');
+                checkServerStatus();
+            } else {
+                showToast('❌ Anslutning misslyckades: ' + data.error, 'error');
+            }
+        },
+        error: function() {
+            showToast('❌ Kunde inte nå update servern', 'error');
+        }
+    });
+}
+
+function rollbackUpdate() {
+    if (!confirm('Återställa till senaste backup? Detta kommer ångra den senaste uppdateringen.')) {
+        return;
+    }
+    
+    showToast('🔄 Återställer från backup...', 'info');
+    
+    $.ajax({
+        url: '/api/update/rollback',
+        type: 'POST',
+        success: function(data) {
+            if (data.success) {
+                showToast('✓ Återställning lyckades! Startar om...', 'success');
+                setTimeout(() => location.reload(), 3000);
+            } else {
+                showToast('❌ Återställning misslyckades: ' + data.error, 'error');
+            }
+        }
+    });
+}
+
+function loadUpdateHistory() {
+    $.get('/api/update/history', function(data) {
+        if (data.success && data.history.length > 0) {
+            const tbody = $('#update-history');
+            tbody.empty();
+            
+            data.history.forEach(function(entry) {
+                const statusBadge = entry.status === 'success' ? 
+                    '<span class="badge bg-success">Lyckades</span>' :
+                    '<span class="badge bg-danger">Misslyckades</span>';
+                
+                const row = `
+                    <tr>
+                        <td>${new Date(entry.timestamp).toLocaleString('sv-SE')}</td>
+                        <td><code>${entry.version}</code></td>
+                        <td><span class="badge bg-info">${entry.channel}</span></td>
+                        <td>${statusBadge}</td>
+                        <td><small class="text-muted">${entry.action}</small></td>
+                    </tr>
+                `;
+                tbody.append(row);
+            });
+        }
+    });
+}
+
+function loadBackups() {
+    $.get('/api/update/backups', function(data) {
+        if (data.success && data.backups.length > 0) {
+            const tbody = $('#backup-list');
+            tbody.empty();
+            
+            data.backups.forEach(function(backup) {
+                const sizeMB = (backup.size / 1024 / 1024).toFixed(2);
+                const row = `
+                    <tr>
+                        <td><small>${backup.name}</small></td>
+                        <td><small>${sizeMB} MB</small></td>
+                        <td>
+                            <button class="btn btn-sm btn-danger" onclick="deleteBackup('${backup.name}')">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+                tbody.append(row);
+            });
+        } else {
+            $('#backup-list').html('<tr><td colspan="3" class="text-center text-muted">Inga backups</td></tr>');
+        }
+    });
+}
+
+function deleteBackup(name) {
+    if (!confirm('Ta bort backup: ' + name + '?')) return;
+    
+    $.ajax({
+        url: '/api/update/backup/' + encodeURIComponent(name),
+        type: 'DELETE',
+        success: function(data) {
+            if (data.success) {
+                showToast('✓ Backup raderad', 'success');
+                loadBackups();
+            }
+        }
+    });
+}
+
+function showToast(message, type) {
+    // Reuse existing toast function
+    const bgClass = type === 'success' ? 'bg-success' : 
+                   type === 'error' ? 'bg-danger' : 
+                   type === 'warning' ? 'bg-warning' : 'bg-info';
+    
+    const toast = $(`
+        <div class="toast align-items-center text-white ${bgClass} border-0" role="alert">
+            <div class="d-flex">
+                <div class="toast-body">${message}</div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+            </div>
+        </div>
+    `);
+    
+    $('.toast-container').append(toast);
+    const bsToast = new bootstrap.Toast(toast);
+    bsToast.show();
+    
+    setTimeout(() => toast.remove(), 5000);
+}
+</script>
+{% endblock %}

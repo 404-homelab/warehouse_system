@@ -1,0 +1,826 @@
+{% extends "base.html" %}
+
+{% block title %}Registrera Produkt - Warehouse System{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col">
+            <h1 class="display-4"><i class="bi bi-plus-circle"></i> Registrera Produkt</h1>
+            <p class="lead">Fotografera och registrera nya produkter</p>
+        </div>
+    </div>
+    
+    <!-- Quick Workflow Info -->
+    <div class="row mb-3">
+        <div class="col">
+            <div class="alert alert-info border-info">
+                <i class="bi bi-lightning-charge"></i> <strong>Snabb-registrering:</strong>
+                Fyll i beskrivning, skick och pris → Scanna hyllplats → Produkten registreras automatiskt! 🚀
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Camera Section -->
+        <div class="col-md-5">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="bi bi-camera"></i> Kamera (<span id="image-count-display">0</span> bilder)</h5>
+                    
+                    <!-- Info about camera limitations -->
+                    <div id="camera-info" class="alert alert-warning" style="display:none;">
+                        <i class="bi bi-exclamation-triangle"></i> 
+                        <strong>Kamera fungerar inte över HTTP-nätverk</strong><br>
+                        Använd "Ladda upp Bild" för att ta bilder från annan enhet.
+                    </div>
+                    
+                    <div class="text-center mb-3">
+                        <video id="camera-preview" width="100%" height="auto" autoplay playsinline style="display:none;"></video>
+                        <canvas id="camera-canvas" style="display:none;"></canvas>
+                        
+                        <!-- Image Gallery -->
+                        <div id="image-gallery" style="display:none;">
+                            <div class="row g-2" id="image-thumbnails"></div>
+                        </div>
+                        
+                        <div id="camera-placeholder" class="p-5 bg-light rounded">
+                            <i class="bi bi-camera" style="font-size: 4rem; color: #ccc;"></i>
+                            <p class="text-muted mt-2">Klicka "Starta Kamera" eller "Ladda upp Bilder"</p>
+                        </div>
+                        
+                        <input type="file" id="file-input" accept="image/*" multiple style="display:none;">
+                    </div>
+                    
+                    <!-- Camera Selector -->
+                    <div id="camera-selector" class="mb-2" style="display:none;">
+                        <label class="form-label small">Välj kamera:</label>
+                        <select class="form-select form-select-sm" id="camera-select">
+                            <option value="">Laddar kameror...</option>
+                        </select>
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        <button id="start-camera-btn" class="btn btn-primary">
+                            <i class="bi bi-camera-video"></i> Starta Kamera
+                        </button>
+                        <button id="upload-image-btn" class="btn btn-outline-primary">
+                            <i class="bi bi-upload"></i> Ladda upp Bilder
+                        </button>
+                        <button id="capture-btn" class="btn btn-success" style="display:none;">
+                            <i class="bi bi-camera"></i> Ta Bild
+                        </button>
+                        <button id="stop-camera-btn" class="btn btn-info" style="display:none;">
+                            <i class="bi bi-stop-circle"></i> Stoppa Kamera
+                        </button>
+                        <button id="view-gallery-btn" class="btn btn-secondary" style="display:none;">
+                            <i class="bi bi-images"></i> Visa Bildgalleri
+                        </button>
+                        <button id="auto-crop-btn" class="btn btn-info" style="display:none;">
+                            <i class="bi bi-crop"></i> Auto-Beskär Alla
+                        </button>
+                    </div>
+                    
+                    <!-- Crop Settings -->
+                    <div id="crop-settings" class="mt-3" style="display:none;">
+                        <hr>
+                        <h6>Beskärningsinställningar</h6>
+                        <div class="mb-2">
+                            <label class="form-label">Padding: <span id="padding-value">10</span>px</label>
+                            <input type="range" class="form-range" id="padding-slider" min="0" max="50" value="10">
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Min Area: <span id="min-area-value">1000</span>px²</label>
+                            <input type="range" class="form-range" id="min-area-slider" min="500" max="5000" step="100" value="1000">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Registration Form -->
+        <div class="col-md-7">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="bi bi-clipboard-check"></i> Produktinformation</h5>
+                    
+                    <form id="register-form">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Artikelnummer</label>
+                                <input type="text" class="form-control" id="article-code" placeholder="Art-12345">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Skick *</label>
+                                <select class="form-select" id="condition" required>
+                                    <option value="">Välj skick</option>
+                                    <option value="Nytt">Nytt</option>
+                                    <option value="Mycket Gott">Mycket Gott</option>
+                                    <option value="Gott">Gott</option>
+                                    <option value="Använt">Använt</option>
+                                    <option value="Defekt">Defekt</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Beskrivning *</label>
+                            <textarea class="form-control" id="description" rows="2" required placeholder="Beskriv produkten..."></textarea>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Längd (cm)</label>
+                                <input type="number" class="form-control" id="length" step="0.1" placeholder="0.0">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Bredd (cm)</label>
+                                <input type="number" class="form-control" id="width" step="0.1" placeholder="0.0">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Höjd (cm)</label>
+                                <input type="number" class="form-control" id="height" step="0.1" placeholder="0.0">
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Vikt (kg)</label>
+                                <input type="number" class="form-control" id="weight" step="0.01" placeholder="0.00">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Pris (SEK) *</label>
+                                <input type="number" class="form-control" id="price" step="1" required placeholder="0">
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Hyllplats</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="location-scan" placeholder="Scanna hyllplats streckkod...">
+                                    <button class="btn btn-outline-secondary" type="button" id="clear-location-btn">
+                                        <i class="bi bi-x-circle"></i>
+                                    </button>
+                                </div>
+                                <small class="text-muted">Scanna LOC-koden eller välj manuellt nedan</small>
+                                <select class="form-select mt-2" id="location-id">
+                                    <option value="">Eller välj manuellt...</option>
+                                </select>
+                                <div id="location-info" class="alert alert-success mt-2" style="display:none;">
+                                    <i class="bi bi-check-circle"></i> <strong id="location-name"></strong>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Antal (bulk)</label>
+                                <input type="number" class="form-control" id="quantity" min="1" value="1">
+                                <small class="text-muted">Skapa flera identiska produkter</small>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Anteckningar</label>
+                            <textarea class="form-control" id="notes" rows="2" placeholder="Extra information..."></textarea>
+                        </div>
+
+                        <hr>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-success btn-lg">
+                                <i class="bi bi-check-circle"></i> Registrera Produkt
+                            </button>
+                            <button type="button" class="btn btn-secondary" id="clear-form-btn">
+                                <i class="bi bi-x-circle"></i> Rensa Formulär
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+let stream = null;
+let capturedImages = [];
+const MAX_IMAGES = 10;
+
+$(document).ready(function() {
+    loadLocations();
+    setupEventHandlers();
+    detectCameraMode();
+    updateImageCountDisplay();
+    enumerateCameras(); // List available cameras
+});
+
+async function enumerateCameras() {
+    try {
+        if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
+            console.log('enumerateDevices not supported');
+            return;
+        }
+        
+        const devices = await navigator.mediaDevices.enumerateDevices();
+        const videoDevices = devices.filter(device => device.kind === 'videoinput');
+        
+        console.log('Found video devices:', videoDevices);
+        
+        if (videoDevices.length === 0) {
+            console.log('No video devices found');
+            return;
+        }
+        
+        const select = $('#camera-select');
+        select.empty();
+        
+        videoDevices.forEach((device, index) => {
+            const label = device.label || `Kamera ${index + 1}`;
+            select.append(`<option value="${device.deviceId}">${label}</option>`);
+        });
+        
+        if (videoDevices.length > 1) {
+            $('#camera-selector').show();
+        }
+        
+    } catch (err) {
+        console.error('Error enumerating cameras:', err);
+    }
+}
+
+function detectCameraMode() {
+    const isSecure = window.location.protocol === 'https:' || 
+                     window.location.hostname === 'localhost' || 
+                     window.location.hostname === '127.0.0.1';
+    
+    if (!isSecure) {
+        $('#camera-info').show();
+        $('#start-camera-btn').hide();
+        $('#upload-image-btn').removeClass('btn-outline-primary').addClass('btn-primary');
+    }
+}
+
+function setupEventHandlers() {
+    $('#start-camera-btn').click(startCamera);
+    $('#capture-btn').click(captureImage);
+    $('#stop-camera-btn').click(stopCamera);
+    $('#view-gallery-btn').click(viewGallery);
+    $('#upload-image-btn').click(() => $('#file-input').click());
+    $('#file-input').change(handleFileUpload);
+    $('#auto-crop-btn').click(autoCropAllImages);
+    $('#register-form').submit(registerProduct);
+    $('#clear-form-btn').click(clearForm);
+    
+    // Location scanning
+    $('#location-scan').on('keypress', function(e) {
+        if (e.which == 13) {
+            e.preventDefault();
+            scanLocation();
+        }
+    });
+    
+    $('#location-scan').on('input', function() {
+        clearTimeout(window.locationScanTimeout);
+        window.locationScanTimeout = setTimeout(function() {
+            const value = $('#location-scan').val().trim();
+            if (value.length > 3) scanLocation();
+        }, 300);
+    });
+    
+    $('#clear-location-btn').click(function() {
+        $('#location-scan').val('');
+        $('#location-id').val('');
+        $('#location-info').hide();
+    });
+    
+    $('#location-id').change(function() {
+        const selected = $(this).find('option:selected');
+        if (selected.val()) {
+            $('#location-scan').val(selected.data('barcode'));
+            $('#location-info').show();
+            $('#location-name').text(selected.text());
+        } else {
+            $('#location-scan').val('');
+            $('#location-info').hide();
+        }
+    });
+    
+    $('#padding-slider').on('input', function() {
+        $('#padding-value').text($(this).val());
+    });
+    
+    $('#min-area-slider').on('input', function() {
+        $('#min-area-value').text($(this).val());
+    });
+}
+
+function loadLocations() {
+    $.get('/api/locations', function(data) {
+        if (data.success) {
+            const select = $('#location-id');
+            data.locations.forEach(function(loc) {
+                select.append(`<option value="${loc.id}" data-barcode="${loc.barcode_value}" data-code="${loc.location_code}">${loc.location_code} - ${loc.description || ''}</option>`);
+            });
+        }
+    });
+}
+
+function updateImageCountDisplay() {
+    $('#image-count-display').text(capturedImages.length);
+    console.log('Images in array:', capturedImages.length);
+}
+
+async function startCamera() {
+    try {
+        console.log('Starting camera...');
+        
+        // First, enumerate available devices to help debug
+        if (navigator.mediaDevices && navigator.mediaDevices.enumerateDevices) {
+            const devices = await navigator.mediaDevices.enumerateDevices();
+            const videoDevices = devices.filter(device => device.kind === 'videoinput');
+            console.log('Available video devices:', videoDevices);
+            
+            if (videoDevices.length === 0) {
+                throw new Error('Ingen kamera hittades. Kontrollera att USB-kameran är inkopplad.');
+            }
+        }
+        
+        // Get selected camera device ID if available
+        const selectedDeviceId = $('#camera-select').val();
+        console.log('Selected device ID:', selectedDeviceId);
+        
+        // Try different constraints, prioritizing selected device
+        const constraints = [];
+        
+        // If specific device selected, try that first
+        if (selectedDeviceId) {
+            constraints.push({
+                video: {
+                    deviceId: { exact: selectedDeviceId },
+                    width: { ideal: 1920 },
+                    height: { ideal: 1080 }
+                }
+            });
+            constraints.push({
+                video: {
+                    deviceId: { exact: selectedDeviceId }
+                }
+            });
+        }
+        
+        // Fallback constraints
+        constraints.push(
+            { video: { 
+                facingMode: 'environment',
+                width: { ideal: 1920 },
+                height: { ideal: 1080 }
+            }},
+            { video: { 
+                width: { ideal: 1280 }, 
+                height: { ideal: 720 } 
+            }},
+            { video: { 
+                width: { ideal: 640 }, 
+                height: { ideal: 480 } 
+            }},
+            { video: true }
+        );
+        
+        let lastError = null;
+        
+        for (let constraint of constraints) {
+            try {
+                console.log('Trying constraint:', constraint);
+                stream = await navigator.mediaDevices.getUserMedia(constraint);
+                console.log('Stream obtained:', stream);
+                break;
+            } catch (e) {
+                console.log('Constraint failed:', e.name, e.message);
+                lastError = e;
+            }
+        }
+        
+        if (!stream) {
+            throw lastError || new Error('Kunde inte starta kamera');
+        }
+        
+        const video = document.getElementById('camera-preview');
+        video.srcObject = stream;
+        
+        // Wait for video to be ready
+        await new Promise((resolve, reject) => {
+            video.onloadedmetadata = () => {
+                video.play()
+                    .then(() => {
+                        console.log('Video playing');
+                        resolve();
+                    })
+                    .catch(reject);
+            };
+            video.onerror = reject;
+        });
+        
+        $('#camera-placeholder').hide();
+        $('#camera-preview').show();
+        $('#start-camera-btn').hide();
+        $('#upload-image-btn').hide();
+        $('#view-gallery-btn').hide();
+        $('#camera-selector').hide();
+        $('#capture-btn').show();
+        $('#stop-camera-btn').show();
+        $('#camera-info').hide();
+        
+        // Show camera info
+        const track = stream.getVideoTracks()[0];
+        const settings = track.getSettings();
+        console.log('Camera settings:', settings);
+        console.log('Camera label:', track.label);
+        
+        showToast(`Kamera startad! ${track.label} (${settings.width}x${settings.height})`, 'success');
+        
+    } catch (err) {
+        console.error('Camera error:', err);
+        
+        let errorMessage = 'Kunde inte starta kamera: ';
+        
+        if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
+            errorMessage += 'Tillåtelse nekad. Tillåt kamera-åtkomst i webbläsaren.';
+        } else if (err.name === 'NotFoundError' || err.name === 'DevicesNotFoundError') {
+            errorMessage += 'Ingen kamera hittades. Kontrollera att USB-kameran är inkopplad.';
+        } else if (err.name === 'NotReadableError' || err.name === 'TrackStartError') {
+            errorMessage += 'Kameran används redan av ett annat program.';
+        } else if (err.name === 'OverconstrainedError') {
+            errorMessage += 'Kameran stöder inte de begärda inställningarna.';
+        } else if (err.name === 'TypeError') {
+            errorMessage += 'Webbläsaren stöder inte kamera-åtkomst. Använd HTTPS eller localhost.';
+        } else {
+            errorMessage += err.message;
+        }
+        
+        showToast(errorMessage, 'error');
+        
+        // Show helpful info
+        $('#camera-info').html(`
+            <div class="alert alert-info">
+                <h6>Felsökning:</h6>
+                <ul class="mb-0">
+                    <li>Kontrollera att USB-kameran är inkopplad</li>
+                    <li>Tillåt kamera-åtkomst när webbläsaren frågar</li>
+                    <li>Stäng andra program som kan använda kameran (Zoom, Teams, etc.)</li>
+                    <li>Prova att ladda om sidan (F5)</li>
+                    <li>Använd Chrome, Firefox eller Edge (bäst stöd)</li>
+                    <li>Kontrollera att du använder HTTPS eller localhost</li>
+                    ${$('#camera-select option').length > 0 ? '<li><strong>Försök välja en annan kamera i listan ovan</strong></li>' : ''}
+                </ul>
+                <small class="text-muted mt-2 d-block">Felkod: ${err.name}</small>
+            </div>
+        `).show();
+    }
+}
+
+function captureImage() {
+    if (capturedImages.length >= MAX_IMAGES) {
+        showToast('Maximum ' + MAX_IMAGES + ' bilder', 'warning');
+        return;
+    }
+    
+    const video = document.getElementById('camera-preview');
+    const canvas = document.getElementById('camera-canvas');
+    const ctx = canvas.getContext('2d');
+    
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    ctx.drawImage(video, 0, 0);
+    
+    const imageData = canvas.toDataURL('image/jpeg', 0.9);
+    
+    capturedImages.push({
+        data: imageData,
+        cropped: null
+    });
+    
+    updateImageCountDisplay();
+    showToast('Bild ' + capturedImages.length + ' tagen!', 'success');
+    playBeep();
+}
+
+function stopCamera() {
+    if (stream) {
+        stream.getTracks().forEach(track => track.stop());
+        stream = null;
+    }
+    
+    $('#camera-preview').hide();
+    $('#capture-btn').hide();
+    $('#stop-camera-btn').hide();
+    
+    if (capturedImages.length > 0) {
+        viewGallery();
+    } else {
+        $('#camera-placeholder').show();
+        $('#start-camera-btn').show();
+        $('#upload-image-btn').show();
+        
+        // Show camera selector if multiple cameras available
+        if ($('#camera-select option').length > 1) {
+            $('#camera-selector').show();
+        }
+    }
+}
+
+function viewGallery() {
+    // Hide everything
+    $('#camera-placeholder').hide();
+    $('#camera-preview').hide();
+    $('#start-camera-btn').hide();
+    $('#upload-image-btn').hide();
+    $('#capture-btn').hide();
+    $('#stop-camera-btn').hide();
+    
+    // Show gallery
+    updateImageGallery();
+    $('#image-gallery').show();
+    $('#view-gallery-btn').show();
+    $('#view-gallery-btn').text('Ta Fler Bilder');
+    $('#view-gallery-btn').off('click').click(backToCamera);
+    $('#auto-crop-btn').show();
+    $('#crop-settings').show();
+}
+
+function backToCamera() {
+    $('#image-gallery').hide();
+    $('#view-gallery-btn').hide();
+    $('#auto-crop-btn').hide();
+    $('#crop-settings').hide();
+    
+    $('#camera-placeholder').show();
+    $('#start-camera-btn').show();
+    $('#upload-image-btn').show();
+    
+    if (capturedImages.length > 0) {
+        $('#view-gallery-btn').show();
+        $('#view-gallery-btn').text(`Visa Galleri (${capturedImages.length} bilder)`);
+        $('#view-gallery-btn').off('click').click(viewGallery);
+    }
+}
+
+function updateImageGallery() {
+    const gallery = $('#image-thumbnails');
+    gallery.empty();
+    
+    console.log('Updating gallery with', capturedImages.length, 'images');
+    
+    if (capturedImages.length === 0) {
+        gallery.append('<div class="col-12 text-center text-muted p-3">Inga bilder än</div>');
+        return;
+    }
+    
+    capturedImages.forEach(function(img, index) {
+        const thumbnail = `
+            <div class="col-4 col-md-3">
+                <div class="position-relative">
+                    <img src="${img.cropped || img.data}" class="img-fluid rounded" style="cursor: pointer; border: 2px solid #ddd;">
+                    <button class="btn btn-sm btn-danger position-absolute top-0 end-0 m-1" onclick="removeImage(${index})">
+                        <i class="bi bi-x"></i>
+                    </button>
+                    <div class="badge bg-primary position-absolute bottom-0 start-0 m-1">#${index + 1}</div>
+                    ${img.cropped ? '<div class="badge bg-success position-absolute bottom-0 end-0 m-1"><i class="bi bi-check"></i></div>' : ''}
+                </div>
+            </div>
+        `;
+        gallery.append(thumbnail);
+    });
+}
+
+function removeImage(index) {
+    if (confirm('Ta bort bild ' + (index + 1) + '?')) {
+        capturedImages.splice(index, 1);
+        updateImageCountDisplay();
+        updateImageGallery();
+        showToast('Bild borttagen', 'info');
+        
+        if (capturedImages.length === 0) {
+            backToCamera();
+        }
+    }
+}
+
+function handleFileUpload(e) {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+    
+    let loadedCount = 0;
+    const totalFiles = Math.min(files.length, MAX_IMAGES - capturedImages.length);
+    
+    for (let i = 0; i < totalFiles; i++) {
+        const file = files[i];
+        if (!file.type.startsWith('image/')) continue;
+        
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            capturedImages.push({
+                data: event.target.result,
+                cropped: null
+            });
+            
+            loadedCount++;
+            if (loadedCount === totalFiles) {
+                updateImageCountDisplay();
+                viewGallery();
+                showToast(capturedImages.length + ' bilder uppladdade!', 'success');
+            }
+        };
+        reader.readAsDataURL(file);
+    }
+    
+    $('#file-input').val('');
+}
+
+function autoCropAllImages() {
+    if (capturedImages.length === 0) {
+        showToast('Inga bilder att beskära', 'error');
+        return;
+    }
+    
+    showToast('Beskär ' + capturedImages.length + ' bilder...', 'info');
+    
+    let processedCount = 0;
+    
+    capturedImages.forEach(function(img, index) {
+        fetch(img.data)
+            .then(res => res.blob())
+            .then(blob => {
+                const formData = new FormData();
+                formData.append('image', blob, `capture_${index}.jpg`);
+                
+                return $.ajax({
+                    url: '/api/image/upload',
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false
+                });
+            })
+            .then(data => {
+                processedCount++;
+                
+                if (data.success && data.cropped) {
+                    capturedImages[index].cropped = data.cropped;
+                }
+                
+                if (processedCount === capturedImages.length) {
+                    updateImageGallery();
+                    showToast('Alla bilder beskurna!', 'success');
+                }
+            })
+            .catch(err => {
+                console.error('Crop error:', err);
+                processedCount++;
+            });
+    });
+}
+
+function scanLocation() {
+    const barcodeValue = $('#location-scan').val().trim();
+    if (!barcodeValue) return;
+    
+    $('#location-info').removeClass('alert-success alert-danger').addClass('alert-info').show();
+    $('#location-name').html('<i class="bi bi-hourglass-split"></i> Söker...');
+    
+    $.ajax({
+        url: '/api/locations/scan',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ barcode_value: barcodeValue }),
+        success: function(data) {
+            if (data.success && data.location) {
+                const loc = data.location;
+                $('#location-id').val(loc.id);
+                $('#location-info').removeClass('alert-info alert-danger').addClass('alert-success').show();
+                $('#location-name').html(`<i class="bi bi-check-circle"></i> ${loc.location_code} - ${loc.description || 'Ingen beskrivning'}`);
+                showToast('Hyllplats skannad: ' + loc.location_code, 'success');
+                playBeep();
+                
+                // AUTO-SUBMIT: Registrera produkten direkt efter lyckad scanning
+                setTimeout(function() {
+                    // Check if required fields are filled
+                    const description = $('#description').val().trim();
+                    const condition = $('#condition').val();
+                    const price = $('#price').val();
+                    
+                    if (description && condition && price) {
+                        // All required fields filled - auto submit!
+                        showToast('🚀 Registrerar produkt automatiskt...', 'info');
+                        $('#register-form').submit();
+                    } else {
+                        // Missing required fields
+                        showToast('⚠️ Fyll i beskrivning, skick och pris först', 'warning');
+                    }
+                }, 500); // Small delay for UX feedback
+                
+            } else {
+                $('#location-info').removeClass('alert-info alert-success').addClass('alert-danger').show();
+                $('#location-name').html('<i class="bi bi-x-circle"></i> Hyllplats hittades inte');
+                showToast('Hyllplats hittades inte', 'error');
+            }
+        },
+        error: function() {
+            $('#location-info').removeClass('alert-info alert-success').addClass('alert-danger').show();
+            $('#location-name').html('<i class="bi bi-x-circle"></i> Fel vid skanning');
+            showToast('Fel vid skanning', 'error');
+        }
+    });
+}
+
+function playBeep() {
+    try {
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
+        
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+        
+        oscillator.frequency.value = 800;
+        oscillator.type = 'sine';
+        
+        gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+        
+        oscillator.start(audioContext.currentTime);
+        oscillator.stop(audioContext.currentTime + 0.1);
+    } catch (e) {}
+}
+
+function registerProduct(e) {
+    e.preventDefault();
+    
+    const quantity = parseInt($('#quantity').val()) || 1;
+    
+    const productData = {
+        article_code: $('#article-code').val(),
+        description: $('#description').val(),
+        condition: $('#condition').val(),
+        length: parseFloat($('#length').val()) || null,
+        width: parseFloat($('#width').val()) || null,
+        height: parseFloat($('#height').val()) || null,
+        weight: parseFloat($('#weight').val()) || null,
+        price: parseFloat($('#price').val()) || null,
+        location_id: $('#location-id').val() || null,
+        notes: $('#notes').val(),
+        quantity: quantity,
+        operator: 'User',
+        images: capturedImages  // Include captured images!
+    };
+    
+    if (!productData.description || !productData.price) {
+        showToast('Fyll i alla obligatoriska fält!', 'error');
+        return;
+    }
+    
+    const endpoint = quantity > 1 ? '/api/items/bulk' : '/api/items';
+    
+    $.ajax({
+        url: endpoint,
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(productData),
+        success: function(data) {
+            if (data.success) {
+                const count = data.items ? data.items.length : 1;
+                const inventoryId = data.inventory_id || (data.items && data.items[0].inventory_id);
+                
+                showToast(`✓ ${count} produkt(er) registrerad(e)! ID: ${inventoryId}`, 'success');
+                clearForm();
+            } else {
+                showToast('Fel vid registrering: ' + data.error, 'error');
+            }
+        },
+        error: function(xhr, status, error) {
+            showToast('Fel vid registrering: ' + error, 'error');
+        }
+    });
+}
+
+function clearForm() {
+    $('#register-form')[0].reset();
+    $('#quantity').val('1');
+    $('#location-scan').val('');
+    $('#location-info').hide();
+    
+    // Clear images
+    capturedImages = [];
+    updateImageCountDisplay();
+    
+    // Reset view
+    $('#image-gallery').hide();
+    $('#view-gallery-btn').hide();
+    $('#auto-crop-btn').hide();
+    $('#crop-settings').hide();
+    $('#camera-placeholder').show();
+    $('#start-camera-btn').show();
+    $('#upload-image-btn').show();
+}
+</script>
+{% endblock %}

@@ -1,0 +1,273 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Warehouse System{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col">
+            <h1 class="display-4"><i class="bi bi-speedometer2"></i> Dashboard</h1>
+            <p class="lead">Översikt av lagersystemet</p>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-3">
+            <div class="card stat-card h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1">Totalt Produkter</p>
+                            <h3 class="mb-0" id="stat-total-items">-</h3>
+                        </div>
+                        <div class="text-primary">
+                            <i class="bi bi-box-seam" style="font-size: 2.5rem;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card stat-card h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1">I Lager</p>
+                            <h3 class="mb-0" id="stat-in-stock">-</h3>
+                        </div>
+                        <div class="text-success">
+                            <i class="bi bi-check-circle" style="font-size: 2.5rem;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card stat-card h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1">Väntande Ordrar</p>
+                            <h3 class="mb-0" id="stat-pending-orders">-</h3>
+                        </div>
+                        <div class="text-warning">
+                            <i class="bi bi-clock-history" style="font-size: 2.5rem;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card stat-card h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1">Lagervärde</p>
+                            <h3 class="mb-0" id="stat-inventory-value">-</h3>
+                        </div>
+                        <div class="text-info">
+                            <i class="bi bi-currency-dollar" style="font-size: 2.5rem;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sales This Month -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="bi bi-graph-up-arrow"></i> Försäljning Denna Månad
+                    </h5>
+                    <div class="row">
+                        <div class="col-6">
+                            <p class="text-muted mb-1">Sålda Produkter</p>
+                            <h4 id="stat-sold-month">-</h4>
+                        </div>
+                        <div class="col-6">
+                            <p class="text-muted mb-1">Intäkter</p>
+                            <h4 id="stat-revenue-month">-</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="bi bi-shop"></i> Marketplace Status
+                    </h5>
+                    <div id="marketplace-status">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Blocket:</span>
+                            <span class="badge bg-info" id="blocket-count">-</span>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <span>Tradera:</span>
+                            <span class="badge bg-info" id="tradera-count">-</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="row mb-4">
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="bi bi-lightning-charge"></i> Snabblänkar</h5>
+                    <div class="row g-2">
+                        <div class="col-md-3">
+                            <a href="/register" class="btn btn-primary w-100">
+                                <i class="bi bi-plus-circle"></i> Registrera Produkt
+                            </a>
+                        </div>
+                        <div class="col-md-3">
+                            <a href="/orders" class="btn btn-success w-100">
+                                <i class="bi bi-cart-plus"></i> Skapa Order
+                            </a>
+                        </div>
+                        <div class="col-md-3">
+                            <a href="/packing" class="btn btn-warning w-100">
+                                <i class="bi bi-box-seam"></i> Packa Order
+                            </a>
+                        </div>
+                        <div class="col-md-3">
+                            <a href="/search" class="btn btn-info w-100">
+                                <i class="bi bi-search"></i> Sök Produkt
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="bi bi-activity"></i> Senaste Aktivitet</h5>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Tid</th>
+                                    <th>Åtgärd</th>
+                                    <th>Inventory ID</th>
+                                    <th>Operatör</th>
+                                    <th>Detaljer</th>
+                                </tr>
+                            </thead>
+                            <tbody id="activity-log">
+                                <tr>
+                                    <td colspan="5" class="text-center">
+                                        <div class="spinner-border spinner-border-sm" role="status">
+                                            <span class="visually-hidden">Laddar...</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+$(document).ready(function() {
+    loadStatistics();
+    loadActivity();
+    
+    // Refresh every 30 seconds
+    setInterval(loadStatistics, 30000);
+    setInterval(loadActivity, 30000);
+});
+
+function loadStatistics() {
+    $.get('/api/reports/statistics', function(data) {
+        if (data.success) {
+            const stats = data.statistics;
+            
+            // Update stat cards
+            $('#stat-total-items').text(stats.total_items || 0);
+            $('#stat-in-stock').text(stats.items_by_status?.in_stock || 0);
+            $('#stat-pending-orders').text(stats.pending_orders || 0);
+            $('#stat-inventory-value').text(formatCurrency(stats.inventory_value || 0));
+            
+            // Sales this month
+            $('#stat-sold-month').text(stats.sold_this_month || 0);
+            $('#stat-revenue-month').text(formatCurrency(stats.revenue_this_month || 0));
+            
+            // Marketplace status
+            const listings = stats.active_listings || {};
+            $('#blocket-count').text(listings.blocket || 0);
+            $('#tradera-count').text(listings.tradera || 0);
+        }
+    });
+}
+
+function loadActivity() {
+    $.get('/api/reports/activity?limit=10', function(data) {
+        if (data.success && data.activity) {
+            const tbody = $('#activity-log');
+            tbody.empty();
+            
+            if (data.activity.length === 0) {
+                tbody.append('<tr><td colspan="5" class="text-center text-muted">Ingen aktivitet än</td></tr>');
+                return;
+            }
+            
+            data.activity.forEach(function(log) {
+                const row = `
+                    <tr>
+                        <td>${formatDateTime(log.created_at)}</td>
+                        <td><span class="badge bg-secondary">${log.action}</span></td>
+                        <td>${log.inventory_id || '-'}</td>
+                        <td>${log.operator || 'System'}</td>
+                        <td>${log.details || '-'}</td>
+                    </tr>
+                `;
+                tbody.append(row);
+            });
+        }
+    });
+}
+
+function formatCurrency(value) {
+    return new Intl.NumberFormat('sv-SE', {
+        style: 'currency',
+        currency: 'SEK',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0
+    }).format(value);
+}
+
+function formatDateTime(dateStr) {
+    const date = new Date(dateStr);
+    return date.toLocaleString('sv-SE', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+}
+</script>
+{% endblock %}

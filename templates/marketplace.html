@@ -1,0 +1,1109 @@
+{% extends "base.html" %}
+
+{% block title %}Marketplace - Warehouse System{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col">
+            <h1 class="display-4"><i class="bi bi-shop"></i> Marketplace Hantering</h1>
+            <p class="lead">Hantera uppläggning av varor på Blocket och Tradera</p>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card bg-light">
+                <div class="card-body">
+                    <h6 class="card-title text-muted">Ej Upplagda</h6>
+                    <h2 class="mb-0" id="stat-not-listed">0</h2>
+                    <small class="text-muted">varor i lager</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <h6 class="card-title">Blocket</h6>
+                    <h2 class="mb-0" id="stat-blocket">0</h2>
+                    <small>aktiva annonser</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-warning text-white">
+                <div class="card-body">
+                    <h6 class="card-title">Tradera</h6>
+                    <h2 class="mb-0" id="stat-tradera">0</h2>
+                    <small>aktiva annonser</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <h6 class="card-title">Sålda</h6>
+                    <h2 class="mb-0" id="stat-sold">0</h2>
+                    <small>genom marketplace</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabs -->
+    <ul class="nav nav-tabs mb-3" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="not-listed-tab" data-bs-toggle="tab" data-bs-target="#not-listed" type="button">
+                <i class="bi bi-inbox"></i> Ej Upplagda (<span id="not-listed-count">0</span>)
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="active-tab" data-bs-toggle="tab" data-bs-target="#active" type="button">
+                <i class="bi bi-list-check"></i> Aktiva Annonser (<span id="active-count">0</span>)
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="sold-tab" data-bs-toggle="tab" data-bs-target="#sold" type="button">
+                <i class="bi bi-check-circle"></i> Sålda (<span id="sold-count">0</span>)
+            </button>
+        </li>
+    </ul>
+
+    <!-- Tab Content -->
+    <div class="tab-content">
+        <!-- Not Listed Tab -->
+        <div class="tab-pane fade show active" id="not-listed" role="tabpanel">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <input type="text" class="form-control" id="search-not-listed" placeholder="Sök produkt...">
+                        </div>
+                        <div class="col-md-3">
+                            <button class="btn btn-success" id="bulk-create-btn" disabled>
+                                <i class="bi bi-plus-circle"></i> Lägg upp Markerade
+                            </button>
+                        </div>
+                        <div class="col-md-3">
+                            <button class="btn btn-outline-primary" id="select-all-btn">
+                                <i class="bi bi-check-square"></i> Markera Alla
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="not-listed-items"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Active Listings Tab -->
+        <div class="tab-pane fade" id="active" role="tabpanel">
+            <div class="card">
+                <div class="card-body">
+                    <div class="btn-group mb-3" role="group">
+                        <button type="button" class="btn btn-outline-primary active filter-marketplace" data-marketplace="">Alla</button>
+                        <button type="button" class="btn btn-outline-info filter-marketplace" data-marketplace="blocket">Blocket</button>
+                        <button type="button" class="btn btn-outline-warning filter-marketplace" data-marketplace="tradera">Tradera</button>
+                    </div>
+
+                    <div id="active-listings"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sold Tab -->
+        <div class="tab-pane fade" id="sold" role="tabpanel">
+            <div class="card">
+                <div class="card-body">
+                    <div id="sold-listings"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Create Listing Modal -->
+<div class="modal fade" id="createListingModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Lägg upp på Marketplace</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="create-listing-form">
+                    <div class="mb-3">
+                        <label class="form-label">Vara</label>
+                        <input type="text" class="form-control" id="modal-inventory-id" readonly>
+                        <input type="hidden" id="modal-item-id">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Marketplace</label>
+                        <select class="form-select" id="modal-marketplace" required>
+                            <option value="">Välj marketplace...</option>
+                            <option value="blocket">Blocket</option>
+                            <option value="tradera">Tradera</option>
+                            <option value="facebook">Facebook Marketplace</option>
+                            <option value="other">Annan</option>
+                        </select>
+                    </div>
+                    <div class="mb-3" id="other-marketplace-container" style="display: none;">
+                        <label class="form-label">Ange marketplace namn</label>
+                        <input type="text" class="form-control" id="modal-marketplace-other" placeholder="T.ex. Instagram, Lokal försäljning...">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Pris (kr)</label>
+                        <input type="number" class="form-control" id="modal-price">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Beskrivning (valfri)</label>
+                        <textarea class="form-control" id="modal-description" rows="3"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Avbryt</button>
+                <button type="button" class="btn btn-success" id="confirm-create-listing">Lägg upp</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bulk Create Modal -->
+<div class="modal fade" id="bulkCreateModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Lägg upp <span id="bulk-count">0</span> varor på Marketplace</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label class="form-label">Marketplace</label>
+                    <select class="form-select" id="bulk-marketplace" required>
+                        <option value="">Välj marketplace...</option>
+                        <option value="blocket">Blocket</option>
+                        <option value="tradera">Tradera</option>
+                        <option value="facebook">Facebook Marketplace</option>
+                        <option value="other">Annan</option>
+                    </select>
+                </div>
+                <div class="mb-3" id="bulk-other-marketplace-container" style="display: none;">
+                    <label class="form-label">Ange marketplace namn</label>
+                    <input type="text" class="form-control" id="bulk-marketplace-other" placeholder="T.ex. Instagram, Lokal försäljning...">
+                </div>
+                <div class="alert alert-info">
+                    <i class="bi bi-info-circle"></i> Alla markerade varor kommer läggas upp med sina befintliga priser och beskrivningar.
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Avbryt</button>
+                <button type="button" class="btn btn-success" id="confirm-bulk-create">Lägg upp alla</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Create Order Modal -->
+<div class="modal fade" id="createOrderModal" tabindex="-1">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Skapa Order från Marketplace</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <!-- Left Column: Cart Items -->
+                    <div class="col-md-6">
+                        <h6 class="mb-3">Varor i order (<span id="order-total-qty">0</span> st)</h6>
+                        <div id="order-cart-items" class="mb-3" style="max-height: 400px; overflow-y: auto;">
+                            <!-- Cart items loaded dynamically -->
+                        </div>
+                        
+                        <div class="alert alert-success">
+                            <strong>Totalt pris: <span id="order-total-price">0 kr</span></strong>
+                        </div>
+                    </div>
+                    
+                    <!-- Right Column: Customer Info -->
+                    <div class="col-md-6">
+                        <h6 class="mb-3">Kunduppgifter</h6>
+                        
+                        <!-- Search existing customer -->
+                        <div class="mb-3">
+                            <label class="form-label">Sök befintlig kund</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="order-customer-search" placeholder="Namn, e-post eller telefon...">
+                                <button class="btn btn-outline-secondary" type="button" onclick="searchOrderCustomers()">
+                                    <i class="bi bi-search"></i>
+                                </button>
+                            </div>
+                            <div id="order-customer-results" class="mt-2" style="display:none; max-height: 200px; overflow-y: auto;"></div>
+                        </div>
+                        
+                        <div class="text-center mb-3">
+                            <small class="text-muted">ELLER ange ny kund</small>
+                        </div>
+                        
+                        <input type="hidden" id="order-customer-id">
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Namn *</label>
+                                <input type="text" class="form-control" id="order-customer-name" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Telefon</label>
+                                <input type="tel" class="form-control" id="order-customer-phone">
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">E-post</label>
+                            <input type="email" class="form-control" id="order-customer-email">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Adress</label>
+                            <input type="text" class="form-control" id="order-customer-address">
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Postnummer</label>
+                                <input type="text" class="form-control" id="order-customer-postal">
+                            </div>
+                            <div class="col-md-5 mb-3">
+                                <label class="form-label">Stad</label>
+                                <input type="text" class="form-control" id="order-customer-city">
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label class="form-label">Land</label>
+                                <input type="text" class="form-control" id="order-customer-country" value="Sverige">
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Fraktmetod</label>
+                            <select class="form-select" id="order-shipping-method">
+                                <option value="">Välj fraktmetod...</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Avbryt</button>
+                <button type="button" class="btn btn-primary" onclick="createOrderFromCart()">
+                    <i class="bi bi-cart-check"></i> Skapa Order
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.customer-result-item {
+    padding: 10px;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.customer-result-item:hover {
+    background-color: #f8f9fa;
+    border-color: #0d6efd;
+}
+</style>
+
+<style>
+.item-card {
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 10px;
+    transition: all 0.2s;
+}
+
+.item-card:hover {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.item-card.selected {
+    border-color: #0d6efd;
+    background-color: #f8f9fa;
+}
+
+.item-image {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+.marketplace-badge {
+    font-size: 0.85rem;
+    padding: 0.35em 0.65em;
+}
+</style>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+let notListedItems = [];
+let activeListings = [];
+let soldListings = [];
+let selectedItems = new Set();
+let marketplaceCart = []; // Cart for marketplace items
+
+$(document).ready(function() {
+    loadStatistics();
+    loadNotListedItems();
+    loadActiveListings();
+    loadSoldListings();
+    
+    $('#search-not-listed').on('input', filterNotListed);
+    $('#select-all-btn').click(toggleSelectAll);
+    $('#bulk-create-btn').click(openBulkCreateModal);
+    $('#confirm-create-listing').click(createListing);
+    $('#confirm-bulk-create').click(confirmBulkCreate);
+    $('.filter-marketplace').click(filterActiveListings);
+    $('#create-order-from-cart-btn').click(openCreateOrderModal);
+    
+    // Single marketplace dropdown handler
+    $('#modal-marketplace').change(function() {
+        if ($(this).val() === 'other') {
+            $('#other-marketplace-container').show();
+        } else {
+            $('#other-marketplace-container').hide();
+        }
+    });
+    
+    // Bulk marketplace dropdown handler
+    $('#bulk-marketplace').change(function() {
+        if ($(this).val() === 'other') {
+            $('#bulk-other-marketplace-container').show();
+        } else {
+            $('#bulk-other-marketplace-container').hide();
+        }
+    });
+    
+    // Customer search on Enter
+    $('#order-customer-search').keypress(function(e) {
+        if (e.which == 13) {
+            searchOrderCustomers();
+        }
+    });
+});
+
+function loadStatistics() {
+    $.get('/api/marketplace/statistics', function(data) {
+        if (data.success) {
+            $('#stat-not-listed').text(data.stats.not_listed || 0);
+            $('#stat-blocket').text(data.stats.blocket || 0);
+            $('#stat-tradera').text(data.stats.tradera || 0);
+            $('#stat-sold').text(data.stats.sold || 0);
+        }
+    });
+}
+
+function loadNotListedItems() {
+    $.get('/api/marketplace/not-listed', function(data) {
+        if (data.success) {
+            notListedItems = data.items || [];
+            $('#not-listed-count').text(notListedItems.length);
+            displayNotListedItems(notListedItems);
+        }
+    });
+}
+
+function displayNotListedItems(items) {
+    const container = $('#not-listed-items');
+    container.empty();
+    
+    if (items.length === 0) {
+        container.html('<div class="alert alert-info">Inga varor att lägga upp. Alla varor är redan upplagda eller sålda!</div>');
+        return;
+    }
+    
+    items.forEach(item => {
+        const isSelected = selectedItems.has(item.id);
+        const imageSrc = (item.image_cropped && item.image_cropped !== 'null' && item.image_cropped !== 'undefined' && item.image_cropped.trim() !== '') ? `/static/uploads/${item.image_cropped}` :
+                        (item.image_original && item.image_original !== 'null' && item.image_original !== 'undefined' && item.image_original.trim() !== '') ? `/static/uploads/${item.image_original}` :
+                        '/static/uploads/placeholder.svg';
+        
+        const card = $(`
+            <div class="item-card ${isSelected ? 'selected' : ''}" data-item-id="${item.id}">
+                <div class="row align-items-center">
+                    <div class="col-auto">
+                        <input type="checkbox" class="form-check-input item-checkbox" ${isSelected ? 'checked' : ''}>
+                    </div>
+                    <div class="col-auto">
+                        <img src="${imageSrc}" class="item-image" alt="Product" onerror="this.onerror=null; this.src='/static/uploads/placeholder.svg'">
+                    </div>
+                    <div class="col">
+                        <h6 class="mb-1"><strong>${item.inventory_id}</strong></h6>
+                        <p class="mb-1">${item.description || '-'}</p>
+                        <div>
+                            <span class="badge bg-secondary">${item.status}</span>
+                            ${item.location_code ? `<span class="badge bg-info">Plats: ${item.location_code}</span>` : ''}
+                            ${item.quantity > 1 ? `<span class="badge bg-primary">${item.quantity} st</span>` : ''}
+                        </div>
+                    </div>
+                    <div class="col-auto text-end">
+                        <h5 class="text-success mb-2">${item.price} kr</h5>
+                        <button class="btn btn-sm btn-success list-single-btn" data-item-id="${item.id}">
+                            <i class="bi bi-plus-circle"></i> Lägg upp
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `);
+        
+        card.find('.item-checkbox').change(function() {
+            if (this.checked) {
+                selectedItems.add(item.id);
+                card.addClass('selected');
+            } else {
+                selectedItems.delete(item.id);
+                card.removeClass('selected');
+            }
+            updateBulkButton();
+        });
+        
+        card.find('.list-single-btn').click(() => openCreateListingModal(item));
+        
+        container.append(card);
+    });
+}
+
+function filterNotListed() {
+    const search = $('#search-not-listed').val().toLowerCase();
+    const filtered = notListedItems.filter(item => 
+        item.inventory_id.toLowerCase().includes(search) ||
+        (item.description && item.description.toLowerCase().includes(search))
+    );
+    displayNotListedItems(filtered);
+}
+
+function toggleSelectAll() {
+    if (selectedItems.size === notListedItems.length) {
+        selectedItems.clear();
+        $('.item-checkbox').prop('checked', false);
+        $('.item-card').removeClass('selected');
+    } else {
+        selectedItems.clear();
+        notListedItems.forEach(item => selectedItems.add(item.id));
+        $('.item-checkbox').prop('checked', true);
+        $('.item-card').addClass('selected');
+    }
+    updateBulkButton();
+}
+
+function updateBulkButton() {
+    $('#bulk-create-btn').prop('disabled', selectedItems.size === 0);
+    if (selectedItems.size > 0) {
+        $('#bulk-create-btn').html(`<i class="bi bi-plus-circle"></i> Lägg upp Markerade (${selectedItems.size})`);
+    } else {
+        $('#bulk-create-btn').html(`<i class="bi bi-plus-circle"></i> Lägg upp Markerade`);
+    }
+}
+
+function openCreateListingModal(item) {
+    $('#modal-inventory-id').val(item.inventory_id);
+    $('#modal-item-id').val(item.id);
+    $('#modal-price').val(item.price);
+    $('#modal-description').val(item.description || '');
+    $('#createListingModal').modal('show');
+}
+
+function createListing() {
+    let marketplace = $('#modal-marketplace').val();
+    
+    if (!marketplace) {
+        showToast('❌ Välj marketplace', 'error');
+        return;
+    }
+    
+    // If "other" is selected, use the custom name
+    if (marketplace === 'other') {
+        const customName = $('#modal-marketplace-other').val().trim();
+        if (!customName) {
+            showToast('❌ Ange marketplace namn', 'error');
+            return;
+        }
+        marketplace = customName;
+    }
+    
+    const data = {
+        item_id: $('#modal-item-id').val(),
+        marketplace: marketplace,
+        price: parseFloat($('#modal-price').val()),
+        description: $('#modal-description').val()
+    };
+    
+    $.ajax({
+        url: '/api/marketplace/listings',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(data),
+        success: function(response) {
+            if (response.success) {
+                showToast('✓ Annons skapad!', 'success');
+                $('#createListingModal').modal('hide');
+                loadStatistics();
+                loadNotListedItems();
+                loadActiveListings();
+            } else {
+                showToast('❌ Fel: ' + response.error, 'error');
+            }
+        },
+        error: function() {
+            showToast('❌ Kunde inte skapa annons', 'error');
+        }
+    });
+}
+
+function searchOrderCustomers() {
+    const query = $('#order-customer-search').val().trim();
+    if (!query) {
+        showToast('❌ Ange sökterm', 'warning');
+        return;
+    }
+    
+    $.get(`/api/customers/search?q=${encodeURIComponent(query)}`, function(data) {
+        const results = $('#order-customer-results');
+        results.empty();
+        
+        if (data.customers && data.customers.length > 0) {
+            results.show();
+            data.customers.forEach(function(customer) {
+                const item = $(`
+                    <div class="customer-result-item">
+                        <strong>${customer.name}</strong><br>
+                        <small class="text-muted">${customer.address || ''}, ${customer.postal_code || ''} ${customer.city || ''}</small><br>
+                        <small>${customer.phone || ''} ${customer.email || ''}</small>
+                    </div>
+                `);
+                item.click(() => selectOrderCustomer(customer));
+                results.append(item);
+            });
+        } else {
+            results.html('<div class="alert alert-info">Ingen kund hittades</div>').show();
+        }
+    });
+}
+
+function selectOrderCustomer(customer) {
+    $('#order-customer-id').val(customer.id);
+    $('#order-customer-name').val(customer.name);
+    $('#order-customer-address').val(customer.address || '');
+    $('#order-customer-postal').val(customer.postal_code || '');
+    $('#order-customer-city').val(customer.city || '');
+    $('#order-customer-country').val(customer.country || 'Sverige');
+    $('#order-customer-phone').val(customer.phone || '');
+    $('#order-customer-email').val(customer.email || '');
+    $('#order-customer-results').hide();
+    showToast(`✓ Kund vald: ${customer.name}`, 'success');
+}
+
+function openBulkCreateModal() {
+    if (selectedItems.size === 0) return;
+    
+    $('#bulk-count').text(selectedItems.size);
+    $('#bulk-marketplace').val('');
+    $('#bulk-marketplace-other').val('');
+    $('#bulk-other-marketplace-container').hide();
+    
+    $('#bulkCreateModal').modal('show');
+}
+
+function confirmBulkCreate() {
+    let marketplace = $('#bulk-marketplace').val();
+    
+    if (!marketplace) {
+        showToast('❌ Välj marketplace', 'error');
+        return;
+    }
+    
+    // If "other" is selected, use the custom name
+    if (marketplace === 'other') {
+        const customName = $('#bulk-marketplace-other').val().trim();
+        if (!customName) {
+            showToast('❌ Ange marketplace namn', 'error');
+            return;
+        }
+        marketplace = customName;
+    }
+    
+    const itemIds = Array.from(selectedItems);
+    let completed = 0;
+    let errors = 0;
+    
+    $('#bulkCreateModal').modal('hide');
+    showToast(`Lägger upp ${itemIds.length} varor på ${marketplace}...`, 'info');
+    
+    itemIds.forEach(itemId => {
+        const item = notListedItems.find(i => i.id === itemId);
+        
+        $.ajax({
+            url: '/api/marketplace/listings',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                item_id: itemId,
+                marketplace: marketplace,
+                price: item.price,
+                description: item.description
+            }),
+            success: function() {
+                completed++;
+                checkBulkCompletion();
+            },
+            error: function() {
+                errors++;
+                checkBulkCompletion();
+            }
+        });
+    });
+    
+    function checkBulkCompletion() {
+        if (completed + errors === itemIds.length) {
+            showToast(`✓ Klart! ${completed} upplagda, ${errors} fel`, completed > 0 ? 'success' : 'error');
+            selectedItems.clear();
+            loadStatistics();
+            loadNotListedItems();
+            loadActiveListings();
+        }
+    }
+}
+
+function loadActiveListings() {
+    $.get('/api/marketplace/listings?status=active', function(data) {
+        if (data.success) {
+            activeListings = data.listings || [];
+            $('#active-count').text(activeListings.length);
+            displayActiveListings(activeListings);
+        }
+    });
+}
+
+function displayActiveListings(listings) {
+    const container = $('#active-listings');
+    container.empty();
+    
+    if (listings.length === 0) {
+        container.html('<div class="alert alert-info">Inga aktiva annonser</div>');
+        return;
+    }
+    
+    listings.forEach(listing => {
+        const marketplaceBadge = listing.marketplace === 'blocket' ? 
+            '<span class="badge bg-info marketplace-badge">Blocket</span>' :
+            '<span class="badge bg-warning marketplace-badge">Tradera</span>';
+        
+        // Format the date properly
+        let dateStr = 'N/A';
+        if (listing.listed_at) {
+            try {
+                dateStr = new Date(listing.listed_at).toLocaleDateString('sv-SE');
+            } catch (e) {
+                dateStr = listing.listed_at;
+            }
+        }
+        
+        // Get price and quantity info
+        const price = listing.price || 0;
+        const qty = listing.quantity || 1;
+        const qtyAvailable = listing.quantity_available || qty;
+        const isBulk = qty > 1;
+        
+        // Check if already in cart
+        const inCart = marketplaceCart.some(item => item.listing_id === listing.id);
+        
+        const card = $(`
+            <div class="item-card ${inCart ? 'border-primary' : ''}">
+                <div class="row align-items-center">
+                    <div class="col">
+                        <h6 class="mb-1">
+                            <strong>${listing.inventory_id}</strong> ${marketplaceBadge}
+                            ${isBulk ? `<span class="badge bg-primary ms-1">${qtyAvailable}/${qty} st tillgängliga</span>` : ''}
+                            ${inCart ? '<span class="badge bg-success ms-2">I varukorg</span>' : ''}
+                        </h6>
+                        <p class="mb-1">${listing.description || '-'}</p>
+                        <small class="text-muted">Upplagd: ${dateStr}</small>
+                    </div>
+                    <div class="col-auto text-end">
+                        <h5 class="text-success mb-2">${price} kr${isBulk ? '/st' : ''}</h5>
+                        ${isBulk ? `<small class="text-muted d-block mb-2">Totalt: ${price * qtyAvailable} kr</small>` : ''}
+                        ${inCart ? 
+                            `<button class="btn btn-sm btn-outline-danger remove-from-cart-btn" data-listing-id="${listing.id}">
+                                <i class="bi bi-cart-x"></i> Ta bort
+                            </button>` :
+                            `<button class="btn btn-sm btn-primary add-to-cart-btn" 
+                                data-listing-id="${listing.id}" 
+                                data-item-id="${listing.item_id}" 
+                                data-inventory-id="${listing.inventory_id}" 
+                                data-price="${price}" 
+                                data-marketplace="${listing.marketplace}" 
+                                data-description="${listing.description || ''}"
+                                data-max-qty="${qtyAvailable}">
+                                <i class="bi bi-cart-plus"></i> Lägg till
+                            </button>`
+                        }
+                    </div>
+                </div>
+            </div>
+        `);
+        
+        card.find('.add-to-cart-btn').click(function() {
+            const maxQty = parseInt($(this).data('max-qty'));
+            addToMarketplaceCart({
+                listing_id: $(this).data('listing-id'),
+                item_id: $(this).data('item-id'),
+                inventory_id: $(this).data('inventory-id'),
+                price: $(this).data('price'),
+                marketplace: $(this).data('marketplace'),
+                description: $(this).data('description'),
+                max_quantity: maxQty
+            });
+        });
+        
+        card.find('.remove-from-cart-btn').click(function() {
+            removeFromMarketplaceCart($(this).data('listing-id'));
+        });
+        
+        container.append(card);
+    });
+    
+    updateCartButton();
+}
+
+function filterActiveListings() {
+    $('.filter-marketplace').removeClass('active');
+    $(this).addClass('active');
+    
+    const marketplace = $(this).data('marketplace');
+    const filtered = marketplace ? 
+        activeListings.filter(l => l.marketplace === marketplace) :
+        activeListings;
+    
+    displayActiveListings(filtered);
+}
+
+function addToMarketplaceCart(item) {
+    // Check if already in cart
+    if (marketplaceCart.some(i => i.listing_id === item.listing_id)) {
+        showToast('Redan tillagd i varukorgen', 'warning');
+        return;
+    }
+    
+    // Add quantity field (default 1)
+    item.quantity = 1;
+    
+    marketplaceCart.push(item);
+    showToast(`✓ ${item.inventory_id} tillagd i varukorgen`, 'success');
+    
+    displayActiveListings(activeListings.filter(l => {
+        const marketplace = $('.filter-marketplace.active').data('marketplace');
+        return marketplace ? l.marketplace === marketplace : true;
+    }));
+    
+    updateCartButton();
+}
+
+function removeFromMarketplaceCart(listingId) {
+    const index = marketplaceCart.findIndex(i => i.listing_id === listingId);
+    if (index !== -1) {
+        const item = marketplaceCart[index];
+        marketplaceCart.splice(index, 1);
+        showToast(`${item.inventory_id} borttagen från varukorgen`, 'info');
+        
+        displayActiveListings(activeListings.filter(l => {
+            const marketplace = $('.filter-marketplace.active').data('marketplace');
+            return marketplace ? l.marketplace === marketplace : true;
+        }));
+        
+        updateCartButton();
+    }
+}
+
+function updateCartButton() {
+    const btn = $('#create-order-from-cart-btn');
+    if (!btn.length) {
+        // Create button if it doesn't exist
+        const buttonHtml = `
+            <button class="btn btn-success btn-lg" id="create-order-from-cart-btn" style="position: fixed; bottom: 20px; right: 20px; z-index: 1000; display: none;">
+                <i class="bi bi-cart-check"></i> Skapa Order (<span id="cart-count">0</span>)
+            </button>
+        `;
+        $('body').append(buttonHtml);
+        $('#create-order-from-cart-btn').click(openCreateOrderModal);
+    }
+    
+    if (marketplaceCart.length > 0) {
+        $('#cart-count').text(marketplaceCart.length);
+        $('#create-order-from-cart-btn').fadeIn();
+    } else {
+        $('#create-order-from-cart-btn').fadeOut();
+    }
+}
+
+function openCreateOrderModal() {
+    if (marketplaceCart.length === 0) {
+        showToast('Varukorgen är tom', 'warning');
+        return;
+    }
+    
+    // Display cart items in modal
+    const cartHtml = marketplaceCart.map((item, index) => `
+        <div class="card mb-2">
+            <div class="card-body p-3">
+                <div class="row align-items-center">
+                    <div class="col-md-5">
+                        <strong>${item.inventory_id}</strong><br>
+                        <small class="text-muted">${item.description}</small><br>
+                        <span class="badge bg-${item.marketplace === 'blocket' ? 'info' : 'warning'} mt-1">${item.marketplace}</span>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="input-group input-group-sm">
+                            <button class="btn btn-outline-secondary" onclick="updateCartQuantity(${index}, -1)" type="button">
+                                <i class="bi bi-dash"></i>
+                            </button>
+                            <input type="number" class="form-control text-center" value="${item.quantity}" min="1" max="${item.max_quantity}"
+                                   onchange="setCartQuantity(${index}, parseInt(this.value))" 
+                                   style="max-width: 70px;">
+                            <button class="btn btn-outline-secondary" onclick="updateCartQuantity(${index}, 1)" type="button">
+                                <i class="bi bi-plus"></i>
+                            </button>
+                        </div>
+                        <small class="text-muted d-block mt-1">Max: ${item.max_quantity} st</small>
+                    </div>
+                    <div class="col-md-2 text-end">
+                        <div><strong>${item.price} kr/st</strong></div>
+                        <div class="text-success"><strong>${item.price * item.quantity} kr</strong></div>
+                    </div>
+                    <div class="col-md-2 text-end">
+                        <button class="btn btn-sm btn-outline-danger" onclick="removeFromMarketplaceCart(${item.listing_id}); openCreateOrderModal();" type="button">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `).join('');
+    
+    $('#order-cart-items').html(cartHtml);
+    
+    const totalPrice = marketplaceCart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    const totalQty = marketplaceCart.reduce((sum, item) => sum + item.quantity, 0);
+    $('#order-total-price').text(totalPrice.toLocaleString('sv-SE') + ' kr');
+    $('#order-total-qty').text(totalQty);
+    
+    // Clear customer fields only if not already filled
+    if (!$('#order-customer-name').val()) {
+        $('#order-customer-name').val('');
+        $('#order-customer-address').val('');
+        $('#order-customer-postal').val('');
+        $('#order-customer-city').val('');
+        $('#order-customer-country').val('Sverige');
+        $('#order-customer-phone').val('');
+        $('#order-customer-email').val('');
+    }
+    
+    // Load shipping methods
+    loadShippingMethodsForOrder();
+    
+    $('#createOrderModal').modal('show');
+}
+
+function setCartQuantity(index, newQty) {
+    const item = marketplaceCart[index];
+    
+    if (isNaN(newQty) || newQty < 1) {
+        showToast('❌ Ange ett giltigt antal', 'error');
+        openCreateOrderModal();
+        return;
+    }
+    
+    if (newQty > item.max_quantity) {
+        showToast(`❌ Max ${item.max_quantity} st tillgängliga`, 'error');
+        openCreateOrderModal();
+        return;
+    }
+    
+    item.quantity = newQty;
+    openCreateOrderModal();
+}
+
+function updateCartQuantity(index, delta) {
+    const item = marketplaceCart[index];
+    const newQty = item.quantity + parseInt(delta);
+    
+    // Validate against max_quantity
+    if (newQty < 1) {
+        showToast('❌ Antal kan inte vara mindre än 1', 'error');
+        return;
+    }
+    
+    if (newQty > item.max_quantity) {
+        showToast(`❌ Max ${item.max_quantity} st tillgängliga`, 'error');
+        return;
+    }
+    
+    item.quantity = newQty;
+    
+    // Refresh modal to show updated prices
+    openCreateOrderModal();
+}
+
+function loadShippingMethodsForOrder() {
+    $.get('/api/shipping-methods?active_only=true', function(data) {
+        const select = $('#order-shipping-method');
+        select.empty();
+        select.append('<option value="">Välj fraktmetod...</option>');
+        
+        if (data.methods && data.methods.length > 0) {
+            data.methods.forEach(function(method) {
+                select.append(`<option value="${method.name}">${method.name}</option>`);
+            });
+        }
+    });
+}
+
+function createOrderFromCart() {
+    if (marketplaceCart.length === 0) {
+        showToast('❌ Varukorgen är tom', 'error');
+        return;
+    }
+    
+    // Validate customer info
+    const customerName = $('#order-customer-name').val().trim();
+    if (!customerName) {
+        showToast('❌ Ange kundnamn', 'error');
+        return;
+    }
+    
+    // Get marketplaces for notes
+    const marketplaces = [...new Set(marketplaceCart.map(item => item.marketplace))].join(', ');
+    
+    const orderData = {
+        items: marketplaceCart.map(item => ({
+            id: parseInt(item.item_id),
+            quantity: item.quantity
+        })),
+        customer: {
+            id: $('#order-customer-id').val() || null,  // Include customer ID if existing
+            name: customerName,
+            address: $('#order-customer-address').val(),
+            postal_code: $('#order-customer-postal').val(),
+            city: $('#order-customer-city').val(),
+            country: $('#order-customer-country').val() || 'Sverige',
+            phone: $('#order-customer-phone').val(),
+            email: $('#order-customer-email').val()
+        },
+        shipping_method: $('#order-shipping-method').val(),
+        payment_status: 'unpaid',
+        notes: `Såld via ${marketplaces}`
+    };
+    
+    // Create order
+    $.ajax({
+        url: '/api/orders',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(orderData),
+        success: function(response) {
+            if (response.success) {
+                // Order created, now mark all listings as sold
+                let completed = 0;
+                const total = marketplaceCart.length;
+                
+                marketplaceCart.forEach(item => {
+                    $.ajax({
+                        url: `/api/marketplace/listings/${item.listing_id}/mark-sold`,
+                        type: 'POST',
+                        success: function(markSoldResponse) {
+                            completed++;
+                            if (completed === total) {
+                                showToast(`✓ Order skapad! (${response.order_number})`, 'success');
+                                $('#createOrderModal').modal('hide');
+                                marketplaceCart = [];
+                                updateCartButton();
+                                loadStatistics();
+                                loadActiveListings();
+                                loadSoldListings();
+                            }
+                        }
+                    });
+                });
+            } else {
+                showToast('❌ Kunde inte skapa order: ' + response.error, 'error');
+            }
+        },
+        error: function() {
+            showToast('❌ Kunde inte skapa order', 'error');
+        }
+    });
+}
+
+function loadSoldListings() {
+    $.get('/api/marketplace/listings?status=sold', function(data) {
+        if (data.success) {
+            soldListings = data.listings || [];
+            $('#sold-count').text(soldListings.length);
+            displaySoldListings(soldListings);
+        }
+    });
+}
+
+function displaySoldListings(listings) {
+    const container = $('#sold-listings');
+    container.empty();
+    
+    if (listings.length === 0) {
+        container.html('<div class="alert alert-info">Inga sålda annonser</div>');
+        return;
+    }
+    
+    listings.forEach(listing => {
+        const marketplaceBadge = listing.marketplace === 'blocket' ? 
+            '<span class="badge bg-info marketplace-badge">Blocket</span>' :
+            '<span class="badge bg-warning marketplace-badge">Tradera</span>';
+        
+        // Format the sold date properly
+        let dateStr = 'N/A';
+        if (listing.sold_at) {
+            try {
+                dateStr = new Date(listing.sold_at).toLocaleDateString('sv-SE');
+            } catch (e) {
+                dateStr = listing.sold_at;
+            }
+        }
+        
+        // Get price
+        const price = listing.price || 0;
+        
+        container.append(`
+            <div class="item-card">
+                <div class="row align-items-center">
+                    <div class="col">
+                        <h6 class="mb-1"><strong>${listing.inventory_id}</strong> ${marketplaceBadge}</h6>
+                        <p class="mb-1">${listing.description || '-'}</p>
+                        <small class="text-muted">Såld: ${dateStr}</small>
+                    </div>
+                    <div class="col-auto text-end">
+                        <h5 class="text-success">${price} kr</h5>
+                    </div>
+                </div>
+            </div>
+        `);
+    });
+}
+</script>
+{% endblock %}

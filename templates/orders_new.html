@@ -1,0 +1,885 @@
+{% extends "base.html" %}
+
+{% block title %}Skapa Order - Warehouse System{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col">
+            <h1 class="display-4"><i class="bi bi-cart-plus"></i> Skapa Order</h1>
+            <p class="lead">3-stegs orderprocess: Kund → Varor → Bekräfta</p>
+        </div>
+    </div>
+
+    <!-- Progress Steps -->
+    <div class="row mb-4">
+        <div class="col">
+            <div class="d-flex justify-content-between">
+                <div class="step-item active" id="step1-indicator">
+                    <div class="step-number">1</div>
+                    <div class="step-label">Kundinfo</div>
+                </div>
+                <div class="step-line"></div>
+                <div class="step-item" id="step2-indicator">
+                    <div class="step-number">2</div>
+                    <div class="step-label">Lägg till varor</div>
+                </div>
+                <div class="step-line"></div>
+                <div class="step-item" id="step3-indicator">
+                    <div class="step-number">3</div>
+                    <div class="step-label">Bekräfta</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Step 1: Customer Info -->
+    <div id="step1" class="step-content">
+        <div class="row">
+            <div class="col-md-8 mx-auto">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="bi bi-person"></i> Kunduppgifter</h5>
+                        
+                        <!-- Search existing customer -->
+                        <div class="mb-4">
+                            <label class="form-label">Sök befintlig kund</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="customer-search" placeholder="Namn, e-post eller telefon...">
+                                <button class="btn btn-outline-secondary" type="button" id="search-customer-btn">
+                                    <i class="bi bi-search"></i> Sök
+                                </button>
+                            </div>
+                            <div id="customer-results" class="mt-2" style="display:none;"></div>
+                        </div>
+
+                        <div class="text-center mb-3">
+                            <strong>ELLER</strong>
+                        </div>
+
+                        <!-- New customer form -->
+                        <form id="customer-form">
+                            <input type="hidden" id="customer-id">
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Namn *</label>
+                                <input type="text" class="form-control" id="customer-name" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Adress *</label>
+                                <input type="text" class="form-control" id="customer-address" required>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">Postnummer *</label>
+                                    <input type="text" class="form-control" id="customer-postal" required>
+                                </div>
+                                <div class="col-md-8 mb-3">
+                                    <label class="form-label">Stad *</label>
+                                    <input type="text" class="form-control" id="customer-city" required>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Land</label>
+                                <input type="text" class="form-control" id="customer-country" value="Sverige">
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Telefon</label>
+                                    <input type="tel" class="form-control" id="customer-phone">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">E-post</label>
+                                    <input type="email" class="form-control" id="customer-email">
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Anteckningar</label>
+                                <textarea class="form-control" id="customer-notes" rows="2"></textarea>
+                            </div>
+
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    <i class="bi bi-arrow-right"></i> Nästa: Lägg till varor
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Step 2: Add Items -->
+    <div id="step2" class="step-content" style="display:none;">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="bi bi-search"></i> Sök vara</h5>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Inventory ID eller Beskrivning</label>
+                            <input type="text" class="form-control" id="item-search" placeholder="INV-000001 eller sök text...">
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-primary" id="search-item-btn">
+                                <i class="bi bi-search"></i> Sök
+                            </button>
+                            <button class="btn btn-outline-primary" id="scan-item-btn">
+                                <i class="bi bi-upc-scan"></i> Scanna Streckkod
+                            </button>
+                        </div>
+
+                        <div id="item-search-results" class="mt-3"></div>
+                    </div>
+                </div>
+
+                <!-- Customer Summary -->
+                <div class="card">
+                    <div class="card-body">
+                        <h6 class="card-title">Kund</h6>
+                        <p class="mb-1"><strong id="summary-customer-name"></strong></p>
+                        <p class="mb-1 small text-muted" id="summary-customer-address"></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="bi bi-cart"></i> Varor i order</h5>
+                        
+                        <div id="order-items-list">
+                            <div class="text-center text-muted p-4">
+                                <i class="bi bi-inbox" style="font-size: 3rem;"></i>
+                                <p>Inga varor tillagda ännu</p>
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="mb-0">Total:</h5>
+                            <h4 class="mb-0"><span id="order-total">0</span> kr</h4>
+                        </div>
+
+                        <div class="alert alert-info">
+                            <strong>Antal varor:</strong> <span id="order-item-count">0</span> st
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-secondary" id="back-to-step1-btn">
+                                <i class="bi bi-arrow-left"></i> Tillbaka till kundinfo
+                            </button>
+                            <button class="btn btn-success btn-lg" id="proceed-to-step3-btn" disabled>
+                                <i class="bi bi-arrow-right"></i> Nästa: Granska order
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Step 3: Confirm Order -->
+    <div id="step3" class="step-content" style="display:none;">
+        <div class="row">
+            <div class="col-md-8 mx-auto">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="bi bi-check-circle"></i> Granska och bekräfta order</h5>
+                        
+                        <!-- Customer Info -->
+                        <h6 class="mt-3">Kunduppgifter:</h6>
+                        <div class="alert alert-light">
+                            <strong id="confirm-customer-name"></strong><br>
+                            <span id="confirm-customer-address"></span><br>
+                            <span id="confirm-customer-postal-city"></span><br>
+                            <span id="confirm-customer-country"></span><br>
+                            <span id="confirm-customer-contact"></span>
+                        </div>
+
+                        <!-- Order Items -->
+                        <h6 class="mt-3">Varor (<span id="confirm-item-count"></span> st):</h6>
+                        <div id="confirm-items-list"></div>
+
+                        <!-- Payment & Shipping -->
+                        <h6 class="mt-3">Betalning & Frakt:</h6>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Betalningsstatus</label>
+                                <select class="form-select" id="payment-status">
+                                    <option value="unpaid">Obetald</option>
+                                    <option value="paid">Betald</option>
+                                    <option value="partial">Delvis betald</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Fraktmetod</label>
+                                <select class="form-select" id="shipping-method">
+                                    <option value="">Välj fraktmetod...</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Spårningsnummer</label>
+                            <input type="text" class="form-control" id="tracking-number" placeholder="Lägg till senare om du vill">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Anteckningar</label>
+                            <textarea class="form-control" id="order-notes" rows="2" placeholder="Extra information om ordern..."></textarea>
+                        </div>
+
+                        <!-- Total -->
+                        <div class="alert alert-success">
+                            <h5 class="mb-0">Total belopp: <strong><span id="confirm-total"></span> kr</strong></h5>
+                        </div>
+
+                        <!-- Actions -->
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-secondary" id="back-to-step2-btn">
+                                <i class="bi bi-arrow-left"></i> Tillbaka till varor
+                            </button>
+                            <button class="btn btn-success btn-lg" id="create-order-btn">
+                                <i class="bi bi-check-circle"></i> Skapa Order
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Message -->
+    <div id="order-success" class="step-content" style="display:none;">
+        <div class="row">
+            <div class="col-md-6 mx-auto">
+                <div class="card border-success">
+                    <div class="card-body text-center">
+                        <i class="bi bi-check-circle-fill text-success" style="font-size: 4rem;"></i>
+                        <h3 class="mt-3">Order skapad!</h3>
+                        <h4 class="text-muted" id="created-order-number"></h4>
+                        
+                        <div class="alert alert-light mt-3">
+                            <div class="mb-2">✓ Kundinfo sparad</div>
+                            <div class="mb-2">✓ <span id="success-item-count"></span> varor tillagda</div>
+                            <div class="mb-2">✓ Varor markerade som "sold"</div>
+                            <div id="marketplace-update-msg">✓ Marketplace-listings uppdaterade</div>
+                        </div>
+
+                        <div class="d-grid gap-2 mt-4">
+                            <a href="/packing" class="btn btn-primary">
+                                <i class="bi bi-box-seam"></i> Gå till Packning
+                            </a>
+                            <button class="btn btn-outline-primary" id="print-packing-slip-btn">
+                                <i class="bi bi-printer"></i> Skriv ut Packlista
+                            </button>
+                            <button class="btn btn-success" id="create-another-order-btn">
+                                <i class="bi bi-plus-circle"></i> Skapa Ny Order
+                            </button>
+                            <a href="/orders" class="btn btn-secondary">
+                                <i class="bi bi-list"></i> Se Alla Ordrar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.step-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+}
+
+.step-number {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: #e9ecef;
+    color: #6c757d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+}
+
+.step-item.active .step-number {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.step-item.completed .step-number {
+    background: #28a745;
+    color: white;
+}
+
+.step-label {
+    font-size: 0.9rem;
+    color: #6c757d;
+}
+
+.step-item.active .step-label {
+    color: #667eea;
+    font-weight: bold;
+}
+
+.step-line {
+    height: 2px;
+    background: #e9ecef;
+    flex: 1;
+    margin: 0 10px;
+    margin-top: 25px;
+}
+
+.customer-result-item {
+    padding: 10px;
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.customer-result-item:hover {
+    background: #f8f9fa;
+    border-color: #667eea;
+}
+
+.item-card {
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+    padding: 15px;
+    margin-bottom: 10px;
+    display: flex;
+    gap: 15px;
+}
+
+.item-card img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.item-card-info {
+    flex: 1;
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+let currentStep = 1;
+let customerData = {};
+let orderItems = [];
+let createdOrderId = null;
+
+$(document).ready(function() {
+    setupEventHandlers();
+    loadShippingMethods();
+});
+
+function loadShippingMethods() {
+    $.get('/api/shipping-methods?active_only=true', function(data) {
+        const select = $('#shipping-method');
+        select.empty();
+        select.append('<option value="">Välj fraktmetod...</option>');
+        
+        if (data.methods && data.methods.length > 0) {
+            data.methods.forEach(function(method) {
+                select.append(`<option value="${method.name}">${method.name}</option>`);
+            });
+        }
+    });
+}
+
+function setupEventHandlers() {
+    $('#customer-form').submit(saveCustomerAndProceed);
+    $('#search-customer-btn').click(searchCustomers);
+    $('#customer-search').on('keypress', function(e) {
+        if (e.which == 13) {
+            e.preventDefault();
+            searchCustomers();
+        }
+    });
+    
+    $('#search-item-btn').click(searchItems);
+    $('#scan-item-btn').click(enableScanning);
+    $('#item-search').on('keypress', function(e) {
+        if (e.which == 13) {
+            e.preventDefault();
+            searchItems();
+        }
+    });
+    
+    $('#back-to-step1-btn').click(() => goToStep(1));
+    $('#back-to-step2-btn').click(() => goToStep(2));
+    $('#proceed-to-step3-btn').click(() => goToStep(3));
+    $('#create-order-btn').click(createOrder);
+    $('#create-another-order-btn').click(resetForm);
+    $('#print-packing-slip-btn').click(printPackingSlip);
+}
+
+function goToStep(step) {
+    // Hide all steps
+    $('.step-content').hide();
+    $('.step-item').removeClass('active completed');
+    
+    // Mark completed steps
+    for (let i = 1; i < step; i++) {
+        $(`#step${i}-indicator`).addClass('completed');
+    }
+    
+    // Show current step
+    $(`#step${step}`).show();
+    $(`#step${step}-indicator`).addClass('active');
+    
+    currentStep = step;
+    
+    // Update step 3 summary if going there
+    if (step === 3) {
+        updateStep3Summary();
+    }
+}
+
+function searchCustomers() {
+    const query = $('#customer-search').val().trim();
+    if (!query) return;
+    
+    $.get(`/api/customers/search?q=${encodeURIComponent(query)}`, function(data) {
+        const results = $('#customer-results');
+        results.empty();
+        
+        if (data.customers && data.customers.length > 0) {
+            results.show();
+            data.customers.forEach(function(customer) {
+                const item = $(`
+                    <div class="customer-result-item">
+                        <strong>${customer.name}</strong><br>
+                        <small class="text-muted">${customer.address}, ${customer.postal_code} ${customer.city}</small><br>
+                        <small>${customer.phone || ''} ${customer.email || ''}</small>
+                    </div>
+                `);
+                item.click(() => selectCustomer(customer));
+                results.append(item);
+            });
+        } else {
+            results.html('<div class="alert alert-info">Ingen kund hittades</div>').show();
+        }
+    });
+}
+
+function selectCustomer(customer) {
+    $('#customer-id').val(customer.id);
+    $('#customer-name').val(customer.name);
+    $('#customer-address').val(customer.address);
+    $('#customer-postal').val(customer.postal_code);
+    $('#customer-city').val(customer.city);
+    $('#customer-country').val(customer.country);
+    $('#customer-phone').val(customer.phone || '');
+    $('#customer-email').val(customer.email || '');
+    $('#customer-notes').val(customer.notes || '');
+    $('#customer-results').hide();
+    showToast(`Kund vald: ${customer.name}`, 'success');
+}
+
+function saveCustomerAndProceed(e) {
+    e.preventDefault();
+    
+    customerData = {
+        id: $('#customer-id').val() || null,
+        name: $('#customer-name').val(),
+        address: $('#customer-address').val(),
+        postal_code: $('#customer-postal').val(),
+        city: $('#customer-city').val(),
+        country: $('#customer-country').val(),
+        phone: $('#customer-phone').val(),
+        email: $('#customer-email').val(),
+        notes: $('#customer-notes').val()
+    };
+    
+    // Update summary
+    $('#summary-customer-name').text(customerData.name);
+    $('#summary-customer-address').text(`${customerData.address}, ${customerData.postal_code} ${customerData.city}`);
+    
+    goToStep(2);
+}
+
+function searchItems() {
+    const query = $('#item-search').val().trim();
+    if (!query) return;
+    
+    $.get(`/api/items/search?q=${encodeURIComponent(query)}`, function(data) {
+        const results = $('#item-search-results');
+        results.empty();
+        
+        if (data.items && data.items.length > 0) {
+            data.items.forEach(function(item) {
+                // Only show items that are in_stock or uploaded (not sold/shipped)
+                if (item.status !== 'in_stock' && item.status !== 'uploaded') {
+                    return;
+                }
+                
+                const available = item.quantity_available || item.quantity || 1;
+                const stockBadge = available > 0 
+                    ? `<span class="badge bg-success">${available} st i lager</span>` 
+                    : `<span class="badge bg-danger">Slut i lager</span>`;
+                
+                // Determine image source
+                let imageSrc = '/static/uploads/placeholder.svg';
+                if (item.image_cropped && item.image_cropped !== 'null' && item.image_cropped !== 'undefined' && item.image_cropped.trim() !== '') {
+                    imageSrc = `/static/uploads/${item.image_cropped}`;
+                } else if (item.image_original && item.image_original !== 'null' && item.image_original !== 'undefined' && item.image_original.trim() !== '') {
+                    imageSrc = `/static/uploads/${item.image_original}`;
+                }
+                
+                const itemDiv = $(`
+                    <div class="card mb-2" style="cursor: pointer; ${available <= 0 ? 'opacity: 0.5;' : ''}">
+                        <div class="card-body p-2">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="d-flex">
+                                    <img src="${imageSrc}" alt="Product" 
+                                         style="width: 50px; height: 50px; object-fit: cover; margin-right: 10px; border-radius: 4px;"
+                                         onerror="this.onerror=null; this.src='/static/uploads/placeholder.svg'">
+                                    <div>
+                                        <strong>${item.inventory_id}</strong><br>
+                                        <small>${item.description}</small><br>
+                                        <strong class="text-success">${item.price} kr</strong>
+                                    </div>
+                                </div>
+                                <div class="text-end">
+                                    ${stockBadge}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `);
+                
+                if (available > 0) {
+                    itemDiv.click(() => addItemToOrder(item));
+                }
+                
+                results.append(itemDiv);
+            });
+        } else {
+            results.html('<div class="alert alert-warning">Ingen vara hittades</div>');
+        }
+    });
+}
+
+function enableScanning() {
+    $('#item-search').focus();
+    showToast('Scanna streckkod...', 'info');
+}
+
+function addItemToOrder(item) {
+    const available = item.quantity_available || item.quantity || 1;
+    
+    // Check if already added
+    const existingItem = orderItems.find(i => i.id === item.id);
+    
+    if (existingItem) {
+        const currentQty = existingItem.quantity || 1;
+        const remainingStock = available - currentQty;
+        
+        if (remainingStock <= 0) {
+            showToast(`❌ ${item.inventory_id} - Slut i lager! (${available} st finns, ${currentQty} st redan i order)`, 'error');
+            return;
+        }
+        
+        // Just add 1 more
+        existingItem.quantity = currentQty + 1;
+        updateOrderItemsList();
+        showToast(`+1 st ${item.inventory_id} (Nu ${existingItem.quantity} st i ordern)`, 'success');
+        return;
+    }
+    
+    // Check stock before adding first item
+    if (available <= 0) {
+        showToast(`❌ ${item.inventory_id} - Slut i lager!`, 'error');
+        return;
+    }
+    
+    // Add first item with quantity 1
+    item.quantity = 1;
+    item.max_available = available;
+    orderItems.push(item);
+    updateOrderItemsList();
+    $('#item-search').val('').focus();
+    showToast(`✓ 1 st ${item.inventory_id} tillagd`, 'success');
+}
+
+function removeItemFromOrder(index) {
+    const item = orderItems[index];
+    showToast(`${item.inventory_id} borttagen`, 'info');
+    orderItems.splice(index, 1);
+    updateOrderItemsList();
+}
+
+function increaseQuantity(index) {
+    const item = orderItems[index];
+    const available = item.max_available || item.quantity_available || item.quantity || 1;
+    const currentQty = item.quantity || 1;
+    
+    if (currentQty >= available) {
+        showToast(`❌ Max ${available} st finns i lager`, 'error');
+        return;
+    }
+    
+    item.quantity = currentQty + 1;
+    updateOrderItemsList();
+    showToast(`+1 st ${item.inventory_id}`, 'success');
+}
+
+function decreaseQuantity(index) {
+    const item = orderItems[index];
+    const currentQty = item.quantity || 1;
+    
+    if (currentQty <= 1) {
+        // Remove item instead of going to 0
+        removeItemFromOrder(index);
+        return;
+    }
+    
+    item.quantity = currentQty - 1;
+    updateOrderItemsList();
+    showToast(`-1 st ${item.inventory_id}`, 'info');
+}
+
+function updateQuantityFromInput(index, value, maxAvailable) {
+    const item = orderItems[index];
+    const newQty = parseInt(value);
+    
+    // Validate input
+    if (isNaN(newQty) || newQty < 1) {
+        showToast('❌ Ange ett giltigt antal (minst 1)', 'error');
+        updateOrderItemsList(); // Reset to current value
+        return;
+    }
+    
+    if (newQty > maxAvailable) {
+        showToast(`❌ Max ${maxAvailable} st finns i lager`, 'error');
+        updateOrderItemsList(); // Reset to current value
+        return;
+    }
+    
+    const oldQty = item.quantity || 1;
+    item.quantity = newQty;
+    updateOrderItemsList();
+    
+    if (newQty > oldQty) {
+        showToast(`✓ Ökade till ${newQty} st ${item.inventory_id}`, 'success');
+    } else if (newQty < oldQty) {
+        showToast(`✓ Minskade till ${newQty} st ${item.inventory_id}`, 'info');
+    }
+}
+
+function updateOrderItemsList() {
+    const list = $('#order-items-list');
+    list.empty();
+    
+    if (orderItems.length === 0) {
+        list.html(`
+            <div class="text-center text-muted p-4">
+                <i class="bi bi-inbox" style="font-size: 3rem;"></i>
+                <p>Inga varor tillagda ännu</p>
+            </div>
+        `);
+        $('#proceed-to-step3-btn').prop('disabled', true);
+    } else {
+        orderItems.forEach(function(item, index) {
+            const qty = item.quantity || 1;
+            const lineTotal = qty * parseFloat(item.price || 0);
+            const available = item.max_available || item.quantity_available || item.quantity || 1;
+            
+            // Determine image source
+            let imageSrc = '/static/uploads/placeholder.svg';
+            if (item.image_cropped && item.image_cropped !== 'null' && item.image_cropped !== 'undefined' && item.image_cropped.trim() !== '') {
+                imageSrc = `/static/uploads/${item.image_cropped}`;
+            } else if (item.image_original && item.image_original !== 'null' && item.image_original !== 'undefined' && item.image_original.trim() !== '') {
+                imageSrc = `/static/uploads/${item.image_original}`;
+            }
+            
+            const itemCard = $(`
+                <div class="item-card">
+                    <div>
+                        <img src="${imageSrc}" alt="Product" onerror="this.onerror=null; this.src='/static/uploads/placeholder.svg'">
+                    </div>
+                    <div class="item-card-info">
+                        <strong>${item.inventory_id}</strong><br>
+                        <small class="text-muted">${item.description}</small><br>
+                        <span class="badge bg-secondary">${item.status}</span>
+                        ${item.location_code ? `<span class="badge bg-info">Plats: ${item.location_code}</span>` : ''}
+                    </div>
+                    <div class="text-center">
+                        <div class="btn-group" role="group">
+                            <button class="btn btn-sm btn-outline-secondary" onclick="decreaseQuantity(${index})" title="Minska antal">
+                                <i class="bi bi-dash"></i>
+                            </button>
+                            <input type="number" 
+                                   class="form-control form-control-sm text-center" 
+                                   style="width: 70px; border-left: 0; border-right: 0;" 
+                                   value="${qty}" 
+                                   min="1" 
+                                   max="${available}"
+                                   data-index="${index}"
+                                   onchange="updateQuantityFromInput(${index}, this.value, ${available})"
+                                   onkeypress="if(event.key === 'Enter') this.blur()"
+                                   title="Ange antal (max ${available} st)">
+                            <button class="btn btn-sm btn-outline-secondary" onclick="increaseQuantity(${index})" title="Öka antal">
+                                <i class="bi bi-plus"></i>
+                            </button>
+                        </div>
+                        <div class="mt-1">
+                            <small class="text-muted">${item.price} kr/st</small>
+                        </div>
+                    </div>
+                    <div class="text-end">
+                        <h5 class="text-success mb-2">${lineTotal.toFixed(0)} kr</h5>
+                        <button class="btn btn-sm btn-danger" onclick="removeItemFromOrder(${index})" title="Ta bort">
+                            <i class="bi bi-trash"></i> Ta bort
+                        </button>
+                    </div>
+                </div>
+            `);
+            list.append(itemCard);
+        });
+        $('#proceed-to-step3-btn').prop('disabled', false);
+    }
+    
+    // Update totals
+    const total = orderItems.reduce((sum, item) => {
+        const qty = item.quantity || 1;
+        return sum + (qty * parseFloat(item.price || 0));
+    }, 0);
+    
+    const totalItems = orderItems.reduce((sum, item) => sum + (item.quantity || 1), 0);
+    
+    $('#order-total').text(total.toFixed(0));
+    $('#order-item-count').text(totalItems);
+}
+
+function updateStep3Summary() {
+    // Customer info
+    $('#confirm-customer-name').text(customerData.name);
+    $('#confirm-customer-address').text(customerData.address);
+    $('#confirm-customer-postal-city').text(`${customerData.postal_code} ${customerData.city}`);
+    $('#confirm-customer-country').text(customerData.country);
+    
+    let contact = [];
+    if (customerData.phone) contact.push(`Tel: ${customerData.phone}`);
+    if (customerData.email) contact.push(`E-post: ${customerData.email}`);
+    $('#confirm-customer-contact').html(contact.join('<br>'));
+    
+    // Items with quantities
+    const itemsList = $('#confirm-items-list');
+    itemsList.empty();
+    orderItems.forEach(function(item) {
+        const qty = item.quantity || 1;
+        const lineTotal = qty * parseFloat(item.price || 0);
+        
+        itemsList.append(`
+            <div class="alert alert-light mb-2">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <strong>${item.inventory_id}</strong> - ${item.description}<br>
+                        <small class="text-muted">${qty} st × ${item.price} kr/st</small>
+                    </div>
+                    <strong class="text-success">${lineTotal.toFixed(0)} kr</strong>
+                </div>
+            </div>
+        `);
+    });
+    
+    // Totals with quantities
+    const totalItems = orderItems.reduce((sum, item) => sum + (item.quantity || 1), 0);
+    const total = orderItems.reduce((sum, item) => {
+        const qty = item.quantity || 1;
+        return sum + (qty * parseFloat(item.price || 0));
+    }, 0);
+    
+    $('#confirm-item-count').text(totalItems);
+    $('#confirm-total').text(total.toFixed(0));
+}
+
+function createOrder() {
+    // Send items as array of {id, quantity}
+    const items_with_qty = orderItems.map(i => ({
+        id: i.id,
+        quantity: i.quantity || 1
+    }));
+    
+    const orderData = {
+        customer: customerData,
+        items: items_with_qty,  // Changed from item_ids
+        payment_status: $('#payment-status').val(),
+        shipping_method: $('#shipping-method').val(),
+        tracking_number: $('#tracking-number').val(),
+        notes: $('#order-notes').val()
+    };
+    
+    $('#create-order-btn').prop('disabled', true).html('<span class="spinner-border spinner-border-sm"></span> Skapar...');
+    
+    $.ajax({
+        url: '/api/orders',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(orderData),
+        success: function(data) {
+            if (data.success) {
+                createdOrderId = data.order_id;
+                $('#created-order-number').text(data.order_number);
+                $('#success-item-count').text(orderItems.length);
+                
+                // Check if any items were on marketplace
+                const hasMarketplace = orderItems.some(i => i.marketplace_status);
+                if (!hasMarketplace) {
+                    $('#marketplace-update-msg').hide();
+                }
+                
+                goToStep(4); // Success screen
+                showToast('Order skapad!', 'success');
+            }
+        },
+        error: function() {
+            showToast('Fel vid skapande av order', 'error');
+            $('#create-order-btn').prop('disabled', false).html('<i class="bi bi-check-circle"></i> Skapa Order');
+        }
+    });
+}
+
+function printPackingSlip() {
+    if (createdOrderId) {
+        window.open(`/api/export/pdf/packing-slip/${createdOrderId}`, '_blank');
+    }
+}
+
+function resetForm() {
+    customerData = {};
+    orderItems = [];
+    createdOrderId = null;
+    $('#customer-form')[0].reset();
+    $('#customer-id').val('');
+    $('#item-search').val('');
+    $('#order-items-list').empty();
+    $('#item-search-results').empty();
+    goToStep(1);
+}
+</script>
+{% endblock %}

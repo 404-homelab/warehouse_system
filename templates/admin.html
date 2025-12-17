@@ -1,0 +1,818 @@
+{% extends "base.html" %}
+{% block title %}Admin - Warehouse System{% endblock %}
+{% block content %}
+<div class="container">
+    <h1 class="display-4 mb-4"><i class="bi bi-gear"></i> Administration</h1>
+    
+    <ul class="nav nav-tabs mb-4" id="adminTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="locations-tab" data-bs-toggle="tab" data-bs-target="#locations" type="button">Hyllplatser</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="boxes-tab" data-bs-toggle="tab" data-bs-target="#boxes" type="button">Kartongstorlekar</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="shipping-tab" data-bs-toggle="tab" data-bs-target="#shipping" type="button">Fraktmetoder</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="barcodes-tab" data-bs-toggle="tab" data-bs-target="#barcodes" type="button">Bulk Streckkoder</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" href="/admin/updates">
+                <i class="bi bi-arrow-repeat"></i> Updates
+            </a>
+        </li>
+    </ul>
+    
+    <div class="tab-content" id="adminTabContent">
+        <!-- Locations Tab -->
+        <div class="tab-pane fade show active" id="locations" role="tabpanel">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Skapa Hyllplats</h5>
+                            <form id="create-location-form">
+                                <div class="mb-3">
+                                    <label class="form-label">Platskod *</label>
+                                    <input type="text" class="form-control" id="location-code" placeholder="A1" required>
+                                    <small class="text-muted">T.ex. A1, B2, C3</small>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Streckkod *</label>
+                                    <input type="text" class="form-control" id="location-barcode" placeholder="LOC-A1-001" required>
+                                    <small class="text-muted">Egen streckkod (måste vara unik)</small>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Beskrivning</label>
+                                    <input type="text" class="form-control" id="location-desc" placeholder="Hylla A, rad 1">
+                                </div>
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <i class="bi bi-plus-circle"></i> Skapa Hyllplats
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h5 class="card-title mb-0">Hyllplatser</h5>
+                                <div class="btn-group">
+                                    <button class="btn btn-sm btn-success" id="print-all-locations-btn">
+                                        <i class="bi bi-printer"></i> Skriv ut Alla
+                                    </button>
+                                    <button class="btn btn-sm btn-info" id="print-selected-locations-btn" disabled>
+                                        <i class="bi bi-printer-fill"></i> Skriv ut Valda (<span id="selected-count">0</span>)
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th><input type="checkbox" id="select-all-locations"></th>
+                                            <th>Kod</th>
+                                            <th>Streckkod</th>
+                                            <th>Beskrivning</th>
+                                            <th>Åtgärd</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="locations-list"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Box Sizes Tab -->
+        <div class="tab-pane fade" id="boxes" role="tabpanel">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Skapa Kartongstorlek</h5>
+                            <form id="create-box-form">
+                                <div class="mb-3">
+                                    <label class="form-label">Namn</label>
+                                    <input type="text" class="form-control" id="box-name" placeholder="Stor kartong" required>
+                                </div>
+                                <div class="row">
+                                    <div class="col-4 mb-3">
+                                        <label class="form-label">Längd (cm)</label>
+                                        <input type="number" class="form-control" id="box-length" step="0.1" required>
+                                    </div>
+                                    <div class="col-4 mb-3">
+                                        <label class="form-label">Bredd (cm)</label>
+                                        <input type="number" class="form-control" id="box-width" step="0.1" required>
+                                    </div>
+                                    <div class="col-4 mb-3">
+                                        <label class="form-label">Höjd (cm)</label>
+                                        <input type="number" class="form-control" id="box-height" step="0.1" required>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Max Vikt (kg)</label>
+                                    <input type="number" class="form-control" id="box-weight" step="0.1" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary w-100">Skapa</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Kartongstorlekar</h5>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Namn</th>
+                                        <th>Mått (L×B×H cm)</th>
+                                        <th>Max Vikt (kg)</th>
+                                        <th>Åtgärd</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="boxes-list"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Shipping Methods Tab -->
+        <div class="tab-pane fade" id="shipping" role="tabpanel">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Lägg till Fraktmetod</h5>
+                            <form id="create-shipping-form">
+                                <div class="mb-3">
+                                    <label class="form-label">Namn</label>
+                                    <input type="text" class="form-control" id="shipping-name" required placeholder="T.ex. PostNord">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Beskrivning</label>
+                                    <input type="text" class="form-control" id="shipping-description" placeholder="T.ex. Standard paketleverans">
+                                </div>
+                                <button type="submit" class="btn btn-success w-100">
+                                    <i class="bi bi-plus-circle"></i> Lägg till
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-8">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Fraktmetoder</h5>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Namn</th>
+                                        <th>Beskrivning</th>
+                                        <th>Status</th>
+                                        <th>Åtgärd</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="shipping-methods-list"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Barcodes Tab -->
+        <div class="tab-pane fade" id="barcodes" role="tabpanel">
+            <div class="row">
+                <div class="col-md-6 mx-auto">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Generera Bulk Streckkoder</h5>
+                            
+                            <!-- History Info -->
+                            <div id="barcode-history" class="alert alert-info" style="display:none;">
+                                <i class="bi bi-info-circle"></i> 
+                                <strong>Senaste:</strong> <span id="last-prefix"></span> 
+                                (<span id="last-range"></span>) - 
+                                <span id="last-count"></span> st
+                                <button type="button" class="btn btn-sm btn-link float-end" id="use-last-btn">
+                                    Använd samma
+                                </button>
+                            </div>
+                            
+                            <form id="generate-barcodes-form">
+                                <div class="mb-3">
+                                    <label class="form-label">Prefix</label>
+                                    <input type="text" class="form-control" id="barcode-prefix" placeholder="CODE" required>
+                                    <small class="text-muted">T.ex. ITEM, PROD, SKU</small>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6 mb-3">
+                                        <label class="form-label">Start Nummer</label>
+                                        <input type="number" class="form-control" id="barcode-start" value="1" required>
+                                    </div>
+                                    <div class="col-6 mb-3">
+                                        <label class="form-label">Slut Nummer</label>
+                                        <input type="number" class="form-control" id="barcode-end" value="30" required>
+                                    </div>
+                                </div>
+                                
+                                <!-- Auto-calculate count -->
+                                <div class="alert alert-secondary mb-3">
+                                    <strong>Antal streckkoder:</strong> <span id="barcode-count-display">30</span> st
+                                    <br>
+                                    <small class="text-muted">Format: <span id="barcode-format-preview">CODE-000001 till CODE-000030</span></small>
+                                </div>
+                                
+                                <!-- Quick actions -->
+                                <div class="mb-3">
+                                    <label class="form-label">Snabbval:</label>
+                                    <div class="btn-group w-100" role="group">
+                                        <button type="button" class="btn btn-outline-secondary btn-sm" onclick="setQuickCount(10)">10 st</button>
+                                        <button type="button" class="btn btn-outline-secondary btn-sm" onclick="setQuickCount(30)">30 st</button>
+                                        <button type="button" class="btn btn-outline-secondary btn-sm" onclick="setQuickCount(50)">50 st</button>
+                                        <button type="button" class="btn btn-outline-secondary btn-sm" onclick="setQuickCount(100)">100 st</button>
+                                    </div>
+                                </div>
+                                
+                                <!-- Continue from last -->
+                                <div id="continue-section" class="mb-3" style="display:none;">
+                                    <button type="button" class="btn btn-info w-100" id="continue-btn">
+                                        <i class="bi bi-arrow-right-circle"></i> Fortsätt från <span id="continue-number"></span>
+                                    </button>
+                                </div>
+                                
+                                <button type="submit" class="btn btn-success w-100">
+                                    <i class="bi bi-file-pdf"></i> Generera PDF
+                                </button>
+                            </form>
+                            
+                            <!-- Generation History -->
+                            <div class="mt-4">
+                                <h6>Tidigare Genererade:</h6>
+                                <div class="table-responsive" style="max-height: 300px; overflow-y: auto;">
+                                    <table class="table table-sm">
+                                        <thead>
+                                            <tr>
+                                                <th>Tid</th>
+                                                <th>Prefix</th>
+                                                <th>Range</th>
+                                                <th>Antal</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="barcode-history-list"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script>
+$(document).ready(function() {
+    loadLocations();
+    loadBoxes();
+    loadShippingMethods();
+    loadBarcodeHistory();
+    
+    $('#create-location-form').submit(createLocation);
+    $('#create-box-form').submit(createBox);
+    $('#create-shipping-form').submit(createShippingMethod);
+    $('#generate-barcodes-form').submit(generateBarcodes);
+    
+    // Print buttons
+    $('#print-all-locations-btn').click(printAllLocations);
+    $('#print-selected-locations-btn').click(printSelectedLocations);
+    
+    // Select all checkbox
+    $('#select-all-locations').change(function() {
+        $('.location-checkbox').prop('checked', $(this).prop('checked'));
+        updatePrintButton();
+    });
+    
+    // Auto-generate barcode suggestion based on location code
+    $('#location-code').on('input', function() {
+        const code = $(this).val().toUpperCase();
+        if (code && !$('#location-barcode').val()) {
+            $('#location-barcode').val('LOC-' + code + '-001');
+        }
+    });
+    
+    // Barcode generation - auto-update preview
+    $('#barcode-prefix, #barcode-start, #barcode-end').on('input', updateBarcodePreview);
+    updateBarcodePreview();
+    
+    // Use last settings
+    $('#use-last-btn').click(useLastSettings);
+    $('#continue-btn').click(continueFromLast);
+});
+
+function loadBarcodeHistory() {
+    $.get('/api/barcodes/history?limit=20', function(data) {
+        if (!data.success || !data.history || data.history.length === 0) {
+            return;
+        }
+        
+        const history = data.history;
+        const last = history[0];
+        
+        $('#barcode-history').show();
+        $('#last-prefix').text(last.prefix);
+        $('#last-range').text(`${last.start}-${last.end}`);
+        $('#last-count').text(last.count);
+        
+        // Show continue option
+        if (last.prefix === $('#barcode-prefix').val() || $('#barcode-prefix').val() === '') {
+            const nextStart = last.end + 1;
+            $('#continue-number').text(nextStart);
+            $('#continue-section').show();
+        }
+        
+        // Update history table
+        const tbody = $('#barcode-history-list');
+        tbody.empty();
+        
+        history.forEach(function(item) {
+            const date = new Date(item.timestamp);
+            tbody.append(`
+                <tr style="cursor: pointer;" onclick='loadHistoryItem(${JSON.stringify(item)})'>
+                    <td><small>${date.toLocaleString('sv-SE', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })}</small></td>
+                    <td><strong>${item.prefix}</strong></td>
+                    <td>${item.start}-${item.end}</td>
+                    <td><span class="badge bg-secondary">${item.count}</span></td>
+                </tr>
+            `);
+        });
+    });
+}
+
+function useLastSettings() {
+    $.get('/api/barcodes/last', function(data) {
+        if (data.success && data.last) {
+            const last = data.last;
+            $('#barcode-prefix').val(last.prefix);
+            $('#barcode-start').val(last.start);
+            $('#barcode-end').val(last.end);
+            updateBarcodePreview();
+        }
+    });
+}
+
+function continueFromLast() {
+    $.get('/api/barcodes/last', function(data) {
+        if (data.success && data.last) {
+            const last = data.last;
+            const nextStart = last.end + 1;
+            const count = last.count;
+            
+            $('#barcode-prefix').val(last.prefix);
+            $('#barcode-start').val(nextStart);
+            $('#barcode-end').val(nextStart + count - 1);
+            updateBarcodePreview();
+            
+            showToast(`Fortsätter från ${nextStart} med ${count} streckkoder`, 'info');
+        }
+    });
+}
+
+function loadHistoryItem(item) {
+    $('#barcode-prefix').val(item.prefix);
+    $('#barcode-start').val(item.start);
+    $('#barcode-end').val(item.end);
+    updateBarcodePreview();
+}
+
+function updateBarcodePreview() {
+    const prefix = $('#barcode-prefix').val() || 'CODE';
+    const start = parseInt($('#barcode-start').val()) || 1;
+    const end = parseInt($('#barcode-end').val()) || 30;
+    const count = end - start + 1;
+    
+    $('#barcode-count-display').text(count);
+    
+    const startFormatted = prefix + '-' + String(start).padStart(6, '0');
+    const endFormatted = prefix + '-' + String(end).padStart(6, '0');
+    $('#barcode-format-preview').text(`${startFormatted} till ${endFormatted}`);
+    
+    // Check if we should show continue option
+    const currentPrefix = $('#barcode-prefix').val();
+    if (currentPrefix) {
+        $.get(`/api/barcodes/last?prefix=${currentPrefix}`, function(data) {
+            if (data.success && data.last) {
+                const nextStart = data.last.end + 1;
+                $('#continue-number').text(nextStart);
+                $('#continue-section').show();
+            } else {
+                $('#continue-section').hide();
+            }
+        });
+    } else {
+        $('#continue-section').hide();
+    }
+}
+
+function setQuickCount(count) {
+    const start = parseInt($('#barcode-start').val()) || 1;
+    $('#barcode-end').val(start + count - 1);
+    updateBarcodePreview();
+}
+
+function loadLocations() {
+    $.get('/api/locations', function(data) {
+        const tbody = $('#locations-list');
+        tbody.empty();
+        
+        if (!data.locations || data.locations.length === 0) {
+            tbody.append('<tr><td colspan="5" class="text-center text-muted">Inga hyllplatser</td></tr>');
+            return;
+        }
+        
+        data.locations.forEach(function(loc) {
+            tbody.append(`
+                <tr>
+                    <td><input type="checkbox" class="location-checkbox" data-location-id="${loc.id}" data-barcode="${loc.barcode_value}" data-code="${loc.location_code}"></td>
+                    <td><strong>${loc.location_code}</strong></td>
+                    <td><code>${loc.barcode_value}</code></td>
+                    <td>${loc.description || '-'}</td>
+                    <td>
+                        <button class="btn btn-sm btn-info" onclick="printSingleLocation(${loc.id}, '${loc.barcode_value}', '${loc.location_code}')">
+                            <i class="bi bi-printer"></i>
+                        </button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteLocation(${loc.id})">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `);
+        });
+        
+        // Add change handler for checkboxes
+        $('.location-checkbox').change(updatePrintButton);
+    });
+}
+
+function updatePrintButton() {
+    const selected = $('.location-checkbox:checked').length;
+    $('#selected-count').text(selected);
+    $('#print-selected-locations-btn').prop('disabled', selected === 0);
+}
+
+function createLocation(e) {
+    e.preventDefault();
+    
+    const data = {
+        location_code: $('#location-code').val().toUpperCase(),
+        barcode_value: $('#location-barcode').val(),
+        description: $('#location-desc').val()
+    };
+    
+    // Validate barcode format
+    if (data.barcode_value.length < 3) {
+        showToast('Streckkod måste vara minst 3 tecken', 'error');
+        return;
+    }
+    
+    $.ajax({
+        url: '/api/locations',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(data),
+        success: function(result) {
+            if (result.success) {
+                showToast('Hyllplats skapad!', 'success');
+                $('#create-location-form')[0].reset();
+                loadLocations();
+                
+                // Ask if user wants to print immediately
+                if (confirm('Vill du skriva ut streckkoden nu?')) {
+                    printSingleLocation(result.location_id, data.barcode_value, data.location_code);
+                }
+            }
+        },
+        error: function(xhr) {
+            const error = xhr.responseJSON?.error || 'Ett fel uppstod';
+            showToast('Fel: ' + error, 'error');
+        }
+    });
+}
+
+function deleteLocation(id) {
+    if (!confirm('Ta bort denna hyllplats?')) return;
+    
+    $.ajax({
+        url: '/api/locations/' + id,
+        type: 'DELETE',
+        success: function() {
+            showToast('Hyllplats borttagen', 'success');
+            loadLocations();
+        }
+    });
+}
+
+function printSingleLocation(locationId, barcode, code) {
+    const locations = [{
+        id: locationId,
+        barcode_value: barcode,
+        location_code: code
+    }];
+    
+    generateLocationsPDF(locations);
+}
+
+function printSelectedLocations() {
+    const selected = [];
+    
+    $('.location-checkbox:checked').each(function() {
+        selected.push({
+            id: $(this).data('location-id'),
+            barcode_value: $(this).data('barcode'),
+            location_code: $(this).data('code')
+        });
+    });
+    
+    if (selected.length === 0) {
+        showToast('Välj minst en hyllplats', 'warning');
+        return;
+    }
+    
+    generateLocationsPDF(selected);
+}
+
+function printAllLocations() {
+    const all = [];
+    
+    $('.location-checkbox').each(function() {
+        all.push({
+            id: $(this).data('location-id'),
+            barcode_value: $(this).data('barcode'),
+            location_code: $(this).data('code')
+        });
+    });
+    
+    if (all.length === 0) {
+        showToast('Inga hyllplatser att skriva ut', 'warning');
+        return;
+    }
+    
+    if (!confirm(`Skriv ut ${all.length} hyllplatser?`)) return;
+    
+    generateLocationsPDF(all);
+}
+
+function generateLocationsPDF(locations) {
+    showToast('Genererar PDF...', 'info');
+    
+    // Create form data with location barcodes
+    const barcodeValues = locations.map(loc => loc.barcode_value);
+    
+    $.ajax({
+        url: '/api/export/pdf/location-labels',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ barcode_values: barcodeValues }),
+        xhrFields: {
+            responseType: 'blob'
+        },
+        success: function(blob) {
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `hyllplatser_${new Date().toISOString().slice(0,10)}.pdf`;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+            showToast(`PDF skapad med ${locations.length} etiketter!`, 'success');
+        },
+        error: function(xhr) {
+            showToast('Fel vid PDF-generering', 'error');
+        }
+    });
+}
+
+function loadBoxes() {
+    $.get('/api/box-sizes', function(data) {
+        const tbody = $('#boxes-list');
+        tbody.empty();
+        
+        if (!data.boxes || data.boxes.length === 0) {
+            tbody.append('<tr><td colspan="4" class="text-center text-muted">Inga kartongstorlekar</td></tr>');
+            return;
+        }
+        
+        data.boxes.forEach(function(box) {
+            tbody.append(`
+                <tr>
+                    <td><strong>${box.name}</strong></td>
+                    <td>${box.inner_length}×${box.inner_width}×${box.inner_height}</td>
+                    <td>${box.max_weight}</td>
+                    <td>
+                        <button class="btn btn-sm btn-danger" onclick="deleteBox(${box.id})">Ta bort</button>
+                    </td>
+                </tr>
+            `);
+        });
+    });
+}
+
+function createBox(e) {
+    e.preventDefault();
+    
+    const data = {
+        name: $('#box-name').val(),
+        inner_length: parseFloat($('#box-length').val()),
+        inner_width: parseFloat($('#box-width').val()),
+        inner_height: parseFloat($('#box-height').val()),
+        max_weight: parseFloat($('#box-weight').val())
+    };
+    
+    $.ajax({
+        url: '/api/box-sizes',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(data),
+        success: function(result) {
+            if (result.success) {
+                showToast('Kartongstorlek skapad!', 'success');
+                $('#create-box-form')[0].reset();
+                loadBoxes();
+            }
+        }
+    });
+}
+
+function deleteBox(id) {
+    if (!confirm('Ta bort denna kartongstorlek?')) return;
+    
+    $.ajax({
+        url: '/api/box-sizes/' + id,
+        type: 'DELETE',
+        success: function() {
+            showToast('Kartongstorlek borttagen', 'success');
+            loadBoxes();
+        }
+    });
+}
+
+// ==================== SHIPPING METHODS ====================
+
+function loadShippingMethods() {
+    $.get('/api/shipping-methods', function(data) {
+        const tbody = $('#shipping-methods-list');
+        tbody.empty();
+        
+        if (data.methods && data.methods.length > 0) {
+            data.methods.forEach(function(method) {
+                const statusBadge = method.active ? 
+                    '<span class="badge bg-success">Aktiv</span>' : 
+                    '<span class="badge bg-secondary">Inaktiv</span>';
+                
+                tbody.append(`
+                    <tr>
+                        <td><strong>${method.name}</strong></td>
+                        <td>${method.description || '-'}</td>
+                        <td>${statusBadge}</td>
+                        <td>
+                            <button class="btn btn-sm btn-warning" onclick="toggleShippingMethod(${method.id}, ${method.active})">
+                                <i class="bi bi-toggle-${method.active ? 'on' : 'off'}"></i>
+                            </button>
+                            <button class="btn btn-sm btn-danger" onclick="deleteShippingMethod(${method.id})">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `);
+            });
+        } else {
+            tbody.append('<tr><td colspan="4" class="text-center text-muted">Inga fraktmetoder</td></tr>');
+        }
+    });
+}
+
+function createShippingMethod(e) {
+    e.preventDefault();
+    
+    const data = {
+        name: $('#shipping-name').val(),
+        description: $('#shipping-description').val()
+    };
+    
+    $.ajax({
+        url: '/api/shipping-methods',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(data),
+        success: function() {
+            loadShippingMethods();
+            $('#create-shipping-form')[0].reset();
+            showToast('Fraktmetod tillagd', 'success');
+        },
+        error: function() {
+            showToast('Fel vid tillägg av fraktmetod', 'error');
+        }
+    });
+}
+
+function toggleShippingMethod(id, currentStatus) {
+    const newStatus = currentStatus ? 0 : 1;
+    
+    $.ajax({
+        url: `/api/shipping-methods/${id}`,
+        type: 'PUT',
+        contentType: 'application/json',
+        data: JSON.stringify({ active: newStatus }),
+        success: function() {
+            loadShippingMethods();
+            showToast(newStatus ? 'Fraktmetod aktiverad' : 'Fraktmetod inaktiverad', 'success');
+        }
+    });
+}
+
+function deleteShippingMethod(id) {
+    if (confirm('Är du säker på att du vill ta bort denna fraktmetod?')) {
+        $.ajax({
+            url: `/api/shipping-methods/${id}`,
+            type: 'DELETE',
+            success: function() {
+                loadShippingMethods();
+                showToast('Fraktmetod borttagen', 'success');
+            }
+        });
+    }
+}
+
+function generateBarcodes(e) {
+    e.preventDefault();
+    
+    const prefix = $('#barcode-prefix').val();
+    const start = parseInt($('#barcode-start').val());
+    const end = parseInt($('#barcode-end').val());
+    
+    if (end < start) {
+        showToast('Slut nummer måste vara större än start nummer', 'error');
+        return;
+    }
+    
+    const count = end - start + 1;
+    
+    if (count > 1000) {
+        if (!confirm(`Du försöker generera ${count} streckkoder. Detta kan ta lång tid. Fortsätt?`)) {
+            return;
+        }
+    }
+    
+    showToast(`Genererar ${count} streckkoder...`, 'info');
+    
+    $.ajax({
+        url: '/api/barcodes/bulk-generate',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ prefix: prefix, start: start, end: end, operator: 'User' }),
+        xhrFields: {
+            responseType: 'blob'
+        },
+        success: function(blob) {
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `barcodes_${prefix}_${start}-${end}.pdf`;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+            
+            showToast(`PDF genererad med ${count} streckkoder!`, 'success');
+            
+            // Reload history from server
+            loadBarcodeHistory();
+            
+            // Suggest next batch
+            const nextStart = end + 1;
+            const nextEnd = nextStart + count - 1;
+            
+            if (confirm(`Vill du förbereda nästa omgång? (${nextStart} till ${nextEnd})`)) {
+                $('#barcode-start').val(nextStart);
+                $('#barcode-end').val(nextEnd);
+                updateBarcodePreview();
+            }
+        },
+        error: function() {
+            showToast('Fel vid PDF-generering', 'error');
+        }
+    });
+}
+</script>
+{% endblock %}

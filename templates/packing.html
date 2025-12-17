@@ -1,0 +1,874 @@
+{% extends "base.html" %}
+{% block title %}Packning - Warehouse System{% endblock %}
+{% block content %}
+<div class="container">
+    <h1 class="display-4 mb-4"><i class="bi bi-box-seam"></i> Packning</h1>
+    
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <button id="load-next-order-btn" class="btn btn-primary btn-lg w-100">
+                        <i class="bi bi-arrow-right-circle"></i> Hämta Nästa Order
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="packing-content" style="display:none;">
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5><i class="bi bi-info-circle"></i> Orderinformation</h5>
+                        <p class="mb-1"><strong>Ordernummer:</strong> <span id="order-number"></span></p>
+                        <p class="mb-1"><strong>Köpare:</strong> <span id="order-buyer"></span></p>
+                        <p class="mb-1"><strong>Adress:</strong> <span id="order-address"></span></p>
+                        <p class="mb-0"><strong>Antal produkter:</strong> <span id="order-item-count"></span></p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5><i class="bi bi-box"></i> Kartongförslag</h5>
+                        <div id="box-suggestion">Laddar...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Scanner Input - Always visible and focused -->
+        <div class="card mb-3 border-primary">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-md-2 text-center">
+                        <i class="bi bi-upc-scan" style="font-size: 3rem; color: #0d6efd;"></i>
+                    </div>
+                    <div class="col-md-7">
+                        <label class="form-label mb-1"><strong>Scanna produkt:</strong></label>
+                        <input type="text" class="form-control form-control-lg" id="scan-input" 
+                               placeholder="Scanna produkter eller 'SHIPPED' när klar..." autofocus>
+                        <small class="text-muted">Scanna alla produkter, sedan scanna <strong>"SHIPPED"</strong> för att färdigställa.</small>
+                    </div>
+                    <div class="col-md-3 text-center">
+                        <div class="progress-circle">
+                            <h2 class="mb-0"><span id="scanned-count">0</span> / <span id="total-count">0</span></h2>
+                            <small class="text-muted">Produkter packade</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5><i class="bi bi-list-check"></i> Produkter att Packa</h5>
+                <div id="packing-items-list"></div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-body">
+                <h5><i class="bi bi-check-circle"></i> Färdigställ Order</h5>
+                <div id="completion-status" class="alert alert-warning">
+                    <i class="bi bi-exclamation-triangle"></i> Scanna alla produkter innan du färdigställer
+                </div>
+                <button id="complete-order-btn" class="btn btn-success btn-lg w-100" disabled>
+                    <i class="bi bi-check-circle"></i> Markera som Skickad
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Celebration Screen - All Orders Packed! -->
+<div id="celebration-screen" style="display: none;">
+    <div class="celebration-overlay"></div>
+    <div class="celebration-content">
+        <div class="celebration-card">
+            <div class="celebration-icon">
+                <i class="bi bi-check-circle-fill"></i>
+            </div>
+            <h1 class="celebration-title">🎉 Grattis!</h1>
+            <h2 class="celebration-subtitle">Alla ordrar är packade!</h2>
+            <p class="celebration-text">
+                Det finns inga fler ordrar att packa just nu.
+                <br>
+                Bra jobbat! 💪
+            </p>
+            <div class="celebration-stats" id="celebration-stats">
+                <div class="stat-item">
+                    <div class="stat-number" id="total-packed-today">0</div>
+                    <div class="stat-label">Packade idag</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="items-packed-today">0</div>
+                    <div class="stat-label">Produkter packade</div>
+                </div>
+            </div>
+            <button class="btn-celebration" onclick="checkForNewOrders()">
+                <i class="bi bi-arrow-repeat"></i> Kolla efter nya ordrar
+            </button>
+            <button class="btn-celebration-secondary" onclick="goToDashboard()">
+                <i class="bi bi-house"></i> Gå till Dashboard
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Confetti Canvas -->
+<canvas id="confetti-canvas"></canvas>
+
+<!-- Success Sound -->
+<audio id="success-beep" preload="auto">
+    <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBTGH0fPTgjMGHm7A7+OZURE" type="audio/wav">
+</audio>
+
+<!-- Error Sound -->
+<audio id="error-beep" preload="auto">
+    <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQoGAACBgoODhISFhYWFhYWFhISEhIOCgYCAfn18e3p5eHd2dXRzc3Jxb25tbGxrbGttbm9wcXJzdHV2d3h5ent8fX5/gIGCg4SEhYWFhYWFhYSEhIOCgYCAfn18e3p5eHd2dXRzc3Jxb25tbGxrbGxtbm9wcXJzdA==" type="audio/wav">
+</audio>
+
+<style>
+.item-card {
+    transition: all 0.3s ease;
+    border-left: 4px solid #ffc107;
+}
+
+.item-card.scanned {
+    border-left-color: #28a745;
+    background-color: #d4edda;
+}
+
+.item-card.scanned .item-status {
+    color: #28a745;
+}
+
+.item-image {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 2px solid #dee2e6;
+    background-color: #f8f9fa;
+    display: block;
+}
+
+.item-card.scanned .item-image {
+    border-color: #28a745;
+}
+
+/* Celebration Screen Styles */
+.celebration-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    z-index: 9998;
+    animation: fadeIn 0.5s ease-in;
+}
+
+.celebration-content {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    animation: slideUp 0.6s ease-out;
+}
+
+.celebration-card {
+    background: white;
+    border-radius: 30px;
+    padding: 60px 80px;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    max-width: 700px;
+    animation: scaleIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.celebration-icon {
+    font-size: 120px;
+    color: #28a745;
+    margin-bottom: 20px;
+    animation: bounce 1s infinite;
+}
+
+.celebration-title {
+    font-size: 64px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.celebration-subtitle {
+    font-size: 36px;
+    color: #555;
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+.celebration-text {
+    font-size: 20px;
+    color: #666;
+    margin-bottom: 40px;
+    line-height: 1.6;
+}
+
+.celebration-stats {
+    display: flex;
+    justify-content: space-around;
+    margin: 40px 0;
+    padding: 30px 0;
+    border-top: 2px solid #eee;
+    border-bottom: 2px solid #eee;
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-number {
+    font-size: 48px;
+    font-weight: bold;
+    color: #667eea;
+    margin-bottom: 10px;
+}
+
+.stat-label {
+    font-size: 16px;
+    color: #999;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.btn-celebration {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 18px 50px;
+    font-size: 20px;
+    font-weight: bold;
+    border-radius: 50px;
+    cursor: pointer;
+    margin: 10px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.btn-celebration:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+}
+
+.btn-celebration-secondary {
+    background: white;
+    color: #667eea;
+    border: 2px solid #667eea;
+    padding: 18px 50px;
+    font-size: 20px;
+    font-weight: bold;
+    border-radius: 50px;
+    cursor: pointer;
+    margin: 10px;
+    transition: all 0.3s ease;
+}
+
+.btn-celebration-secondary:hover {
+    background: #667eea;
+    color: white;
+    transform: translateY(-3px);
+}
+
+#confetti-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 10000;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(100px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        transform: scale(0.5);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-20px);
+    }
+    60% {
+        transform: translateY(-10px);
+    }
+}
+}
+
+.scan-animation {
+    animation: scan-pulse 0.5s ease;
+}
+
+@keyframes scan-pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); background-color: #d4edda; }
+    100% { transform: scale(1); }
+}
+
+.progress-circle {
+    padding: 15px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 10px;
+}
+
+#scan-input {
+    border: 2px solid #0d6efd;
+    font-size: 1.2rem;
+}
+
+#scan-input:focus {
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+let currentOrderId = null;
+let orderItems = [];
+let scannedItems = new Map(); // Changed to Map to track quantities: inventory_id -> scanned_count
+
+$(document).ready(function() {
+    $('#load-next-order-btn').click(loadNextOrder);
+    $('#complete-order-btn').click(completeOrder);
+    
+    // Scanner input handling
+    $('#scan-input').on('keypress', function(e) {
+        if (e.which == 13) { // Enter key
+            const scannedCode = $(this).val().trim().toUpperCase();
+            if (scannedCode) {
+                // Check if scanning SHIPPED command
+                if (scannedCode === 'SHIPPED') {
+                    handleShippedScan();
+                } else {
+                    handleScan(scannedCode);
+                }
+                $(this).val(''); // Clear input
+            }
+        }
+    });
+    
+    // Keep focus on scan input
+    $(document).on('click', function() {
+        if ($('#packing-content').is(':visible')) {
+            $('#scan-input').focus();
+        }
+    });
+});
+
+function loadNextOrder() {
+    $.get('/api/orders/next', function(data) {
+        if (data.success && data.order) {
+            currentOrderId = data.order.id;
+            scannedItems.clear();
+            displayOrder(data.order);
+            loadOrderItems(data.order.id);
+            loadBoxSuggestion(data.order.id);
+            
+            // Hide celebration screen if it was showing
+            $('#celebration-screen').hide();
+            $('#packing-content').show();
+        } else {
+            // No more orders - Show celebration!
+            showCelebrationScreen();
+        }
+    });
+}
+
+function displayOrder(order) {
+    $('#order-number').text(order.order_number);
+    
+    // Get full order details to show customer info
+    $.get(`/api/orders/${order.id}`, function(data) {
+        if (data.success && data.order) {
+            const o = data.order;
+            $('#order-buyer').text(o.customer_name || 'Okänd kund');
+            
+            const address = [
+                o.address,
+                `${o.postal_code || ''} ${o.city || ''}`.trim(),
+                o.country
+            ].filter(Boolean).join(', ');
+            
+            $('#order-address').text(address || 'Ingen adress');
+        }
+    });
+    
+    $('#packing-content').show();
+    $('#scan-input').focus();
+}
+
+function loadOrderItems(orderId) {
+    $.get('/api/orders/' + orderId + '/items', function(data) {
+        if (data.success) {
+            orderItems = data.items;
+            console.log('Loaded items:', orderItems); // DEBUG
+            
+            // Calculate total item count including quantities
+            const totalItems = orderItems.reduce((sum, item) => sum + (item.quantity || 1), 0);
+            
+            $('#order-item-count').text(totalItems);
+            $('#total-count').text(totalItems);
+            $('#scanned-count').text(0);
+            
+            displayItems();
+        }
+    });
+}
+
+function displayItems() {
+    const list = $('#packing-items-list');
+    list.empty();
+    
+    orderItems.forEach(function(item, index) {
+        const qty = item.quantity || 1;
+        const scannedQty = scannedItems.get(item.inventory_id) || 0;
+        const isFullyScanned = scannedQty >= qty;
+        const scannedClass = isFullyScanned ? 'scanned' : '';
+        
+        let statusIcon, statusText;
+        if (isFullyScanned) {
+            statusIcon = '<i class="bi bi-check-circle-fill text-success" style="font-size: 2rem;"></i>';
+            statusText = '<div class="text-success small"><strong>SCANNAD</strong></div>';
+        } else if (scannedQty > 0) {
+            statusIcon = '<i class="bi bi-hourglass-split text-info" style="font-size: 2rem;"></i>';
+            statusText = `<div class="text-info small"><strong>${scannedQty}/${qty} scannade</strong></div>`;
+        } else {
+            statusIcon = '<i class="bi bi-circle text-warning" style="font-size: 2rem;"></i>';
+            statusText = '<div class="text-muted small">Väntar...</div>';
+        }
+        
+        // Determine image path
+        let imagePath = '/static/uploads/placeholder.svg';
+        if (item.filename_cropped && item.filename_cropped !== 'null' && item.filename_cropped !== 'undefined' && item.filename_cropped.trim() !== '') {
+            imagePath = `/static/uploads/${item.filename_cropped}`;
+        } else if (item.filename_original && item.filename_original !== 'null' && item.filename_original !== 'undefined' && item.filename_original.trim() !== '') {
+            imagePath = `/static/uploads/${item.filename_original}`;
+        }
+        
+        const card = $(`
+            <div class="card mb-2 item-card ${scannedClass}" data-inventory-id="${item.inventory_id}" data-item-index="${index}">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-auto">
+                            <img src="${imagePath}" class="item-image" alt="Product" onerror="this.onerror=null; this.src='/static/uploads/placeholder.svg'">
+                        </div>
+                        <div class="col">
+                            <h6 class="mb-1">
+                                <strong>${item.inventory_id}</strong>
+                                ${qty > 1 ? `<span class="badge bg-primary ms-2">${qty} st</span>` : ''}
+                            </h6>
+                            <p class="mb-1">${item.description || '-'}</p>
+                            <span class="badge bg-warning">${item.location_code || 'Ingen plats'}</span>
+                            ${item.location_barcode ? `<span class="badge bg-secondary">${item.location_barcode}</span>` : ''}
+                        </div>
+                        <div class="col-auto text-center item-status">
+                            ${statusIcon}
+                            ${statusText}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `);
+        
+        list.append(card);
+    });
+    
+    updateProgress();
+}
+
+function handleScan(scannedCode) {
+    // Convert to uppercase for case-insensitive matching
+    const code = scannedCode.toUpperCase();
+    
+    // Find item with matching inventory_id (case-insensitive)
+    const item = orderItems.find(i => i.inventory_id.toUpperCase() === code);
+    
+    if (!item) {
+        // Not in this order
+        playErrorSound();
+        showToast(`Produkt ${scannedCode} finns inte i denna order!`, 'error');
+        return;
+    }
+    
+    const qty = item.quantity || 1;
+    const scannedQty = scannedItems.get(item.inventory_id) || 0;
+    
+    if (scannedQty >= qty) {
+        // Already fully scanned
+        playErrorSound();
+        showToast(`${item.inventory_id} redan fullständigt scannad! (${qty}/${qty})`, 'warning');
+        return;
+    }
+    
+    // SUCCESS - Increment scanned count
+    const newScannedQty = scannedQty + 1;
+    scannedItems.set(item.inventory_id, newScannedQty);
+    playSuccessSound();
+    
+    // Animate the card
+    const card = $(`.item-card[data-inventory-id="${item.inventory_id}"]`);
+    card.addClass('scan-animation');
+    setTimeout(() => card.removeClass('scan-animation'), 500);
+    
+    // Update display
+    displayItems();
+    
+    if (newScannedQty >= qty) {
+        showToast(`✓ ${item.inventory_id} fullständigt packad! (${qty} st)`, 'success');
+    } else {
+        showToast(`✓ ${item.inventory_id} scannad (${newScannedQty}/${qty})`, 'success');
+    }
+    
+    // Check if all scanned
+    checkAllScanned();
+}
+
+function handleShippedScan() {
+    // Check if all items are scanned with correct quantities
+    const totalNeeded = orderItems.reduce((sum, item) => sum + (item.quantity || 1), 0);
+    const totalScanned = Array.from(scannedItems.values()).reduce((sum, count) => sum + count, 0);
+    
+    if (totalScanned < totalNeeded) {
+        playErrorSound();
+        showToast(`⚠️ Alla produkter måste scannas först! (${totalScanned}/${totalNeeded} st)`, 'error');
+        return;
+    }
+    
+    if (!currentOrderId) {
+        playErrorSound();
+        showToast('Ingen order vald', 'error');
+        return;
+    }
+    
+    // Show confirmation
+    playSuccessSound();
+    showToast('📦 Färdigställer order och laddar nästa...', 'info');
+    
+    // Ship the order
+    $.ajax({
+        url: '/api/orders/' + currentOrderId + '/ship',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ operator: 'User' }),
+        success: function(data) {
+            if (data.success) {
+                showToast('✅ Order skickad!', 'success');
+                
+                // Reset current state
+                currentOrderId = null;
+                scannedItems.clear();
+                orderItems = [];
+                
+                // Wait a moment then load next order automatically
+                setTimeout(function() {
+                    loadNextOrder();
+                }, 1000);
+            }
+        },
+        error: function() {
+            playErrorSound();
+            showToast('Fel vid färdigställning', 'error');
+        }
+    });
+}
+
+function updateProgress() {
+    // Calculate total scanned vs total needed
+    const totalNeeded = orderItems.reduce((sum, item) => sum + (item.quantity || 1), 0);
+    const totalScanned = Array.from(scannedItems.values()).reduce((sum, count) => sum + count, 0);
+    
+    $('#scanned-count').text(totalScanned);
+    
+    const percentage = totalNeeded > 0 ? 
+        Math.round((totalScanned / totalNeeded) * 100) : 0;
+    
+    if (totalScanned >= totalNeeded && totalNeeded > 0) {
+        $('#completion-status').removeClass('alert-warning').addClass('alert-success')
+            .html('<i class="bi bi-check-circle"></i> <strong>Alla produkter scannade!</strong><br>Scanna <strong>"SHIPPED"</strong> för att färdigställa och ladda nästa order.');
+        $('#complete-order-btn').prop('disabled', false);
+    } else {
+        const remaining = totalNeeded - totalScanned;
+        $('#completion-status').removeClass('alert-success').addClass('alert-warning')
+            .html(`<i class="bi bi-exclamation-triangle"></i> ${remaining} st kvar att scanna`);
+        $('#complete-order-btn').prop('disabled', true);
+    }
+}
+
+function checkAllScanned() {
+    const totalNeeded = orderItems.reduce((sum, item) => sum + (item.quantity || 1), 0);
+    const totalScanned = Array.from(scannedItems.values()).reduce((sum, count) => sum + count, 0);
+    
+    if (totalScanned >= totalNeeded && totalNeeded > 0) {
+        allItemsScanned();
+    }
+}
+
+function allItemsScanned() {
+    playSuccessSound();
+    showToast('🎉 Alla produkter scannade! Scanna "SHIPPED" för att färdigställa.', 'success');
+    
+    // Highlight the scan input to draw attention
+    $('#scan-input').addClass('border-success').css('border-width', '3px');
+    setTimeout(() => {
+        $('#scan-input').removeClass('border-success').css('border-width', '2px');
+    }, 2000);
+}
+
+function loadBoxSuggestion(orderId) {
+    $.get('/api/orders/' + orderId + '/box-suggestion', function(data) {
+        const container = $('#box-suggestion');
+        
+        if (data.success && data.suggestion) {
+            const box = data.suggestion;
+            container.html(`
+                <p class="mb-1"><strong>${box.name}</strong></p>
+                <p class="mb-0">Innermått: ${box.inner_length}×${box.inner_width}×${box.inner_height} cm</p>
+                <p class="mb-0">Max vikt: ${box.max_weight} kg</p>
+            `);
+        } else {
+            container.html('<p class="text-muted">Ingen kartong passar</p>');
+        }
+    });
+}
+
+function completeOrder() {
+    if (!currentOrderId) {
+        showToast('Ingen order vald', 'error');
+        return;
+    }
+    
+    if (scannedItems.size !== orderItems.length) {
+        showToast('Alla produkter måste scannas först!', 'error');
+        return;
+    }
+    
+    if (!confirm('Markera denna order som skickad?')) {
+        return;
+    }
+    
+    $.ajax({
+        url: '/api/orders/' + currentOrderId + '/ship',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ operator: 'User' }),
+        success: function(data) {
+            if (data.success) {
+                showToast('✓ Order skickad!', 'success');
+                $('#packing-content').hide();
+                currentOrderId = null;
+                scannedItems.clear();
+                orderItems = [];
+                
+                // Automatically check for next order
+                setTimeout(function() {
+                    loadNextOrder();
+                }, 800);
+            }
+        },
+        error: function() {
+            showToast('Fel vid färdigställning', 'error');
+        }
+    });
+}
+
+function playSuccessSound() {
+    const audio = document.getElementById('success-beep');
+    audio.currentTime = 0;
+    audio.play().catch(e => console.log('Audio play failed:', e));
+}
+
+function playErrorSound() {
+    const audio = document.getElementById('error-beep');
+    audio.currentTime = 0;
+    audio.play().catch(e => console.log('Audio play failed:', e));
+}
+
+// ==================== CELEBRATION SCREEN ====================
+
+function showCelebrationScreen() {
+    // Hide main content
+    $('#packing-content').hide();
+    $('.container').first().hide();
+    
+    // Get today's stats
+    getTodaysStats();
+    
+    // Show celebration screen
+    $('#celebration-screen').fadeIn(500);
+    
+    // Start confetti
+    startConfetti();
+    
+    // Play celebration sound
+    playSuccessSound();
+}
+
+function getTodaysStats() {
+    // Get statistics for today
+    $.get('/api/reports/sales', function(data) {
+        if (data.success && data.report) {
+            const today = data.report.find(r => {
+                const date = new Date(r.date);
+                const now = new Date();
+                return date.toDateString() === now.toDateString();
+            });
+            
+            if (today) {
+                $('#total-packed-today').text(today.orders_count || 0);
+                $('#items-packed-today').text(today.items_sold || 0);
+            }
+        }
+    });
+}
+
+function checkForNewOrders() {
+    // Hide celebration
+    stopConfetti();
+    $('#celebration-screen').fadeOut(300, function() {
+        $('.container').first().show();
+    });
+    
+    // Check for new orders
+    loadNextOrder();
+}
+
+function goToDashboard() {
+    window.location.href = '/';
+}
+
+// ==================== CONFETTI ANIMATION ====================
+
+let confettiAnimationId;
+let confettiParticles = [];
+
+function startConfetti() {
+    const canvas = document.getElementById('confetti-canvas');
+    const ctx = canvas.getContext('2d');
+    
+    // Set canvas size
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    
+    // Create confetti particles
+    const colors = ['#667eea', '#764ba2', '#f093fb', '#4facfe', '#43e97b', '#ffd700', '#ff6b6b'];
+    
+    for (let i = 0; i < 150; i++) {
+        confettiParticles.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height - canvas.height,
+            r: Math.random() * 4 + 2,
+            d: Math.random() * 150 + 10,
+            color: colors[Math.floor(Math.random() * colors.length)],
+            tilt: Math.random() * 10 - 10,
+            tiltAngleIncremental: Math.random() * 0.07 + 0.05,
+            tiltAngle: 0
+        });
+    }
+    
+    function animateConfetti() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        confettiParticles.forEach((p, i) => {
+            p.tiltAngle += p.tiltAngleIncremental;
+            p.y += (Math.cos(p.d) + 3 + p.r / 2) / 2;
+            p.x += Math.sin(p.d);
+            p.tilt = (Math.sin(p.tiltAngle - (i / 3))) * 15;
+            
+            ctx.beginPath();
+            ctx.lineWidth = p.r / 2;
+            ctx.strokeStyle = p.color;
+            ctx.moveTo(p.x + p.tilt + p.r, p.y);
+            ctx.lineTo(p.x + p.tilt, p.y + p.tilt + p.r);
+            ctx.stroke();
+            
+            // Reset particle when it goes off screen
+            if (p.y > canvas.height) {
+                confettiParticles[i] = {
+                    x: Math.random() * canvas.width,
+                    y: -20,
+                    r: p.r,
+                    d: p.d,
+                    color: p.color,
+                    tilt: p.tilt,
+                    tiltAngleIncremental: p.tiltAngleIncremental,
+                    tiltAngle: p.tiltAngle
+                };
+            }
+        });
+        
+        confettiAnimationId = requestAnimationFrame(animateConfetti);
+    }
+    
+    animateConfetti();
+    
+    // Stop confetti after 10 seconds
+    setTimeout(stopConfetti, 10000);
+}
+
+function stopConfetti() {
+    if (confettiAnimationId) {
+        cancelAnimationFrame(confettiAnimationId);
+        confettiAnimationId = null;
+    }
+    
+    const canvas = document.getElementById('confetti-canvas');
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    confettiParticles = [];
+}
+
+// Handle window resize for confetti
+window.addEventListener('resize', function() {
+    const canvas = document.getElementById('confetti-canvas');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+});
+</script>
+{% endblock %}

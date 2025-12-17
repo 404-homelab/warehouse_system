@@ -1,0 +1,451 @@
+{% extends "base.html" %}
+
+{% block title %}Sök - Warehouse System{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col">
+            <h1 class="display-4"><i class="bi bi-search"></i> Sök Produkter</h1>
+            <p class="lead">Sök och filtrera i hela lagret</p>
+        </div>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <div class="input-group input-group-lg">
+                <span class="input-group-text"><i class="bi bi-search"></i></span>
+                <input type="text" class="form-control" id="search-input" 
+                       placeholder="Sök på INV-ID, artikelnummer, beskrivning..." 
+                       autofocus>
+                <button class="btn btn-primary" id="search-btn">Sök</button>
+            </div>
+            <div class="form-text">Tips: Sök på INV-000001, artikelnummer, eller produktbeskrivning. Tryck Enter för att söka.</div>
+        </div>
+        <div class="col-md-4">
+            <button class="btn btn-outline-secondary w-100 mb-2" id="advanced-toggle">
+                <i class="bi bi-funnel"></i> Avancerade Filter
+            </button>
+            <button class="btn btn-outline-info w-100" id="clear-filters-btn">
+                <i class="bi bi-x-circle"></i> Rensa Allt
+            </button>
+        </div>
+    </div>
+
+    <!-- Advanced Filters -->
+    <div class="card mb-4" id="advanced-filters" style="display:none;">
+        <div class="card-body">
+            <h5 class="card-title">Avancerade Filter</h5>
+            <div class="row">
+                <div class="col-md-3">
+                    <label class="form-label">Status</label>
+                    <select class="form-select" id="filter-status">
+                        <option value="">Alla</option>
+                        <option value="in_stock">I lager</option>
+                        <option value="uploaded">Upplagd</option>
+                        <option value="sold">Såld</option>
+                        <option value="shipped">Skickad</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Plats</label>
+                    <select class="form-select" id="filter-location">
+                        <option value="">Alla platser</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Pris (min)</label>
+                    <input type="number" class="form-control" id="filter-price-min" placeholder="0">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Pris (max)</label>
+                    <input type="number" class="form-control" id="filter-price-max" placeholder="999999">
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-md-3">
+                    <label class="form-label">Sortera efter</label>
+                    <select class="form-select" id="sort-by">
+                        <option value="created_desc">Nyast först</option>
+                        <option value="created_asc">Äldst först</option>
+                        <option value="price_desc">Högst pris</option>
+                        <option value="price_asc">Lägst pris</option>
+                        <option value="inventory_asc">INV-ID (A-Ö)</option>
+                        <option value="inventory_desc">INV-ID (Ö-A)</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Visa endast</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="filter-has-image">
+                        <label class="form-check-label" for="filter-has-image">
+                            Med bilder
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="filter-bulk">
+                        <label class="form-check-label" for="filter-bulk">
+                            Bulk (flera st)
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Results Summary -->
+    <div class="row mb-3" id="results-summary" style="display:none;">
+        <div class="col">
+            <div class="alert alert-info mb-0">
+                <strong><span id="results-count">0</span> produkter</strong> 
+                <span id="results-details"></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search Results -->
+    <div id="search-results"></div>
+</div>
+
+<!-- Item Details Modal -->
+<div class="modal fade" id="itemDetailsModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modal-inventory-id"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="modal-item-details">
+                <!-- Loaded dynamically -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Stäng</button>
+                <a href="#" class="btn btn-primary" id="modal-edit-btn">
+                    <i class="bi bi-pencil"></i> Redigera
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.search-result-card {
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.search-result-card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    transform: translateY(-2px);
+}
+
+.result-image {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.result-badge {
+    font-size: 0.75rem;
+    padding: 0.25em 0.5em;
+    margin-right: 0.25rem;
+    margin-bottom: 0.25rem;
+}
+
+.action-buttons .btn {
+    margin-right: 5px;
+    margin-bottom: 5px;
+}
+</style>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+let allResults = [];
+let filteredResults = [];
+
+$(document).ready(function() {
+    $('#search-btn').click(performSearch);
+    $('#search-input').keypress(function(e) {
+        if (e.which == 13) performSearch();
+    });
+    
+    $('#advanced-toggle').click(() => $('#advanced-filters').slideToggle());
+    $('#clear-filters-btn').click(clearFilters);
+    
+    // Real-time filtering
+    $('#filter-status, #filter-location, #filter-price-min, #filter-price-max, #sort-by, #filter-has-image, #filter-bulk')
+        .change(applyFilters);
+    
+    loadLocations();
+    
+    // Auto-search if there's a query parameter
+    const urlParams = new URLSearchParams(window.location.search);
+    const query = urlParams.get('q');
+    if (query) {
+        $('#search-input').val(query);
+        performSearch();
+    }
+});
+
+function loadLocations() {
+    $.get('/api/locations', function(data) {
+        if (data.success && data.locations) {
+            const select = $('#filter-location');
+            data.locations.forEach(loc => {
+                select.append(`<option value="${loc.location_code}">${loc.location_code} - ${loc.description || ''}</option>`);
+            });
+        }
+    });
+}
+
+function performSearch() {
+    const query = $('#search-input').val().trim();
+    if (!query) {
+        showToast('Ange sökterm', 'warning');
+        return;
+    }
+    
+    $.get('/api/items/search?q=' + encodeURIComponent(query), function(data) {
+        allResults = data.items || [];
+        applyFilters();
+    });
+}
+
+function applyFilters() {
+    if (allResults.length === 0) {
+        return;
+    }
+    
+    let results = [...allResults];
+    
+    // Status filter
+    const status = $('#filter-status').val();
+    if (status) {
+        results = results.filter(item => item.status === status);
+    }
+    
+    // Location filter
+    const location = $('#filter-location').val();
+    if (location) {
+        results = results.filter(item => item.location_code === location);
+    }
+    
+    // Price filters
+    const minPrice = parseFloat($('#filter-price-min').val());
+    const maxPrice = parseFloat($('#filter-price-max').val());
+    
+    if (!isNaN(minPrice)) {
+        results = results.filter(item => (item.price || 0) >= minPrice);
+    }
+    
+    if (!isNaN(maxPrice)) {
+        results = results.filter(item => (item.price || 0) <= maxPrice);
+    }
+    
+    // Has image filter
+    if ($('#filter-has-image').is(':checked')) {
+        results = results.filter(item => item.image_cropped || item.image_original);
+    }
+    
+    // Bulk filter
+    if ($('#filter-bulk').is(':checked')) {
+        results = results.filter(item => (item.quantity || 1) > 1);
+    }
+    
+    // Sorting
+    const sortBy = $('#sort-by').val();
+    results = sortResults(results, sortBy);
+    
+    filteredResults = results;
+    displayResults(results);
+}
+
+function sortResults(results, sortBy) {
+    const sorted = [...results];
+    
+    switch(sortBy) {
+        case 'created_desc':
+            sorted.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+            break;
+        case 'created_asc':
+            sorted.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+            break;
+        case 'price_desc':
+            sorted.sort((a, b) => (b.price || 0) - (a.price || 0));
+            break;
+        case 'price_asc':
+            sorted.sort((a, b) => (a.price || 0) - (b.price || 0));
+            break;
+        case 'inventory_asc':
+            sorted.sort((a, b) => a.inventory_id.localeCompare(b.inventory_id));
+            break;
+        case 'inventory_desc':
+            sorted.sort((a, b) => b.inventory_id.localeCompare(a.inventory_id));
+            break;
+    }
+    
+    return sorted;
+}
+
+function displayResults(items) {
+    const container = $('#search-results');
+    container.empty();
+    
+    if (items.length === 0) {
+        container.html('<div class="alert alert-warning">Inga produkter hittades med valda filter</div>');
+        $('#results-summary').hide();
+        return;
+    }
+    
+    // Update summary
+    $('#results-count').text(items.length);
+    
+    let details = [];
+    if (allResults.length !== items.length) {
+        details.push(`(filtrerat från ${allResults.length})`);
+    }
+    
+    const totalValue = items.reduce((sum, item) => sum + (item.price || 0) * (item.quantity || 1), 0);
+    const totalQty = items.reduce((sum, item) => sum + (item.quantity || 1), 0);
+    
+    details.push(`• ${totalQty} enheter`);
+    details.push(`• Totalt värde: ${Math.round(totalValue).toLocaleString('sv-SE')} kr`);
+    
+    $('#results-details').html(details.join(' '));
+    $('#results-summary').show();
+    
+    // Display items
+    items.forEach(function(item) {
+        const imageSrc = (item.image_cropped && item.image_cropped !== 'null' && item.image_cropped !== 'undefined' && item.image_cropped.trim() !== '') ? `/static/uploads/${item.image_cropped}` :
+                        (item.image_original && item.image_original !== 'null' && item.image_original !== 'undefined' && item.image_original.trim() !== '') ? `/static/uploads/${item.image_original}` :
+                        '/static/uploads/placeholder.svg';
+        
+        const statusBadge = getStatusBadge(item.status);
+        const qty = item.quantity || 1;
+        const qtyAvailable = item.quantity_available || qty;
+        
+        const card = $(`
+            <div class="search-result-card">
+                <div class="row align-items-center">
+                    <div class="col-auto">
+                        <img src="${imageSrc}" class="result-image" alt="Product" onerror="this.onerror=null; this.src='/static/uploads/placeholder.svg'">
+                    </div>
+                    <div class="col">
+                        <h5 class="mb-2">
+                            <strong>${item.inventory_id}</strong>
+                            ${statusBadge}
+                            ${qty > 1 ? `<span class="badge bg-primary result-badge">${qtyAvailable}/${qty} st</span>` : ''}
+                        </h5>
+                        <p class="mb-2">${item.description || 'Ingen beskrivning'}</p>
+                        <div class="mb-2">
+                            ${item.article_code ? `<span class="badge bg-secondary result-badge">Art: ${item.article_code}</span>` : ''}
+                            ${item.location_code ? `<span class="badge bg-info result-badge">Plats: ${item.location_code}</span>` : ''}
+                            ${item.condition ? `<span class="badge bg-light text-dark result-badge">Skick: ${item.condition}</span>` : ''}
+                        </div>
+                        <div class="action-buttons">
+                            <button class="btn btn-sm btn-outline-primary view-details-btn" data-item-id="${item.id}">
+                                <i class="bi bi-eye"></i> Detaljer
+                            </button>
+                            <a href="/admin?item=${item.inventory_id}" class="btn btn-sm btn-outline-secondary">
+                                <i class="bi bi-pencil"></i> Redigera
+                            </a>
+                            ${item.status === 'in_stock' ? `
+                                <a href="/marketplace" class="btn btn-sm btn-outline-success">
+                                    <i class="bi bi-shop"></i> Lägg upp
+                                </a>
+                            ` : ''}
+                        </div>
+                    </div>
+                    <div class="col-auto text-end">
+                        <h3 class="text-success mb-1">${item.price || 0} kr</h3>
+                        ${qty > 1 ? `<small class="text-muted">${item.price || 0} kr/st</small><br>` : ''}
+                        ${item.length ? `<small class="text-muted">${item.length}×${item.width}×${item.height} cm</small><br>` : ''}
+                        ${item.weight ? `<small class="text-muted">${item.weight} kg</small>` : ''}
+                    </div>
+                </div>
+            </div>
+        `);
+        
+        card.find('.view-details-btn').click(function() {
+            viewItemDetails(item);
+        });
+        
+        container.append(card);
+    });
+}
+
+function getStatusBadge(status) {
+    const badges = {
+        'in_stock': '<span class="badge bg-success result-badge">I lager</span>',
+        'uploaded': '<span class="badge bg-info result-badge">Upplagd</span>',
+        'sold': '<span class="badge bg-danger result-badge">Såld</span>',
+        'shipped': '<span class="badge bg-secondary result-badge">Skickad</span>'
+    };
+    return badges[status] || `<span class="badge bg-secondary result-badge">${status}</span>`;
+}
+
+function viewItemDetails(item) {
+    $('#modal-inventory-id').text(item.inventory_id);
+    $('#modal-edit-btn').attr('href', `/admin?item=${item.inventory_id}`);
+    
+    const imageSrc = item.image_cropped ? `/static/uploads/${item.image_cropped}` :
+                    item.image_original ? `/static/uploads/${item.image_original}` :
+                    '/static/uploads/placeholder.svg';
+    
+    const qty = item.quantity || 1;
+    const qtyAvailable = item.quantity_available || qty;
+    
+    const details = `
+        <div class="row">
+            <div class="col-md-6">
+                <img src="${imageSrc}" class="img-fluid rounded" alt="Product" onerror="this.onerror=null; this.src='/static/uploads/placeholder.svg'">
+            </div>
+            <div class="col-md-6">
+                <table class="table table-sm">
+                    <tr><th>Inventory ID:</th><td>${item.inventory_id}</td></tr>
+                    <tr><th>Beskrivning:</th><td>${item.description || '-'}</td></tr>
+                    <tr><th>Artikelnummer:</th><td>${item.article_code || '-'}</td></tr>
+                    <tr><th>Skick:</th><td>${item.condition || '-'}</td></tr>
+                    <tr><th>Pris:</th><td><strong>${item.price || 0} kr</strong></td></tr>
+                    ${qty > 1 ? `<tr><th>Antal:</th><td>${qtyAvailable} / ${qty} st</td></tr>` : ''}
+                    <tr><th>Plats:</th><td>${item.location_code || 'Ingen'}</td></tr>
+                    <tr><th>Status:</th><td>${getStatusBadge(item.status)}</td></tr>
+                    ${item.length ? `<tr><th>Mått:</th><td>${item.length}×${item.width}×${item.height} cm</td></tr>` : ''}
+                    ${item.weight ? `<tr><th>Vikt:</th><td>${item.weight} kg</td></tr>` : ''}
+                    <tr><th>Skapad:</th><td>${new Date(item.created_at).toLocaleDateString('sv-SE')}</td></tr>
+                </table>
+            </div>
+        </div>
+    `;
+    
+    $('#modal-item-details').html(details);
+    $('#itemDetailsModal').modal('show');
+}
+
+function clearFilters() {
+    $('#filter-status').val('');
+    $('#filter-location').val('');
+    $('#filter-price-min').val('');
+    $('#filter-price-max').val('');
+    $('#sort-by').val('created_desc');
+    $('#filter-has-image').prop('checked', false);
+    $('#filter-bulk').prop('checked', false);
+    $('#search-input').val('');
+    
+    $('#search-results').empty();
+    $('#results-summary').hide();
+    allResults = [];
+    filteredResults = [];
+    
+    showToast('Filter rensade', 'info');
+}
+</script>
+{% endblock %}

@@ -1,0 +1,44 @@
+# WAREHOUSE SYSTEMD SERVICE
+# =========================
+# 
+# Installation:
+# 1. Redigera denna fil (byt ut USER och PATH)
+# 2. Kopiera till: /etc/systemd/system/warehouse.service
+# 3. sudo systemctl daemon-reload
+# 4. sudo systemctl enable warehouse
+# 5. sudo systemctl start warehouse
+#
+
+[Unit]
+Description=Warehouse Management System
+After=network.target
+
+[Service]
+Type=simple
+User=YOUR_USERNAME
+WorkingDirectory=/path/to/warehouse_system
+Environment="PATH=/path/to/warehouse_system/venv/bin"
+ExecStart=/path/to/warehouse_system/venv/bin/python3 /path/to/warehouse_system/app.py
+Restart=always
+RestartSec=10
+
+# Restart automatically after updates
+RestartForceExitStatus=42
+
+# Logging
+StandardOutput=append:/var/log/warehouse/warehouse.log
+StandardError=append:/var/log/warehouse/warehouse_error.log
+
+[Install]
+WantedBy=multi-user.target
+
+# USAGE:
+# ------
+# Start:   sudo systemctl start warehouse
+# Stop:    sudo systemctl stop warehouse
+# Restart: sudo systemctl restart warehouse
+# Status:  sudo systemctl status warehouse
+# Logs:    sudo journalctl -u warehouse -f
+#
+# After update, the service will restart automatically if the
+# update client exits with code 42 (signal for restart needed)

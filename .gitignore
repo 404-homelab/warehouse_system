@@ -1,0 +1,40 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Uploads and generated files
+static/uploads/*
+static/barcodes/*
+static/exports/*
+!static/uploads/.gitkeep
+!static/barcodes/.gitkeep
+!static/exports/.gitkeep
+!static/uploads/placeholder.svg
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Environment variables
+.env
+.env.local

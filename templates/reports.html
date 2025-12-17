@@ -1,0 +1,443 @@
+{% extends "base.html" %}
+
+{% block title %}Rapporter - Warehouse System{% endblock %}
+
+{% block extra_css %}
+<style>
+    .chart-container {
+        position: relative;
+        height: 300px;
+    }
+    .report-card {
+        transition: all 0.3s;
+    }
+    .report-card:hover {
+        transform: translateY(-3px);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col">
+            <h1 class="display-4"><i class="bi bi-graph-up"></i> Rapporter & Analys</h1>
+            <p class="lead">Insikter och statistik om din verksamhet</p>
+        </div>
+    </div>
+
+    <!-- Period Selection -->
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-outline-primary period-btn active" data-period="day">
+                            Idag
+                        </button>
+                        <button type="button" class="btn btn-outline-primary period-btn" data-period="week">
+                            Denna Vecka
+                        </button>
+                        <button type="button" class="btn btn-outline-primary period-btn" data-period="month">
+                            Denna Månad
+                        </button>
+                        <button type="button" class="btn btn-outline-primary period-btn" data-period="year">
+                            Detta År
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <div class="card report-card">
+                <div class="card-body text-center">
+                    <i class="bi bi-cart-check text-success" style="font-size: 3rem;"></i>
+                    <h6 class="text-muted mt-2">Sålda Produkter</h6>
+                    <h2 class="mb-0" id="total-items-sold">-</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card report-card">
+                <div class="card-body text-center">
+                    <i class="bi bi-currency-exchange text-primary" style="font-size: 3rem;"></i>
+                    <h6 class="text-muted mt-2">Total Intäkt</h6>
+                    <h2 class="mb-0" id="total-revenue">-</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card report-card">
+                <div class="card-body text-center">
+                    <i class="bi bi-graph-up-arrow text-info" style="font-size: 3rem;"></i>
+                    <h6 class="text-muted mt-2">Genomsnittspris</h6>
+                    <h2 class="mb-0" id="avg-price">-</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sales Chart -->
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="bi bi-graph-up"></i> Försäljningstrend</h5>
+                    <div class="chart-container">
+                        <canvas id="salesChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="bi bi-pie-chart"></i> Försäljning per Dag</h5>
+                    <div id="daily-sales-list" style="max-height: 300px; overflow-y: auto;">
+                        <div class="text-center">
+                            <div class="spinner-border spinner-border-sm" role="status"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Top Selling Items -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="bi bi-trophy"></i> Mest Sålda Produkter</h5>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Artikelkod</th>
+                                    <th>Beskrivning</th>
+                                    <th>Antal Sålda</th>
+                                    <th>Intäkt</th>
+                                </tr>
+                            </thead>
+                            <tbody id="top-items-table">
+                                <tr>
+                                    <td colspan="5" class="text-center">
+                                        <div class="spinner-border spinner-border-sm" role="status"></div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Inventory Value -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="bi bi-box-seam"></i> Lagervärde per Plats</h5>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Hyllplats</th>
+                                    <th>Antal Produkter</th>
+                                    <th>Totalt Värde</th>
+                                </tr>
+                            </thead>
+                            <tbody id="location-value-table">
+                                <tr>
+                                    <td colspan="3" class="text-center">
+                                        <div class="spinner-border spinner-border-sm" role="status"></div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Inventory Status -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="bi bi-clipboard-data"></i> Lagerstatus</h5>
+                    <div class="row">
+                        <div class="col-md-3 text-center">
+                            <h6 class="text-muted">I Lager</h6>
+                            <h3 class="text-success" id="status-in-stock">-</h3>
+                        </div>
+                        <div class="col-md-3 text-center">
+                            <h6 class="text-muted">Uppladdat</h6>
+                            <h3 class="text-info" id="status-uploaded">-</h3>
+                        </div>
+                        <div class="col-md-3 text-center">
+                            <h6 class="text-muted">Sålt</h6>
+                            <h3 class="text-primary" id="status-sold">-</h3>
+                        </div>
+                        <div class="col-md-3 text-center">
+                            <h6 class="text-muted">Skickat</h6>
+                            <h3 class="text-warning" id="status-shipped">-</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+<script>
+let salesChart;
+let currentPeriod = 'day';
+
+$(document).ready(function() {
+    loadReports();
+    loadTopItems();
+    loadInventoryValue();
+    loadInventoryStatus();
+    
+    // Period selection
+    $('.period-btn').click(function() {
+        $('.period-btn').removeClass('active');
+        $(this).addClass('active');
+        currentPeriod = $(this).data('period');
+        loadReports();
+    });
+});
+
+function loadReports() {
+    $.get('/api/reports/sales?period=' + currentPeriod, function(data) {
+        if (data.success) {
+            const report = data.sales;
+            
+            // Update summary cards
+            $('#total-items-sold').text(report.totals.total_items || 0);
+            $('#total-revenue').text(formatCurrency(report.totals.total_revenue || 0));
+            $('#avg-price').text(formatCurrency(report.totals.avg_price || 0));
+            
+            // Update daily sales list
+            updateDailySalesList(report.daily_sales);
+            
+            // Update chart
+            updateSalesChart(report.daily_sales);
+        }
+    });
+}
+
+function updateDailySalesList(dailySales) {
+    const list = $('#daily-sales-list');
+    list.empty();
+    
+    if (dailySales.length === 0) {
+        list.append('<p class="text-muted text-center">Ingen försäljning under denna period</p>');
+        return;
+    }
+    
+    dailySales.forEach(function(day) {
+        const item = `
+            <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
+                <div>
+                    <strong>${formatDate(day.sale_date)}</strong>
+                    <br>
+                    <small class="text-muted">${day.items_sold} produkter</small>
+                </div>
+                <div class="text-end">
+                    <strong class="text-success">${formatCurrency(day.revenue)}</strong>
+                </div>
+            </div>
+        `;
+        list.append(item);
+    });
+}
+
+function updateSalesChart(dailySales) {
+    const ctx = document.getElementById('salesChart');
+    
+    if (salesChart) {
+        salesChart.destroy();
+    }
+    
+    const labels = dailySales.map(d => formatDate(d.sale_date));
+    const revenues = dailySales.map(d => d.revenue || 0);
+    const items = dailySales.map(d => d.items_sold || 0);
+    
+    salesChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Intäkt (SEK)',
+                data: revenues,
+                borderColor: 'rgb(102, 126, 234)',
+                backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                yAxisID: 'y',
+                tension: 0.4
+            }, {
+                label: 'Antal Sålda',
+                data: items,
+                borderColor: 'rgb(118, 75, 162)',
+                backgroundColor: 'rgba(118, 75, 162, 0.1)',
+                yAxisID: 'y1',
+                tension: 0.4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: {
+                mode: 'index',
+                intersect: false,
+            },
+            scales: {
+                y: {
+                    type: 'linear',
+                    display: true,
+                    position: 'left',
+                    title: {
+                        display: true,
+                        text: 'Intäkt (SEK)'
+                    }
+                },
+                y1: {
+                    type: 'linear',
+                    display: true,
+                    position: 'right',
+                    title: {
+                        display: true,
+                        text: 'Antal Produkter'
+                    },
+                    grid: {
+                        drawOnChartArea: false,
+                    },
+                }
+            }
+        }
+    });
+}
+
+function loadTopItems() {
+    $.get('/api/reports/top-items?limit=10', function(data) {
+        if (data.success) {
+            const tbody = $('#top-items-table');
+            tbody.empty();
+            
+            if (data.items.length === 0) {
+                tbody.append('<tr><td colspan="5" class="text-center text-muted">Ingen försäljningsdata än</td></tr>');
+                return;
+            }
+            
+            data.items.forEach(function(item, index) {
+                const row = `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${item.article_code || '-'}</td>
+                        <td>${item.description || '-'}</td>
+                        <td><span class="badge bg-success">${item.times_sold}</span></td>
+                        <td>${formatCurrency(item.total_revenue)}</td>
+                    </tr>
+                `;
+                tbody.append(row);
+            });
+        }
+    });
+}
+
+function loadInventoryValue() {
+    $.get('/api/reports/inventory-value', function(data) {
+        if (data.success) {
+            const tbody = $('#location-value-table');
+            tbody.empty();
+            
+            const locations = data.report.by_location || [];
+            
+            if (locations.length === 0) {
+                tbody.append('<tr><td colspan="3" class="text-center text-muted">Ingen lagerdata</td></tr>');
+                return;
+            }
+            
+            locations.forEach(function(loc) {
+                const row = `
+                    <tr>
+                        <td>${loc.location_code || 'Ingen plats'}</td>
+                        <td>${loc.item_count || 0}</td>
+                        <td>${formatCurrency(loc.total_value || 0)}</td>
+                    </tr>
+                `;
+                tbody.append(row);
+            });
+            
+            // Add total row
+            const total = data.report.totals;
+            tbody.append(`
+                <tr class="table-active fw-bold">
+                    <td>TOTALT</td>
+                    <td>${total.total_items || 0}</td>
+                    <td>${formatCurrency(total.total_value || 0)}</td>
+                </tr>
+            `);
+        }
+    });
+}
+
+function loadInventoryStatus() {
+    $.get('/api/reports/inventory-value', function(data) {
+        if (data.success) {
+            const byStatus = data.report.by_status || [];
+            
+            // Reset all counts
+            $('#status-in-stock').text('0');
+            $('#status-uploaded').text('0');
+            $('#status-sold').text('0');
+            $('#status-shipped').text('0');
+            
+            // Update each status
+            byStatus.forEach(function(status) {
+                const statusName = status.status;
+                const count = status.item_count;
+                
+                if (statusName === 'in_stock') {
+                    $('#status-in-stock').text(count);
+                } else if (statusName === 'uploaded') {
+                    $('#status-uploaded').text(count);
+                } else if (statusName === 'sold') {
+                    $('#status-sold').text(count);
+                } else if (statusName === 'shipped') {
+                    $('#status-shipped').text(count);
+                }
+            });
+        }
+    });
+}
+
+function formatCurrency(value) {
+    return new Intl.NumberFormat('sv-SE', {
+        style: 'currency',
+        currency: 'SEK',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0
+    }).format(value);
+}
+
+function formatDate(dateStr) {
+    const date = new Date(dateStr);
+    return date.toLocaleDateString('sv-SE', {
+        month: 'short',
+        day: 'numeric'
+    });
+}
+</script>
+{% endblock %}

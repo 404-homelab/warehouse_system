@@ -1,0 +1,24 @@
+Flask==3.0.0
+Werkzeug==3.0.1
+
+# Database
+# SQLite3 is built into Python
+
+# Image Processing
+opencv-python==4.10.0.84
+numpy>=1.26.0,<2.0
+Pillow==10.1.0
+
+# Barcodes
+python-barcode==0.15.1
+pyzbar==0.1.9
+
+# PDF Generation
+reportlab==4.0.7
+
+# Update System
+requests==2.31.0
+flask-cors==4.0.0
+
+# Optional but recommended
+python-dotenv==1.0.0

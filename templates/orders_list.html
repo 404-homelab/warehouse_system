@@ -1,0 +1,391 @@
+{% extends "base.html" %}
+
+{% block title %}Ordrar - Warehouse System{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col">
+            <h1 class="display-4"><i class="bi bi-list-check"></i> Ordrar</h1>
+            <p class="lead">Hantera och följ upp alla ordrar</p>
+        </div>
+        <div class="col-auto">
+            <a href="/orders/new" class="btn btn-success btn-lg">
+                <i class="bi bi-plus-circle"></i> Skapa Ny Order
+            </a>
+        </div>
+    </div>
+
+    <!-- Filter -->
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-md-3">
+                            <label class="form-label">Filtrera på status:</label>
+                            <select class="form-select" id="status-filter">
+                                <option value="">Alla ordrar</option>
+                                <option value="pending">Väntande</option>
+                                <option value="confirmed">Bekräftad</option>
+                                <option value="packed">Packad</option>
+                                <option value="shipped">Skickad</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Betalningsstatus:</label>
+                            <select class="form-select" id="payment-filter">
+                                <option value="">Alla</option>
+                                <option value="unpaid">Obetald</option>
+                                <option value="paid">Betald</option>
+                                <option value="partial">Delvis betald</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Sök:</label>
+                            <input type="text" class="form-control" id="search-input" placeholder="Ordernummer, kundnamn...">
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">&nbsp;</label>
+                            <button class="btn btn-primary w-100" id="apply-filters-btn">
+                                <i class="bi bi-funnel"></i> Filtrera
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card bg-warning text-white">
+                <div class="card-body">
+                    <h6 class="card-title">Väntande</h6>
+                    <h2 class="mb-0" id="stat-pending">0</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <h6 class="card-title">Bekräftade</h6>
+                    <h2 class="mb-0" id="stat-confirmed">0</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <h6 class="card-title">Packade</h6>
+                    <h2 class="mb-0" id="stat-packed">0</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <h6 class="card-title">Skickade</h6>
+                    <h2 class="mb-0" id="stat-shipped">0</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Orders Table -->
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Ordernr</th>
+                            <th>Kund</th>
+                            <th>Antal varor</th>
+                            <th>Belopp</th>
+                            <th>Betalning</th>
+                            <th>Status</th>
+                            <th>Skapad</th>
+                            <th>Åtgärder</th>
+                        </tr>
+                    </thead>
+                    <tbody id="orders-table-body">
+                        <tr>
+                            <td colspan="8" class="text-center">
+                                <div class="spinner-border" role="status">
+                                    <span class="visually-hidden">Laddar...</span>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Order Details Modal -->
+<div class="modal fade" id="orderModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Order <span id="modal-order-number"></span></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="order-details-content">
+                <!-- Loaded dynamically -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Stäng</button>
+                <a href="#" class="btn btn-primary" id="edit-order-btn">
+                    <i class="bi bi-pencil"></i> Redigera
+                </a>
+                <button type="button" class="btn btn-success" id="print-packing-slip-modal-btn">
+                    <i class="bi bi-printer"></i> Packlista
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.badge-status {
+    font-size: 0.85rem;
+    padding: 0.35em 0.65em;
+}
+
+.order-row {
+    cursor: pointer;
+}
+
+.order-row:hover {
+    background-color: #f8f9fa;
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+let allOrders = [];
+let currentOrder = null;
+
+$(document).ready(function() {
+    loadOrders();
+    
+    $('#status-filter, #payment-filter').change(applyFilters);
+    $('#search-input').on('input', applyFilters);
+    $('#apply-filters-btn').click(applyFilters);
+});
+
+function loadOrders() {
+    $.get('/api/orders', function(data) {
+        if (data.success) {
+            allOrders = data.orders;
+            updateStatistics();
+            displayOrders(allOrders);
+        }
+    });
+}
+
+function updateStatistics() {
+    const stats = {
+        pending: 0,
+        confirmed: 0,
+        packed: 0,
+        shipped: 0
+    };
+    
+    allOrders.forEach(order => {
+        if (stats.hasOwnProperty(order.status)) {
+            stats[order.status]++;
+        }
+    });
+    
+    $('#stat-pending').text(stats.pending);
+    $('#stat-confirmed').text(stats.confirmed);
+    $('#stat-packed').text(stats.packed);
+    $('#stat-shipped').text(stats.shipped);
+}
+
+function applyFilters() {
+    const statusFilter = $('#status-filter').val();
+    const paymentFilter = $('#payment-filter').val();
+    const searchTerm = $('#search-input').val().toLowerCase();
+    
+    let filtered = allOrders;
+    
+    if (statusFilter) {
+        filtered = filtered.filter(o => o.status === statusFilter);
+    }
+    
+    if (paymentFilter) {
+        filtered = filtered.filter(o => o.payment_status === paymentFilter);
+    }
+    
+    if (searchTerm) {
+        filtered = filtered.filter(o => 
+            o.order_number.toLowerCase().includes(searchTerm) ||
+            (o.customer_name && o.customer_name.toLowerCase().includes(searchTerm))
+        );
+    }
+    
+    displayOrders(filtered);
+}
+
+function displayOrders(orders) {
+    const tbody = $('#orders-table-body');
+    tbody.empty();
+    
+    if (orders.length === 0) {
+        tbody.append('<tr><td colspan="8" class="text-center text-muted">Inga ordrar hittades</td></tr>');
+        return;
+    }
+    
+    orders.forEach(order => {
+        const statusBadge = getStatusBadge(order.status);
+        const paymentBadge = getPaymentBadge(order.payment_status);
+        const date = new Date(order.created_at).toLocaleDateString('sv-SE');
+        
+        const row = $(`
+            <tr class="order-row" data-order-id="${order.id}">
+                <td><strong>${order.order_number}</strong></td>
+                <td>${order.customer_name || 'Okänd'}</td>
+                <td><span class="badge bg-secondary">${order.item_count || 0} st</span></td>
+                <td><strong>${Math.round(order.total_amount || 0)} kr</strong></td>
+                <td>${paymentBadge}</td>
+                <td>${statusBadge}</td>
+                <td>${date}</td>
+                <td>
+                    <button class="btn btn-sm btn-primary" onclick="viewOrder(${order.id}); event.stopPropagation();">
+                        <i class="bi bi-eye"></i>
+                    </button>
+                    <button class="btn btn-sm btn-success" onclick="updateOrderStatus(${order.id}, '${getNextStatus(order.status)}'); event.stopPropagation();">
+                        <i class="bi bi-arrow-right"></i>
+                    </button>
+                </td>
+            </tr>
+        `);
+        
+        row.click(() => viewOrder(order.id));
+        tbody.append(row);
+    });
+}
+
+function getStatusBadge(status) {
+    const badges = {
+        'pending': '<span class="badge bg-warning badge-status">Väntande</span>',
+        'confirmed': '<span class="badge bg-info badge-status">Bekräftad</span>',
+        'packed': '<span class="badge bg-primary badge-status">Packad</span>',
+        'shipped': '<span class="badge bg-success badge-status">Skickad</span>'
+    };
+    return badges[status] || '<span class="badge bg-secondary badge-status">' + status + '</span>';
+}
+
+function getPaymentBadge(payment) {
+    const badges = {
+        'unpaid': '<span class="badge bg-danger">Obetald</span>',
+        'paid': '<span class="badge bg-success">Betald</span>',
+        'partial': '<span class="badge bg-warning">Delvis</span>'
+    };
+    return badges[payment] || '<span class="badge bg-secondary">' + payment + '</span>';
+}
+
+function getNextStatus(currentStatus) {
+    const flow = {
+        'pending': 'confirmed',
+        'confirmed': 'packed',
+        'packed': 'shipped',
+        'shipped': 'shipped'
+    };
+    return flow[currentStatus] || currentStatus;
+}
+
+function viewOrder(orderId) {
+    $.get(`/api/orders/${orderId}`, function(data) {
+        if (data.success) {
+            currentOrder = data.order;
+            displayOrderDetails(data.order);
+            $('#orderModal').modal('show');
+        }
+    });
+}
+
+function displayOrderDetails(order) {
+    $('#modal-order-number').text(order.order_number);
+    $('#edit-order-btn').attr('href', `/orders/${order.id}/edit`);
+    
+    let itemsHtml = '';
+    if (order.items && order.items.length > 0) {
+        order.items.forEach(item => {
+            itemsHtml += `
+                <div class="border rounded p-2 mb-2">
+                    <strong>${item.inventory_id}</strong> - ${item.description}<br>
+                    <small class="text-muted">Plats: ${item.location_code || 'N/A'}</small>
+                    <strong class="float-end text-success">${item.price} kr</strong>
+                </div>
+            `;
+        });
+    }
+    
+    const content = `
+        <div class="row">
+            <div class="col-md-6">
+                <h6>Kunduppgifter:</h6>
+                <p>
+                    <strong>${order.customer_name}</strong><br>
+                    ${order.address}<br>
+                    ${order.postal_code} ${order.city}<br>
+                    ${order.country}<br>
+                    ${order.phone ? 'Tel: ' + order.phone + '<br>' : ''}
+                    ${order.email ? 'E-post: ' + order.email : ''}
+                </p>
+            </div>
+            <div class="col-md-6">
+                <h6>Orderinformation:</h6>
+                <p>
+                    <strong>Status:</strong> ${getStatusBadge(order.status)}<br>
+                    <strong>Betalning:</strong> ${getPaymentBadge(order.payment_status)}<br>
+                    <strong>Fraktmetod:</strong> ${order.shipping_method || 'Ej angiven'}<br>
+                    <strong>Spårningsnr:</strong> ${order.tracking_number || 'Ej angiven'}<br>
+                    <strong>Totalt:</strong> <span class="text-success">${Math.round(order.total_amount)} kr</span>
+                </p>
+            </div>
+        </div>
+        
+        <hr>
+        
+        <h6>Varor (${order.items ? order.items.length : 0} st):</h6>
+        ${itemsHtml || '<p class="text-muted">Inga varor</p>'}
+        
+        ${order.notes ? `<hr><h6>Anteckningar:</h6><p>${order.notes}</p>` : ''}
+    `;
+    
+    $('#order-details-content').html(content);
+}
+
+function updateOrderStatus(orderId, newStatus) {
+    if (confirm(`Uppdatera orderstatus till "${newStatus}"?`)) {
+        $.ajax({
+            url: `/api/orders/${orderId}`,
+            type: 'PUT',
+            contentType: 'application/json',
+            data: JSON.stringify({ status: newStatus }),
+            success: function() {
+                showToast(`Order uppdaterad till ${newStatus}`, 'success');
+                loadOrders();
+            },
+            error: function() {
+                showToast('Fel vid uppdatering', 'error');
+            }
+        });
+    }
+}
+
+$('#print-packing-slip-modal-btn').click(function() {
+    if (currentOrder) {
+        window.open(`/api/export/pdf/packing-slip/${currentOrder.id}`, '_blank');
+    }
+});
+</script>
+{% endblock %}

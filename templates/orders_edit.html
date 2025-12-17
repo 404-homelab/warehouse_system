@@ -1,0 +1,198 @@
+{% extends "base.html" %}
+
+{% block title %}Redigera Order - Warehouse System{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col">
+            <h1 class="display-4"><i class="bi bi-pencil"></i> Redigera Order</h1>
+            <p class="lead">Order: <span id="order-number-display"></span></p>
+        </div>
+        <div class="col-auto">
+            <a href="/orders" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Tillbaka till ordrar
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Orderdetaljer</h5>
+                    
+                    <form id="edit-order-form">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Betalningsstatus</label>
+                                <select class="form-select" id="payment-status">
+                                    <option value="unpaid">Obetald</option>
+                                    <option value="paid">Betald</option>
+                                    <option value="partial">Delvis betald</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Orderstatus</label>
+                                <select class="form-select" id="order-status">
+                                    <option value="pending">Väntande</option>
+                                    <option value="confirmed">Bekräftad</option>
+                                    <option value="packed">Packad</option>
+                                    <option value="shipped">Skickad</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Fraktmetod</label>
+                            <select class="form-select" id="shipping-method">
+                                <option value="">Välj fraktmetod...</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Spårningsnummer</label>
+                            <input type="text" class="form-control" id="tracking-number">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Anteckningar</label>
+                            <textarea class="form-control" id="order-notes" rows="3"></textarea>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-success">
+                                <i class="bi bi-check-circle"></i> Spara ändringar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h6 class="card-title">Kund</h6>
+                    <div id="customer-info"></div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <h6 class="card-title">Varor (<span id="items-count">0</span> st)</h6>
+                    <div id="items-list"></div>
+                    <hr>
+                    <strong>Total: <span id="total-amount">0</span> kr</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const orderId = {{ order_id }};
+let currentOrder = null;
+
+$(document).ready(function() {
+    loadOrder();
+    loadShippingMethods();
+    
+    $('#edit-order-form').submit(saveOrder);
+});
+
+function loadShippingMethods() {
+    $.get('/api/shipping-methods?active_only=true', function(data) {
+        const select = $('#shipping-method');
+        select.empty();
+        select.append('<option value="">Välj fraktmetod...</option>');
+        
+        if (data.methods && data.methods.length > 0) {
+            data.methods.forEach(function(method) {
+                select.append(`<option value="${method.name}">${method.name}</option>`);
+            });
+        }
+    });
+}
+
+function loadOrder() {
+    $.get(`/api/orders/${orderId}`, function(data) {
+        if (data.success && data.order) {
+            currentOrder = data.order;
+            displayOrder(data.order);
+        } else {
+            showToast('Order hittades inte', 'error');
+            setTimeout(() => window.location.href = '/orders', 2000);
+        }
+    });
+}
+
+function displayOrder(order) {
+    $('#order-number-display').text(order.order_number);
+    
+    // Form fields
+    $('#payment-status').val(order.payment_status);
+    $('#order-status').val(order.status);
+    $('#shipping-method').val(order.shipping_method || '');
+    $('#tracking-number').val(order.tracking_number || '');
+    $('#order-notes').val(order.notes || '');
+    
+    // Customer info
+    const customerHtml = `
+        <p class="mb-1"><strong>${order.customer_name}</strong></p>
+        <p class="mb-1 small">${order.address}</p>
+        <p class="mb-1 small">${order.postal_code} ${order.city}</p>
+        ${order.phone ? `<p class="mb-0 small">Tel: ${order.phone}</p>` : ''}
+    `;
+    $('#customer-info').html(customerHtml);
+    
+    // Items
+    $('#items-count').text(order.items ? order.items.length : 0);
+    
+    let itemsHtml = '';
+    if (order.items && order.items.length > 0) {
+        order.items.forEach(item => {
+            itemsHtml += `
+                <div class="border-bottom py-2">
+                    <small><strong>${item.inventory_id}</strong></small><br>
+                    <small class="text-muted">${item.description}</small><br>
+                    <strong class="text-success">${item.price} kr</strong>
+                </div>
+            `;
+        });
+    }
+    $('#items-list').html(itemsHtml);
+    
+    // Total
+    $('#total-amount').text(Math.round(order.total_amount || 0));
+}
+
+function saveOrder(e) {
+    e.preventDefault();
+    
+    const data = {
+        payment_status: $('#payment-status').val(),
+        status: $('#order-status').val(),
+        shipping_method: $('#shipping-method').val(),
+        tracking_number: $('#tracking-number').val(),
+        notes: $('#order-notes').val()
+    };
+    
+    $.ajax({
+        url: `/api/orders/${orderId}`,
+        type: 'PUT',
+        contentType: 'application/json',
+        data: JSON.stringify(data),
+        success: function() {
+            showToast('Order uppdaterad!', 'success');
+            setTimeout(() => window.location.href = '/orders', 1500);
+        },
+        error: function() {
+            showToast('Fel vid uppdatering', 'error');
+        }
+    });
+}
+</script>
+{% endblock %}

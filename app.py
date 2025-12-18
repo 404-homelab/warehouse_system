@@ -2,7 +2,7 @@
 Warehouse Management System
 Main Flask Application
 """
-from flask import Flask, render_template, request, jsonify, send_file
+from flask import Flask, render_template, request, jsonify, send_file, make_response, redirect
 from datetime import datetime
 import os
 from database import Database
@@ -28,8 +28,72 @@ os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 os.makedirs('static/barcodes', exist_ok=True)
 os.makedirs('static/exports', exist_ok=True)
 
+# Load translations
+TRANSLATIONS = {}
+try:
+    with open('static/translations.json', 'r', encoding='utf-8') as f:
+        TRANSLATIONS = json.load(f)
+    print(f"✓ Loaded translations for: {', '.join(TRANSLATIONS.keys())}")
+except FileNotFoundError:
+    print("⚠ translations.json not found, using Swedish only")
+    TRANSLATIONS = {'sv': {}}
+
+def get_language():
+    """Get user's preferred language from cookie or Accept-Language header"""
+    try:
+        # First check cookie
+        lang = request.cookies.get('language')
+        if lang and lang in TRANSLATIONS:
+            return lang
+        
+        # Fallback to Accept-Language header
+        lang = request.accept_languages.best_match(TRANSLATIONS.keys())
+        return lang or 'sv'
+    except RuntimeError:
+        # No request context (e.g., in CLI commands)
+        return 'sv'
+
+@app.context_processor
+def inject_translations():
+    """Make translations and language available in all templates"""
+    lang = get_language()
+    translations = TRANSLATIONS.get(lang, TRANSLATIONS.get('sv', {}))
+    
+    # Provide empty dict structure if translations not loaded
+    if not translations:
+        translations = {
+            'nav': {},
+            'register': {},
+            'packing': {},
+            'common': {}
+        }
+    
+    return {
+        't': translations,
+        'current_lang': lang,
+        'available_langs': list(TRANSLATIONS.keys()) if TRANSLATIONS else ['sv']
+    }
+
+
 
 # ==================== WEB ROUTES ====================
+
+# ==================== LANGUAGE MANAGEMENT ====================
+
+@app.route('/set-language/<lang>')
+def set_language(lang):
+    """Set user's preferred language"""
+    if lang not in TRANSLATIONS:
+        return jsonify({'success': False, 'error': 'Language not supported'}), 400
+    
+    # Redirect back to referring page or home
+    response = make_response(redirect(request.referrer or '/'))
+    response.set_cookie('language', lang, max_age=31536000)  # 1 year
+    
+    return response
+
+
+# ==================== MAIN ROUTES ====================
 
 @app.route('/')
 def index():
@@ -83,6 +147,12 @@ def marketplace():
 def admin():
     """Admin page"""
     return render_template('admin.html')
+
+
+@app.route('/test/i18n')
+def test_i18n():
+    """i18n test page"""
+    return render_template('test_i18n.html')
 
 
 @app.route('/reports')
@@ -1380,9 +1450,268 @@ def get_top_items():
 
 @app.route('/admin/updates')
 def admin_updates():
-    """Update management page"""
-    return render_template('admin_updates.html')
+    """Git-based update management page"""
+    return render_template('admin_git_updates.html')
 
+
+# ==================== GIT UPDATE API ====================
+
+@app.route('/api/git/status', methods=['GET'])
+def git_status():
+    """Get git repository status"""
+    try:
+        import subprocess
+        
+        # Check if git repo
+        if not os.path.exists('.git'):
+            return jsonify({
+                'success': True,
+                'is_git_repo': False,
+                'can_initialize': True,
+                'message': 'This directory is not a git repository. You can initialize it to enable git updates.'
+            })
+        
+        # Get current version/commit
+        current = subprocess.check_output(['git', 'rev-parse', '--short', 'HEAD'], text=True).strip()
+        branch = subprocess.check_output(['git', 'rev-parse', '--abbrev-ref', 'HEAD'], text=True).strip()
+        
+        # Get remote URL
+        try:
+            remote = subprocess.check_output(['git', 'remote', 'get-url', 'origin'], text=True).strip()
+        except:
+            remote = None
+        
+        # Only fetch if remote exists
+        if remote:
+            subprocess.run(['git', 'fetch', 'origin'], capture_output=True, timeout=10)
+            
+            # Check if updates available
+            try:
+                local = subprocess.check_output(['git', 'rev-parse', '@'], text=True).strip()
+                remote_commit = subprocess.check_output(['git', 'rev-parse', '@{u}'], text=True).strip()
+                updates_available = local != remote_commit
+            except:
+                updates_available = False
+            
+            # Get commit log if updates available
+            changelog = []
+            if updates_available:
+                try:
+                    log_output = subprocess.check_output(
+                        ['git', 'log', '--oneline', '--decorate', 'HEAD..@{u}'],
+                        text=True
+                    )
+                    changelog = log_output.strip().split('\n') if log_output.strip() else []
+                except:
+                    changelog = []
+        else:
+            updates_available = False
+            changelog = []
+        
+        # Get last update time
+        last_commit_time = subprocess.check_output(
+            ['git', 'log', '-1', '--format=%cd', '--date=iso'],
+            text=True
+        ).strip()
+        
+        return jsonify({
+            'success': True,
+            'is_git_repo': True,
+            'current_commit': current,
+            'branch': branch,
+            'remote_url': remote or 'No remote configured',
+            'updates_available': updates_available,
+            'commits_behind': len(changelog),
+            'changelog': changelog,
+            'last_update': last_commit_time,
+            'can_initialize': False
+        })
+        
+    except subprocess.TimeoutExpired:
+        return jsonify({'success': False, 'error': 'Git command timeout'})
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)})
+
+
+@app.route('/api/git/init', methods=['POST'])
+def git_init():
+    """Initialize git repository and connect to remote"""
+    try:
+        import subprocess
+        
+        data = request.json or {}
+        remote_url = data.get('remote_url', 'https://github.com/404-homelab/warehouse_system.git')
+        
+        # Initialize git repo
+        subprocess.run(['git', 'init'], check=True, capture_output=True)
+        
+        # Add remote
+        subprocess.run(['git', 'remote', 'add', 'origin', remote_url], check=True, capture_output=True)
+        
+        # Fetch from remote
+        subprocess.run(['git', 'fetch', 'origin'], check=True, capture_output=True, timeout=30)
+        
+        # Get default branch
+        try:
+            default_branch = subprocess.check_output(
+                ['git', 'symbolic-ref', 'refs/remotes/origin/HEAD', '--short'],
+                text=True
+            ).strip().replace('origin/', '')
+        except:
+            # Try common branch names
+            for branch in ['master', 'main']:
+                result = subprocess.run(
+                    ['git', 'ls-remote', '--heads', 'origin', branch],
+                    capture_output=True,
+                    text=True
+                )
+                if result.stdout.strip():
+                    default_branch = branch
+                    break
+            else:
+                default_branch = 'master'  # Fallback
+        
+        # Reset to match remote
+        subprocess.run(
+            ['git', 'reset', '--hard', f'origin/{default_branch}'],
+            check=True,
+            capture_output=True
+        )
+        
+        # Set up tracking
+        subprocess.run(
+            ['git', 'branch', '--set-upstream-to', f'origin/{default_branch}', default_branch],
+            capture_output=True
+        )
+        
+        return jsonify({
+            'success': True,
+            'message': f'Git repository initialized and connected to {remote_url}',
+            'branch': default_branch
+        })
+        
+    except subprocess.TimeoutExpired:
+        return jsonify({'success': False, 'error': 'Git operation timeout'})
+    except subprocess.CalledProcessError as e:
+        return jsonify({'success': False, 'error': f'Git error: {e.stderr.decode() if e.stderr else str(e)}'})
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)})
+
+
+@app.route('/api/git/update', methods=['POST'])
+def git_update():
+    """Perform git pull update"""
+    try:
+        import subprocess
+        import sys
+        import shutil
+        from datetime import datetime
+        
+        # Check if git repo
+        if not os.path.exists('.git'):
+            return jsonify({'success': False, 'error': 'Not a git repository'})
+        
+        # Backup database
+        backup_name = f"warehouse.db.backup.{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+        shutil.copy('warehouse.db', backup_name)
+        
+        # Pull updates
+        result = subprocess.run(
+            ['git', 'pull', 'origin', 'master'],
+            capture_output=True,
+            text=True,
+            timeout=30
+        )
+        
+        if result.returncode != 0:
+            return jsonify({
+                'success': False,
+                'error': f'Git pull failed: {result.stderr}'
+            })
+        
+        # Update dependencies
+        subprocess.run(
+            [sys.executable, '-m', 'pip', 'install', '-r', 'requirements.txt', '--break-system-packages'],
+            capture_output=True,
+            timeout=60
+        )
+        
+        # Log action
+        db.log_action('GIT_UPDATE', None, 'Admin', 'Updated from git')
+        
+        return jsonify({
+            'success': True,
+            'message': 'Update complete. Restart required.',
+            'output': result.stdout,
+            'backup': backup_name
+        })
+        
+    except subprocess.TimeoutExpired:
+        return jsonify({'success': False, 'error': 'Update timeout'})
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)})
+
+
+@app.route('/api/git/restart', methods=['POST'])
+def git_restart():
+    """Restart the application"""
+    try:
+        import subprocess
+        import signal
+        
+        # Log action
+        db.log_action('APP_RESTART', None, 'Admin', 'Restarting application')
+        
+        # Try restart script first
+        if os.path.exists('restart.sh'):
+            subprocess.Popen(['bash', 'restart.sh'])
+            return jsonify({'success': True, 'message': 'Restarting via script...'})
+        
+        # Otherwise kill process - systemd will restart
+        os.kill(os.getpid(), signal.SIGTERM)
+        
+        return jsonify({'success': True, 'message': 'Restarting...'})
+        
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)})
+
+
+@app.route('/api/git/auto-update', methods=['POST'])
+def git_auto_update_config():
+    """Configure auto-update settings"""
+    try:
+        data = request.json
+        
+        # Load or create config
+        config = {}
+        config_file = 'git_update_config.json'
+        
+        if os.path.exists(config_file):
+            with open(config_file, 'r') as f:
+                config = json.load(f)
+        
+        # Update settings
+        config['auto_update'] = data.get('auto_update', False)
+        config['check_interval'] = data.get('check_interval', 86400)
+        config['auto_restart'] = data.get('auto_restart', True)
+        
+        # Save
+        with open(config_file, 'w') as f:
+            json.dump(config, f, indent=2)
+        
+        # Log action
+        db.log_action('AUTO_UPDATE_CONFIG', None, 'Admin', 
+                     f"Auto-update: {config['auto_update']}, Auto-restart: {config['auto_restart']}")
+        
+        return jsonify({'success': True})
+        
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)})
+
+
+# ==================== LEGACY UPDATE ROUTES (for backward compatibility) ====================
+# These routes are kept for compatibility with old update_client.py system
+# New installations should use Git-based updates above
 
 @app.route('/api/update/config', methods=['GET'])
 def get_update_config():
@@ -1724,6 +2053,20 @@ if __name__ == '__main__':
     # Initialize database
     db.init_db()
     
+    # Initialize git update config if not exists
+    if not os.path.exists('git_update_config.json'):
+        default_config = {
+            'auto_update': False,
+            'check_interval': 86400,
+            'auto_restart': True
+        }
+        with open('git_update_config.json', 'w') as f:
+            json.dump(default_config, f, indent=2)
+    
+    # Check for SSL certificates (optional)
+    ssl_context = None
+    if os.path.exists('cert.pem') and os.path.exists('key.pem'):
+        ssl_context = ('cert.pem', 'key.pem')
+    
     # Run application
-    app.run(host='0.0.0.0', port=5000, debug=True, 
-        ssl_context=('cert.pem', 'key.pem'))
+    app.run(host='0.0.0.0', port=5000, debug=True, ssl_context=ssl_context)

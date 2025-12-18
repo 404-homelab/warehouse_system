@@ -1,0 +1,389 @@
+{
+  "sv": {
+    "nav": {
+      "home": "Hem",
+      "register": "Registrera",
+      "inventory": "Lager",
+      "orders": "Ordrar",
+      "packing": "Packa",
+      "search": "Sök",
+      "marketplace": "Marknadsplats",
+      "reports": "Rapporter",
+      "admin": "Admin"
+    },
+    "register": {
+      "title": "Registrera Produkt",
+      "quick_info": "Snabb-registrering: Fyll i beskrivning, skick och pris → Scanna hyllplats → Produkten registreras automatiskt!",
+      "camera": "Kamera",
+      "start_camera": "Starta Kamera",
+      "capture": "Ta Bild",
+      "description": "Beskrivning",
+      "condition": "Skick",
+      "price": "Pris",
+      "location": "Hyllplats",
+      "register_btn": "Registrera Produkt",
+      "auto_registering": "🚀 Registrerar automatiskt...",
+      "fill_required": "⚠️ Fyll i beskrivning, skick och pris först"
+    },
+    "packing": {
+      "title": "Packa Order",
+      "celebration_title": "🎉 Grattis!",
+      "celebration_subtitle": "Alla ordrar är packade!",
+      "packed_today": "Packade idag",
+      "check_new_orders": "Kolla efter nya ordrar"
+    },
+    "common": {
+      "save": "Spara",
+      "cancel": "Avbryt",
+      "delete": "Ta bort",
+      "search": "Sök",
+      "loading": "Laddar...",
+      "success": "Lyckades!",
+      "error": "Fel"
+    }
+  },
+  "en": {
+    "nav": {
+      "home": "Home",
+      "register": "Register",
+      "inventory": "Inventory",
+      "orders": "Orders",
+      "packing": "Packing",
+      "search": "Search",
+      "marketplace": "Marketplace",
+      "reports": "Reports",
+      "admin": "Admin"
+    },
+    "register": {
+      "title": "Register Product",
+      "quick_info": "Quick registration: Fill description, condition and price → Scan location → Product registered automatically!",
+      "camera": "Camera",
+      "start_camera": "Start Camera",
+      "capture": "Capture",
+      "description": "Description",
+      "condition": "Condition",
+      "price": "Price",
+      "location": "Location",
+      "register_btn": "Register Product",
+      "auto_registering": "🚀 Registering automatically...",
+      "fill_required": "⚠️ Fill description, condition and price first"
+    },
+    "packing": {
+      "title": "Pack Order",
+      "celebration_title": "🎉 Congratulations!",
+      "celebration_subtitle": "All orders packed!",
+      "packed_today": "Packed Today",
+      "check_new_orders": "Check for New Orders"
+    },
+    "common": {
+      "save": "Save",
+      "cancel": "Cancel",
+      "delete": "Delete",
+      "search": "Search",
+      "loading": "Loading...",
+      "success": "Success!",
+      "error": "Error"
+    }
+  },
+  "de": {
+    "nav": {
+      "home": "Startseite",
+      "register": "Registrieren",
+      "inventory": "Inventar",
+      "orders": "Bestellungen",
+      "packing": "Verpackung",
+      "search": "Suchen",
+      "marketplace": "Marktplatz",
+      "reports": "Berichte",
+      "admin": "Admin"
+    },
+    "register": {
+      "title": "Produkt Registrieren",
+      "quick_info": "Schnellregistrierung: Beschreibung, Zustand und Preis ausfüllen → Standort scannen → Produkt automatisch registriert!",
+      "camera": "Kamera",
+      "start_camera": "Kamera Starten",
+      "capture": "Aufnehmen",
+      "description": "Beschreibung",
+      "condition": "Zustand",
+      "price": "Preis",
+      "location": "Standort",
+      "register_btn": "Produkt Registrieren",
+      "auto_registering": "🚀 Automatische Registrierung...",
+      "fill_required": "⚠️ Beschreibung, Zustand und Preis zuerst ausfüllen"
+    },
+    "packing": {
+      "title": "Bestellung Verpacken",
+      "celebration_title": "🎉 Glückwunsch!",
+      "celebration_subtitle": "Alle Bestellungen verpackt!",
+      "packed_today": "Heute Verpackt",
+      "check_new_orders": "Nach Neuen Bestellungen Suchen"
+    },
+    "common": {
+      "save": "Speichern",
+      "cancel": "Abbrechen",
+      "delete": "Löschen",
+      "search": "Suchen",
+      "loading": "Lädt...",
+      "success": "Erfolg!",
+      "error": "Fehler"
+    }
+  },
+  "fr": {
+    "nav": {
+      "home": "Accueil",
+      "register": "Enregistrer",
+      "inventory": "Inventaire",
+      "orders": "Commandes",
+      "packing": "Emballage",
+      "search": "Rechercher",
+      "marketplace": "Place de Marché",
+      "reports": "Rapports",
+      "admin": "Admin"
+    },
+    "register": {
+      "title": "Enregistrer Produit",
+      "quick_info": "Enregistrement rapide : Remplir description, état et prix → Scanner l'emplacement → Produit enregistré automatiquement !",
+      "camera": "Caméra",
+      "start_camera": "Démarrer Caméra",
+      "capture": "Capturer",
+      "description": "Description",
+      "condition": "État",
+      "price": "Prix",
+      "location": "Emplacement",
+      "register_btn": "Enregistrer Produit",
+      "auto_registering": "🚀 Enregistrement automatique...",
+      "fill_required": "⚠️ Remplir description, état et prix d'abord"
+    },
+    "packing": {
+      "title": "Emballer Commande",
+      "celebration_title": "🎉 Félicitations !",
+      "celebration_subtitle": "Toutes les commandes emballées !",
+      "packed_today": "Emballé Aujourd'hui",
+      "check_new_orders": "Vérifier Nouvelles Commandes"
+    },
+    "common": {
+      "save": "Enregistrer",
+      "cancel": "Annuler",
+      "delete": "Supprimer",
+      "search": "Rechercher",
+      "loading": "Chargement...",
+      "success": "Succès !",
+      "error": "Erreur"
+    }
+  },
+  "es": {
+    "nav": {
+      "home": "Inicio",
+      "register": "Registrar",
+      "inventory": "Inventario",
+      "orders": "Pedidos",
+      "packing": "Empaquetar",
+      "search": "Buscar",
+      "marketplace": "Mercado",
+      "reports": "Informes",
+      "admin": "Admin"
+    },
+    "register": {
+      "title": "Registrar Producto",
+      "quick_info": "Registro rápido: Llenar descripción, estado y precio → Escanear ubicación → ¡Producto registrado automáticamente!",
+      "camera": "Cámara",
+      "start_camera": "Iniciar Cámara",
+      "capture": "Capturar",
+      "description": "Descripción",
+      "condition": "Estado",
+      "price": "Precio",
+      "location": "Ubicación",
+      "register_btn": "Registrar Producto",
+      "auto_registering": "🚀 Registrando automáticamente...",
+      "fill_required": "⚠️ Llenar descripción, estado y precio primero"
+    },
+    "packing": {
+      "title": "Empaquetar Pedido",
+      "celebration_title": "🎉 ¡Felicitaciones!",
+      "celebration_subtitle": "¡Todos los pedidos empaquetados!",
+      "packed_today": "Empaquetado Hoy",
+      "check_new_orders": "Buscar Nuevos Pedidos"
+    },
+    "common": {
+      "save": "Guardar",
+      "cancel": "Cancelar",
+      "delete": "Eliminar",
+      "search": "Buscar",
+      "loading": "Cargando...",
+      "success": "¡Éxito!",
+      "error": "Error"
+    }
+  },
+  "no": {
+    "nav": {
+      "home": "Hjem",
+      "register": "Registrer",
+      "inventory": "Lager",
+      "orders": "Ordrer",
+      "packing": "Pakking",
+      "search": "Søk",
+      "marketplace": "Markedsplass",
+      "reports": "Rapporter",
+      "admin": "Admin"
+    },
+    "register": {
+      "title": "Registrer Produkt",
+      "quick_info": "Hurtigregistrering: Fyll ut beskrivelse, tilstand og pris → Skann lokasjon → Produkt registrert automatisk!",
+      "camera": "Kamera",
+      "start_camera": "Start Kamera",
+      "capture": "Ta Bilde",
+      "description": "Beskrivelse",
+      "condition": "Tilstand",
+      "price": "Pris",
+      "location": "Lokasjon",
+      "register_btn": "Registrer Produkt",
+      "auto_registering": "🚀 Registrerer automatisk...",
+      "fill_required": "⚠️ Fyll ut beskrivelse, tilstand og pris først"
+    },
+    "packing": {
+      "title": "Pakk Ordre",
+      "celebration_title": "🎉 Gratulerer!",
+      "celebration_subtitle": "Alle ordrer pakket!",
+      "packed_today": "Pakket I Dag",
+      "check_new_orders": "Sjekk Nye Ordrer"
+    },
+    "common": {
+      "save": "Lagre",
+      "cancel": "Avbryt",
+      "delete": "Slett",
+      "search": "Søk",
+      "loading": "Laster...",
+      "success": "Suksess!",
+      "error": "Feil"
+    }
+  },
+  "da": {
+    "nav": {
+      "home": "Hjem",
+      "register": "Registrer",
+      "inventory": "Lager",
+      "orders": "Ordrer",
+      "packing": "Pakning",
+      "search": "Søg",
+      "marketplace": "Markedsplads",
+      "reports": "Rapporter",
+      "admin": "Admin"
+    },
+    "register": {
+      "title": "Registrer Produkt",
+      "quick_info": "Hurtig registrering: Udfyld beskrivelse, tilstand og pris → Scan placering → Produkt registreret automatisk!",
+      "camera": "Kamera",
+      "start_camera": "Start Kamera",
+      "capture": "Tag Billede",
+      "description": "Beskrivelse",
+      "condition": "Tilstand",
+      "price": "Pris",
+      "location": "Placering",
+      "register_btn": "Registrer Produkt",
+      "auto_registering": "🚀 Registrerer automatisk...",
+      "fill_required": "⚠️ Udfyld beskrivelse, tilstand og pris først"
+    },
+    "packing": {
+      "title": "Pak Ordre",
+      "celebration_title": "🎉 Tillykke!",
+      "celebration_subtitle": "Alle ordrer pakket!",
+      "packed_today": "Pakket I Dag",
+      "check_new_orders": "Tjek Nye Ordrer"
+    },
+    "common": {
+      "save": "Gem",
+      "cancel": "Annuller",
+      "delete": "Slet",
+      "search": "Søg",
+      "loading": "Indlæser...",
+      "success": "Succes!",
+      "error": "Fejl"
+    }
+  },
+  "fi": {
+    "nav": {
+      "home": "Koti",
+      "register": "Rekisteröi",
+      "inventory": "Varasto",
+      "orders": "Tilaukset",
+      "packing": "Pakkaus",
+      "search": "Hae",
+      "marketplace": "Markkinapaikka",
+      "reports": "Raportit",
+      "admin": "Ylläpito"
+    },
+    "register": {
+      "title": "Rekisteröi Tuote",
+      "quick_info": "Pikarekisteröinti: Täytä kuvaus, kunto ja hinta → Skannaa sijainti → Tuote rekisteröity automaattisesti!",
+      "camera": "Kamera",
+      "start_camera": "Käynnistä Kamera",
+      "capture": "Ota Kuva",
+      "description": "Kuvaus",
+      "condition": "Kunto",
+      "price": "Hinta",
+      "location": "Sijainti",
+      "register_btn": "Rekisteröi Tuote",
+      "auto_registering": "🚀 Rekisteröidään automaattisesti...",
+      "fill_required": "⚠️ Täytä kuvaus, kunto ja hinta ensin"
+    },
+    "packing": {
+      "title": "Pakkaa Tilaus",
+      "celebration_title": "🎉 Onnittelut!",
+      "celebration_subtitle": "Kaikki tilaukset pakattu!",
+      "packed_today": "Pakattu Tänään",
+      "check_new_orders": "Tarkista Uudet Tilaukset"
+    },
+    "common": {
+      "save": "Tallenna",
+      "cancel": "Peruuta",
+      "delete": "Poista",
+      "search": "Hae",
+      "loading": "Ladataan...",
+      "success": "Onnistui!",
+      "error": "Virhe"
+    }
+  },
+  "pl": {
+    "nav": {
+      "home": "Strona Główna",
+      "register": "Zarejestruj",
+      "inventory": "Magazyn",
+      "orders": "Zamówienia",
+      "packing": "Pakowanie",
+      "search": "Szukaj",
+      "marketplace": "Rynek",
+      "reports": "Raporty",
+      "admin": "Admin"
+    },
+    "register": {
+      "title": "Zarejestruj Produkt",
+      "quick_info": "Szybka rejestracja: Wypełnij opis, stan i cenę → Zeskanuj lokalizację → Produkt zarejestrowany automatycznie!",
+      "camera": "Kamera",
+      "start_camera": "Uruchom Kamerę",
+      "capture": "Zrób Zdjęcie",
+      "description": "Opis",
+      "condition": "Stan",
+      "price": "Cena",
+      "location": "Lokalizacja",
+      "register_btn": "Zarejestruj Produkt",
+      "auto_registering": "🚀 Rejestrowanie automatyczne...",
+      "fill_required": "⚠️ Najpierw wypełnij opis, stan i cenę"
+    },
+    "packing": {
+      "title": "Zapakuj Zamówienie",
+      "celebration_title": "🎉 Gratulacje!",
+      "celebration_subtitle": "Wszystkie zamówienia zapakowane!",
+      "packed_today": "Zapakowano Dzisiaj",
+      "check_new_orders": "Sprawdź Nowe Zamówienia"
+    },
+    "common": {
+      "save": "Zapisz",
+      "cancel": "Anuluj",
+      "delete": "Usuń",
+      "search": "Szukaj",
+      "loading": "Ładowanie...",
+      "success": "Sukces!",
+      "error": "Błąd"
+    }
+  }
+}

@@ -6,7 +6,7 @@
 <div class="container">
     <div class="row mb-4">
         <div class="col">
-            <h1 class="display-4"><i class="bi bi-plus-circle"></i> Registrera Produkt</h1>
+            <h1 class="display-4"><i class="bi bi-plus-circle"></i> {{ t.register.title }}</h1>
             <p class="lead">Fotografera och registrera nya produkter</p>
         </div>
     </div>
@@ -15,8 +15,7 @@
     <div class="row mb-3">
         <div class="col">
             <div class="alert alert-info border-info">
-                <i class="bi bi-lightning-charge"></i> <strong>Snabb-registrering:</strong>
-                Fyll i beskrivning, skick och pris → Scanna hyllplats → Produkten registreras automatiskt! 🚀
+                <i class="bi bi-lightning-charge"></i> <strong>{{ t.register.quick_info }}</strong>
             </div>
         </div>
     </div>
@@ -26,7 +25,7 @@
         <div class="col-md-5">
             <div class="card mb-3">
                 <div class="card-body">
-                    <h5 class="card-title"><i class="bi bi-camera"></i> Kamera (<span id="image-count-display">0</span> bilder)</h5>
+                    <h5 class="card-title"><i class="bi bi-camera"></i> {{ t.register.camera }} (<span id="image-count-display">0</span> {{ t.register.images }})</h5>
                     
                     <!-- Info about camera limitations -->
                     <div id="camera-info" class="alert alert-warning" style="display:none;">

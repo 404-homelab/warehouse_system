@@ -1,0 +1,393 @@
+{% extends "base.html" %}
+
+{% block title %}Git Updates - Warehouse System{% endblock %}
+
+{% block extra_css %}
+<style>
+    .update-card {
+        transition: all 0.3s;
+        border: none;
+        border-radius: 10px;
+    }
+    .status-indicator {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        display: inline-block;
+        margin-right: 8px;
+    }
+    .status-ok { background-color: #28a745; }
+    .status-update { background-color: #ffc107; animation: pulse 2s infinite; }
+    .status-error { background-color: #dc3545; }
+    @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.5; }
+    }
+    .changelog {
+        background: #f8f9fa;
+        padding: 12px;
+        border-radius: 4px;
+        font-family: monospace;
+        font-size: 0.9rem;
+        max-height: 300px;
+        overflow-y: auto;
+    }
+    .changelog-item {
+        padding: 4px 0;
+        border-bottom: 1px solid #dee2e6;
+    }
+    .changelog-item:last-child {
+        border-bottom: none;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col">
+            <h1 class="display-5"><i class="bi bi-git"></i> Git Updates</h1>
+            <p class="lead">Hantera uppdateringar från GitHub</p>
+        </div>
+    </div>
+
+    <!-- Status Card -->
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <div class="card update-card">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <span class="status-indicator" id="status-indicator"></span>
+                        Repository Status
+                    </h5>
+                    
+                    <div id="status-loading" class="text-center py-4">
+                        <div class="spinner-border text-primary" role="status"></div>
+                        <p class="mt-2">Checking for updates...</p>
+                    </div>
+                    
+                    <!-- Not a Git Repo -->
+                    <div id="not-git-repo" style="display:none;">
+                        <div class="alert alert-warning">
+                            <h5><i class="bi bi-exclamation-triangle"></i> Not a Git Repository</h5>
+                            <p class="mb-3">This directory is not connected to Git. Initialize it to enable automatic updates from GitHub.</p>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">GitHub Repository URL:</label>
+                                <input type="text" class="form-control" id="remote-url-input" 
+                                       value="https://github.com/404-homelab/warehouse_system.git" readonly>
+                            </div>
+                            
+                            <button class="btn btn-primary" onclick="initializeGit()">
+                                <i class="bi bi-git"></i> Initialize Git Repository
+                            </button>
+                            
+                            <hr class="my-3">
+                            
+                            <p class="small text-muted mb-0">
+                                <strong>What will happen:</strong><br>
+                                • Initialize git in current directory<br>
+                                • Connect to GitHub repository<br>
+                                • Download latest version<br>
+                                • Enable automatic updates
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div id="status-content" style="display:none;">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <small class="text-muted">Current Commit</small>
+                                <p class="mb-0"><code id="current-commit">-</code></p>
+                            </div>
+                            <div class="col-md-6">
+                                <small class="text-muted">Branch</small>
+                                <p class="mb-0"><span class="badge bg-secondary" id="branch">-</span></p>
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-12">
+                                <small class="text-muted">Remote Repository</small>
+                                <p class="mb-0"><code id="remote-url">-</code></p>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <small class="text-muted">Last Update</small>
+                                <p class="mb-0" id="last-update">-</p>
+                            </div>
+                            <div class="col-md-6">
+                                <small class="text-muted">Commits Behind</small>
+                                <p class="mb-0">
+                                    <span class="badge bg-warning" id="commits-behind">0</span>
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <!-- Changelog -->
+                        <div id="changelog-section" style="display:none;" class="mt-4">
+                            <h6>Available Updates:</h6>
+                            <div class="changelog" id="changelog"></div>
+                        </div>
+                        
+                        <!-- Update Buttons -->
+                        <div class="mt-4">
+                            <button id="check-btn" class="btn btn-primary" onclick="checkUpdates()">
+                                <i class="bi bi-arrow-repeat"></i> Check for Updates
+                            </button>
+                            <button id="update-btn" class="btn btn-success" onclick="performUpdate()" style="display:none;">
+                                <i class="bi bi-download"></i> Install Update
+                            </button>
+                            <button id="restart-btn" class="btn btn-warning" onclick="restartApp()" style="display:none;">
+                                <i class="bi bi-arrow-clockwise"></i> Restart Application
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div id="status-error" style="display:none;" class="alert alert-danger">
+                        <i class="bi bi-exclamation-triangle"></i>
+                        <span id="error-message"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Settings Card -->
+        <div class="col-md-4">
+            <div class="card update-card">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="bi bi-gear"></i> Settings</h5>
+                    
+                    <div class="form-check form-switch mb-3">
+                        <input class="form-check-input" type="checkbox" id="auto-update" onchange="saveSettings()">
+                        <label class="form-check-label" for="auto-update">
+                            Auto-Update (Daily)
+                        </label>
+                        <small class="form-text text-muted d-block">
+                            Automatically check and install updates every night
+                        </small>
+                    </div>
+                    
+                    <div class="form-check form-switch mb-3">
+                        <input class="form-check-input" type="checkbox" id="auto-restart" onchange="saveSettings()">
+                        <label class="form-check-label" for="auto-restart">
+                            Auto-Restart
+                        </label>
+                        <small class="form-text text-muted d-block">
+                            Restart application after update
+                        </small>
+                    </div>
+                    
+                    <hr>
+                    
+                    <h6>Quick Actions</h6>
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-sm btn-outline-primary" onclick="viewLogs()">
+                            <i class="bi bi-file-text"></i> View Update Logs
+                        </button>
+                        <button class="btn btn-sm btn-outline-secondary" onclick="viewBackups()">
+                            <i class="bi bi-archive"></i> View Backups
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Update Log -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card update-card">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="bi bi-clock-history"></i> Update History</h5>
+                    <div id="update-log">
+                        <p class="text-muted">No updates yet</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+let updateStatus = {};
+
+$(document).ready(function() {
+    checkUpdates();
+    loadSettings();
+    setInterval(checkUpdates, 60000); // Check every minute
+});
+
+function checkUpdates() {
+    $('#check-btn').prop('disabled', true).html('<span class="spinner-border spinner-border-sm"></span> Checking...');
+    
+    $.get('/api/git/status', function(data) {
+        if (data.success) {
+            updateStatus = data;
+            displayStatus(data);
+        } else {
+            showError(data.error || 'Failed to check status');
+        }
+    }).fail(function() {
+        showError('Network error');
+    }).always(function() {
+        $('#check-btn').prop('disabled', false).html('<i class="bi bi-arrow-repeat"></i> Check for Updates');
+    });
+}
+
+function displayStatus(data) {
+    $('#status-loading').hide();
+    $('#status-error').hide();
+    
+    // Check if it's a git repo
+    if (!data.is_git_repo) {
+        $('#not-git-repo').show();
+        $('#status-content').hide();
+        return;
+    }
+    
+    $('#not-git-repo').hide();
+    $('#status-content').show();
+    
+    // Update fields
+    $('#current-commit').text(data.current_commit);
+    $('#branch').text(data.branch);
+    $('#remote-url').text(data.remote_url);
+    $('#last-update').text(new Date(data.last_update).toLocaleString('sv-SE'));
+    $('#commits-behind').text(data.commits_behind);
+    
+    // Status indicator
+    if (data.updates_available) {
+        $('#status-indicator').removeClass().addClass('status-indicator status-update');
+        $('#update-btn').show();
+        $('#commits-behind').removeClass('bg-success').addClass('bg-warning');
+        
+        // Show changelog
+        $('#changelog-section').show();
+        let changelogHtml = '';
+        data.changelog.forEach(function(commit) {
+            changelogHtml += `<div class="changelog-item">${commit}</div>`;
+        });
+        $('#changelog').html(changelogHtml);
+    } else {
+        $('#status-indicator').removeClass().addClass('status-indicator status-ok');
+        $('#update-btn').hide();
+        $('#commits-behind').removeClass('bg-warning').addClass('bg-success');
+        $('#changelog-section').hide();
+    }
+}
+
+function performUpdate() {
+    if (!confirm('Install updates now? The application will need to be restarted.')) {
+        return;
+    }
+    
+    $('#update-btn').prop('disabled', true).html('<span class="spinner-border spinner-border-sm"></span> Updating...');
+    
+    $.post('/api/git/update', function(data) {
+        if (data.success) {
+            showToast('✓ Update installed successfully!', 'success');
+            $('#restart-btn').show();
+            $('#update-btn').hide();
+            
+            // Show output
+            if (data.output) {
+                $('#changelog').html('<pre>' + data.output + '</pre>');
+            }
+        } else {
+            showToast('✗ Update failed: ' + data.error, 'error');
+            $('#update-btn').prop('disabled', false).html('<i class="bi bi-download"></i> Install Update');
+        }
+    }).fail(function() {
+        showToast('✗ Network error', 'error');
+        $('#update-btn').prop('disabled', false).html('<i class="bi bi-download"></i> Install Update');
+    });
+}
+
+function restartApp() {
+    if (!confirm('Restart application now? This will disconnect all users briefly.')) {
+        return;
+    }
+    
+    $('#restart-btn').prop('disabled', true).html('<span class="spinner-border spinner-border-sm"></span> Restarting...');
+    
+    $.post('/api/git/restart', function(data) {
+        showToast('✓ Application restarting...', 'info');
+        setTimeout(function() {
+            location.reload();
+        }, 5000);
+    });
+}
+
+function loadSettings() {
+    // Load from localStorage or API
+    const autoUpdate = localStorage.getItem('auto_update') === 'true';
+    const autoRestart = localStorage.getItem('auto_restart') !== 'false'; // Default true
+    
+    $('#auto-update').prop('checked', autoUpdate);
+    $('#auto-restart').prop('checked', autoRestart);
+}
+
+function saveSettings() {
+    const autoUpdate = $('#auto-update').is(':checked');
+    const autoRestart = $('#auto-restart').is(':checked');
+    
+    localStorage.setItem('auto_update', autoUpdate);
+    localStorage.setItem('auto_restart', autoRestart);
+    
+    $.post('/api/git/auto-update', {
+        auto_update: autoUpdate,
+        auto_restart: autoRestart,
+        check_interval: 86400
+    }, function(data) {
+        if (data.success) {
+            showToast('✓ Settings saved', 'success');
+        }
+    });
+}
+
+function viewLogs() {
+    window.open('/admin/logs', '_blank');
+}
+
+function viewBackups() {
+    alert('Backups located in: ' + updateStatus.backup || '/opt/warehouse/*.backup.*');
+}
+
+function initializeGit() {
+    if (!confirm('Initialize git repository and connect to GitHub?\n\nThis will:\n• Download the latest version from GitHub\n• Overwrite local changes\n• Enable automatic updates')) {
+        return;
+    }
+    
+    const remoteUrl = $('#remote-url-input').val();
+    
+    $('#not-git-repo button').prop('disabled', true).html('<span class="spinner-border spinner-border-sm"></span> Initializing...');
+    
+    $.post('/api/git/init', JSON.stringify({ remote_url: remoteUrl }), function(data) {
+        if (data.success) {
+            showToast('✓ Git repository initialized successfully!', 'success');
+            setTimeout(function() {
+                location.reload();
+            }, 2000);
+        } else {
+            showToast('✗ Failed to initialize: ' + data.error, 'error');
+            $('#not-git-repo button').prop('disabled', false).html('<i class="bi bi-git"></i> Initialize Git Repository');
+        }
+    }, 'json').fail(function() {
+        showToast('✗ Network error', 'error');
+        $('#not-git-repo button').prop('disabled', false).html('<i class="bi bi-git"></i> Initialize Git Repository');
+    });
+}
+
+function showError(message) {
+    $('#status-loading').hide();
+    $('#status-content').hide();
+    $('#status-error').show();
+    $('#error-message').text(message);
+}
+</script>
+{% endblock %}

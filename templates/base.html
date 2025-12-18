@@ -35,6 +35,72 @@
             border-radius: 5px;
         }
         
+        /* Language Selector */
+        .language-selector {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .lang-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        
+        .lang-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+        
+        .lang-dropdown {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 100%;
+            margin-top: 5px;
+            background: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+            min-width: 150px;
+            z-index: 1000;
+        }
+        
+        .lang-dropdown.show {
+            display: block;
+        }
+        
+        .lang-option {
+            display: block;
+            padding: 10px 15px;
+            cursor: pointer;
+            color: #333;
+            text-decoration: none;
+            transition: all 0.2s;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .lang-option:last-child {
+            border-bottom: none;
+            border-radius: 0 0 5px 5px;
+        }
+        
+        .lang-option:first-child {
+            border-radius: 5px 5px 0 0;
+        }
+        
+        .lang-option:hover {
+            background: #f8f9fa;
+        }
+        
+        .lang-option.active {
+            background: #667eea;
+            color: white;
+        }
+        
         .content-wrapper {
             padding: 2rem 0;
         }
@@ -130,45 +196,64 @@
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
                         <a class="nav-link" href="/">
-                            <i class="bi bi-speedometer2"></i> Dashboard
+                            <i class="bi bi-speedometer2"></i> {{ t.nav.home }}
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/register">
-                            <i class="bi bi-plus-circle"></i> Registrera
+                            <i class="bi bi-plus-circle"></i> {{ t.nav.register }}
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/orders">
-                            <i class="bi bi-cart"></i> Ordrar
+                            <i class="bi bi-cart"></i> {{ t.nav.orders }}
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/packing">
-                            <i class="bi bi-box-seam"></i> Packning
+                            <i class="bi bi-box-seam"></i> {{ t.nav.packing }}
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/marketplace">
-                            <i class="bi bi-shop"></i> Marketplace
+                            <i class="bi bi-shop"></i> {{ t.nav.marketplace }}
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/search">
-                            <i class="bi bi-search"></i> Sök
+                            <i class="bi bi-search"></i> {{ t.nav.search }}
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/reports">
-                            <i class="bi bi-graph-up"></i> Rapporter
+                            <i class="bi bi-graph-up"></i> {{ t.nav.reports }}
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/admin">
-                            <i class="bi bi-gear"></i> Admin
+                            <i class="bi bi-gear"></i> {{ t.nav.admin }}
                         </a>
                     </li>
                 </ul>
+                
+                <!-- Language Selector -->
+                <div class="language-selector me-3">
+                    <button class="lang-btn" onclick="toggleLangDropdown()">
+                        <i class="bi bi-globe"></i> <span id="current-lang">{{ current_lang.upper() }}</span>
+                    </button>
+                    <div class="lang-dropdown" id="langDropdown">
+                        <a href="/set-language/sv" class="lang-option {% if current_lang == 'sv' %}active{% endif %}">🇸🇪 Svenska</a>
+                        <a href="/set-language/en" class="lang-option {% if current_lang == 'en' %}active{% endif %}">🇬🇧 English</a>
+                        <a href="/set-language/de" class="lang-option {% if current_lang == 'de' %}active{% endif %}">🇩🇪 Deutsch</a>
+                        <a href="/set-language/fr" class="lang-option {% if current_lang == 'fr' %}active{% endif %}">🇫🇷 Français</a>
+                        <a href="/set-language/es" class="lang-option {% if current_lang == 'es' %}active{% endif %}">🇪🇸 Español</a>
+                        <a href="/set-language/no" class="lang-option {% if current_lang == 'no' %}active{% endif %}">🇳🇴 Norsk</a>
+                        <a href="/set-language/da" class="lang-option {% if current_lang == 'da' %}active{% endif %}">🇩🇰 Dansk</a>
+                        <a href="/set-language/fi" class="lang-option {% if current_lang == 'fi' %}active{% endif %}">🇫🇮 Suomi</a>
+                        <a href="/set-language/pl" class="lang-option {% if current_lang == 'pl' %}active{% endif %}">🇵🇱 Polski</a>
+                    </div>
+                </div>
+                
                 <span class="navbar-text text-white">
                     <i class="bi bi-clock"></i> <span id="current-time"></span>
                 </span>
@@ -227,6 +312,21 @@
         $(document).ajaxError(function(event, jqxhr, settings, thrownError) {
             console.error('AJAX Error:', thrownError);
             showToast('Ett fel uppstod: ' + thrownError, 'error');
+        });
+        
+        // Language selector functions
+        window.toggleLangDropdown = function() {
+            document.getElementById('langDropdown').classList.toggle('show');
+        }
+        
+        // Close dropdown when clicking outside
+        window.addEventListener('click', function(e) {
+            if (!e.target.matches('.lang-btn') && !e.target.closest('.lang-btn')) {
+                const dropdown = document.getElementById('langDropdown');
+                if (dropdown && dropdown.classList.contains('show')) {
+                    dropdown.classList.remove('show');
+                }
+            }
         });
     </script>
     

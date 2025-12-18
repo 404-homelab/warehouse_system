@@ -21,6 +21,9 @@ static/exports/*
 !static/barcodes/.gitkeep
 !static/exports/.gitkeep
 !static/uploads/placeholder.svg
+!updates/*
+!test/*
+local-setup.sh
 # IDE
 .vscode/
 .idea/

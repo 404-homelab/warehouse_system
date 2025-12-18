@@ -1,0 +1,5 @@
+{
+  "auto_update": false,
+  "check_interval": 86400,
+  "auto_restart": true
+}

@@ -1,291 +1,214 @@
-# Warehouse Management System 📦
+# 📦 Warehouse Management System
 
-Ett komplett webbaserat lagersystem för hantering av produkter, ordrar, packning och försäljning på marknadsplatser.
+Ett komplett lagerhanteringssystem med streckkodsskanning, bildhantering, orderhantering och marknadsplatsintegrationer.
 
-## 🌟 Funktioner
+![GitHub](https://img.shields.io/badge/License-MIT-blue.svg)
+![Python](https://img.shields.io/badge/Python-3.10+-green.svg)
+![Flask](https://img.shields.io/badge/Flask-Latest-lightgrey.svg)
 
-### Kärnfunktionalitet
-- ✅ **Produktregistrering** med kamera och automatisk bildbeskärning
-- ✅ **Hyllplatshantering** med streckkodsskanning
-- ✅ **Orderhantering** och smart packning
-- ✅ **Marketplace-integration** (Blocket/Tradera)
-- ✅ **PDF-export** för etiketter och bilder
-- ✅ **Rapporter & Analys** med försäljningsstatistik
-- ✅ **Sökfunktion** för produkter
+## ✨ Features
 
-### Teknisk Stack
-- **Backend:** Python 3.12+ / Flask 3.0
-- **Databas:** SQLite3
-- **Frontend:** HTML5, Bootstrap 5, jQuery 3.6
-- **Bildbehandling:** OpenCV 4.10
-- **Streckkoder:** python-barcode, pyzbar
-- **PDF:** ReportLab 4.0
-- **Kamera:** WebRTC (browser-baserad)
+### 📸 Produktregistrering
+- USB-kamera integration med OpenCV
+- Automatisk bildbeskärning med AI
+- Bulk-registrering (flera identiska produkter)
+- **Auto-registrering vid hyllplats-scanning** ⚡
+
+### 📦 Lagerhantering
+- Streckkodssystem (generering & scanning)
+- Hyllplats-hantering med QR-koder
+- Produktsökning med autocomplete
+- Bulk inventory-hantering
+
+### 🛒 Orderhantering
+- 3-stegs orderprocess
+- Shopping cart med bulk quantities
+- Packningsworkflow med scanning-validering
+- **Celebration screen när alla ordrar är packade** 🎉
+- PDF-generering för packsedlar
+
+### 🌐 Marknadsplatsintegration
+- Blocket listing
+- Tradera listing
+- Facebook Marketplace
+- Custom platforms
+
+### 📊 Rapporter
+- Försäljningsrapporter
+- Lagerrapporter
+- Export till CSV/PDF
+
+### 🔄 Auto-Update System
+- Update server & client
+- Stable/Testing channels
+- Scheduled updates
+- **Auto-restart efter update**
+- Backup före uppdatering
 
 ## 🚀 Installation
 
-### Förutsättningar
-- Python 3.12 eller senare
-- pip (Python package manager)
-- Webbläsare med WebRTC-stöd (Chrome, Firefox, Safari, Edge)
+### Snabbinstallation (1 kommando)
 
-### Steg 1: Klona/Ladda ner projektet
 ```bash
+curl -sSL https://raw.githubusercontent.com/404-homelab/warehouse_system/main/install.sh | sudo bash
+```
+
+### Steg-för-steg
+
+```bash
+# 1. Ladda ner installern
+wget https://raw.githubusercontent.com/404-homelab/warehouse_system/main/install.sh
+chmod +x install.sh
+
+# 2. Kör installation
+sudo ./install.sh
+
+# 3. Öppna i webbläsare
+http://YOUR_SERVER_IP:5000
+```
+
+### Docker Installation
+
+```bash
+git clone https://github.com/404-homelab/warehouse_system.git
 cd warehouse_system
+docker-compose up -d
 ```
 
-### Steg 2: Skapa virtuell miljö (rekommenderat)
+## 📋 Systemkrav
+
+**Minimum:**
+- Ubuntu 20.04+ / Debian 11+
+- 512 MB RAM
+- 5 GB disk
+- Python 3.8+
+
+**Rekommenderat:**
+- Ubuntu 22.04 LTS
+- 2 GB RAM
+- 20 GB disk (för bilder)
+- Python 3.10+
+
+## 🎯 Quick Start
+
+1. **Efter installation:** Öppna http://YOUR_SERVER_IP:5000
+2. **Skapa lagerplatser:** Admin → Locations
+3. **Printa streckkoder:** Använd "Bulk Streckkoder" funktionen
+4. **Registrera produkter:** Registrera Produkt → Ta bild → Scanna hyllplats
+5. **Skapa orders:** Skapa Order → Välj produkter → Packa
+
+## 🛠️ Hantera Tjänsten
+
 ```bash
-python -m venv venv
+# Status
+sudo systemctl status warehouse
 
-# Aktivera på Windows:
-venv\Scripts\activate
+# Starta/Stoppa
+sudo systemctl start warehouse
+sudo systemctl stop warehouse
+sudo systemctl restart warehouse
 
-# Aktivera på Mac/Linux:
-source venv/bin/activate
+# Loggar
+sudo journalctl -u warehouse -f
 ```
 
-### Steg 3: Installera beroenden
+## 🔄 Uppdatera
+
 ```bash
-pip install -r requirements.txt
+# Via installer
+sudo ./install.sh --update
+
+# Via Git
+cd /opt/warehouse
+sudo git pull
+sudo systemctl restart warehouse
+
+# Via Update System
+cd /opt/warehouse
+sudo python3 update_client.py
 ```
 
-**Viktigt:** Om du får problem med NumPy/OpenCV:
-```bash
-pip install "numpy>=1.26.0,<2.0"
-pip install opencv-python==4.10.0.84
+## 📖 Dokumentation
+
+- [INSTALLATION.md](INSTALLATION.md) - Detaljerad installationsguide
+- [DOCKER_INSTALLATION.md](DOCKER_INSTALLATION.md) - Docker-specifik guide
+- [UPDATE_GUIDE.txt](UPDATE_GUIDE.txt) - Update system
+- [AUTO_RESTART_GUIDE.txt](AUTO_RESTART_GUIDE.txt) - Auto-restart
+- [AUTO_REGISTRATION_GUIDE.txt](AUTO_REGISTRATION_GUIDE.txt) - Snabb-registrering
+
+## 🏗️ Arkitektur
+
 ```
+warehouse_system/
+├── app.py                  # Flask application
+├── database.py             # SQLite database logic
+├── barcode_generator.py    # Barcode generation
+├── camera_handler.py       # USB camera integration
+├── image_processor.py      # Image processing & AI cropping
+├── pdf_generator.py        # PDF generation
+├── update_client.py        # Update client
+├── update_server.py        # Update server
+├── templates/              # HTML templates
+├── static/                 # CSS, JS, images
+└── install.sh              # Auto-installer
 
-### Steg 4: Starta applikationen
-```bash
-python app.py
+Tech Stack:
+- Backend: Python 3.10 + Flask
+- Database: SQLite
+- Frontend: Bootstrap 5 + jQuery
+- Image Processing: OpenCV + Pillow
+- Barcode: python-barcode
 ```
-
-Systemet startar på: **http://localhost:5000**
-
-## 📱 Användning
-
-### 1. Dashboard (/)
-- Översikt av systemstatistik
-- Snabblänkar till vanliga funktioner
-- Senaste aktivitet
-
-### 2. Registrera Produkt (/register)
-**Steg-för-steg:**
-1. Klicka "Starta Kamera"
-2. Ta bild av produkten
-3. Klicka "Auto-Beskär" för att rensa bakgrund
-4. Fyll i produktinformation:
-   - Artikelnummer (valfritt)
-   - Beskrivning (obligatoriskt)
-   - Skick (obligatoriskt)
-   - Mått (L×B×H cm)
-   - Vikt (kg)
-   - Pris (SEK, obligatoriskt)
-   - Hyllplats
-   - Antal för bulk-registrering
-5. Klicka "Registrera Produkt"
-
-**Tips:**
-- Auto-beskärning justerar sig automatiskt efter ljus och bakgrund
-- Bulk-registrering skapar flera identiska produkter med unika ID:n
-- Inventory ID genereras automatiskt (INV-000001, INV-000002, etc.)
-
-### 3. Ordrar (/orders)
-**Skapa order:**
-1. Ange köparinfo (t.ex. "Blocket - Johan S.")
-2. Scanna eller skriv Inventory ID
-3. Lägg till fler produkter om behövs
-4. Klicka "Skapa Order"
-
-### 4. Packning (/packing)
-**Packa order:**
-1. Klicka "Hämta Nästa Order"
-2. Systemet visar:
-   - Orderinformation
-   - Kartongförslag baserat på produkternas mått
-   - Lista med produkter och deras hyllplatser
-3. Plocka produkterna från angivna hyllplatser
-4. Scanna "SHIPPED" eller klicka "Markera som Skickad"
-
-### 5. Marketplace (/marketplace)
-**Ladda upp till marknadsplats:**
-1. Ange Inventory ID
-2. Välj marketplace (Blocket/Tradera/Båda)
-3. Klicka "Skapa Annons"
-4. Uppdatera status när produkten säljs
-
-**Exportera bilder:**
-1. Markera produkter med checkbox
-2. Klicka "Exportera Bilder (ZIP)"
-3. Få ZIP-fil med alla produktbilder
-
-### 6. Sök (/search)
-- Sök på Inventory ID, artikelnummer eller beskrivning
-- Få omedelbar översikt av produktinformation
-
-### 7. Rapporter (/reports)
-**Analysera försäljning:**
-- Försäljningstrend (graf)
-- Mest sålda produkter
-- Lagervärde per plats
-- Intäkter per period (dag/vecka/månad/år)
-
-### 8. Admin (/admin)
-**Hyllplatser:**
-- Skapa nya hyllplatser (t.ex. A1, B2, C3)
-- Automatisk streckkodsgenerering (LOC-A1-001)
-
-**Kartongstorlekar:**
-- Lägg till kartongstorlekar med mått
-- Systemet föreslår automatiskt lämplig kartong vid packning
-
-**Bulk Streckkoder:**
-- Generera PDF med streckkoder
-- Format: PREFIX-000001 till PREFIX-000030
-- 3 kolumner × 10 rader per sida (A4)
-
-## 🔧 API Endpoints
-
-### Items
-```
-POST   /api/items                    - Skapa produkt
-POST   /api/items/bulk               - Bulk-registrering
-GET    /api/items/<inventory_id>    - Hämta produkt
-GET    /api/items/search?q=          - Sök produkter
-PUT    /api/items/<id>/location     - Uppdatera hyllplats
-PUT    /api/items/<id>/status       - Uppdatera status
-```
-
-### Orders
-```
-GET    /api/orders                   - Lista ordrar
-POST   /api/orders                   - Skapa order
-GET    /api/orders/next              - Nästa att packa
-POST   /api/orders/<id>/ship         - Markera skickad
-GET    /api/orders/<id>/items        - Få orderitems
-```
-
-### Locations
-```
-GET    /api/locations                - Lista hyllplatser
-POST   /api/locations                - Skapa hyllplats
-DELETE /api/locations/<id>           - Ta bort
-```
-
-### Marketplace
-```
-GET    /api/marketplace/listings     - Lista annonser
-POST   /api/marketplace/listings     - Skapa annons
-PUT    /api/marketplace/listings/<id>/status - Uppdatera status
-```
-
-### Reports
-```
-GET    /api/reports/statistics       - Systemstatistik
-GET    /api/reports/sales?period=    - Försäljningsrapport
-GET    /api/reports/inventory-value  - Lagervärde
-GET    /api/reports/top-items        - Mest sålda
-GET    /api/reports/activity         - Aktivitetslogg
-```
-
-### Export
-```
-POST   /api/export/images            - Exportera bilder (ZIP)
-POST   /api/export/pdf/labels        - PDF-etiketter
-POST   /api/barcodes/bulk-generate   - Bulk streckkoder
-```
-
-## 📊 Databasschema
-
-### Tabeller
-- **items** - Produkter med inventory_id, beskrivning, mått, pris, status
-- **images** - Produktbilder (original + beskuren)
-- **locations** - Hyllplatser med streckkoder
-- **orders** - Ordrar med köparinfo
-- **order_items** - Många-till-många relation order↔items
-- **box_sizes** - Kartongstorlekar
-- **marketplace_listings** - Marketplace-annonser
-- **audit_log** - Händelselogg
-
-## 🎯 Arbetsflöde
-
-### Typiskt arbetsflöde:
-1. **Inleverans:**
-   - Ta bild av produkt
-   - Registrera i systemet
-   - Placera på hyllplats
-   - Etikett med streckkod printas automatiskt
-
-2. **Försäljning:**
-   - Markera produkt för marketplace
-   - Exportera bilder
-   - Ladda upp till Blocket/Tradera
-
-3. **Order:**
-   - Kund köper → Skapa order i systemet
-   - Lista visar alla produkter och deras hyllplatser
-
-4. **Packning:**
-   - Hämta nästa order
-   - Systemet föreslår kartong
-   - Plocka produkter från angivna hyllor
-   - Scanna SHIPPED → Order färdig
-
-## 🔐 Säkerhet & Best Practices
-
-- Databasen lagras lokalt (warehouse.db)
-- Bilder sparas i static/uploads/
-- Regelbunden backup rekommenderas
-- HTTPS rekommenderas för produktionsmiljö
 
 ## 🐛 Felsökning
 
-### Problem: Kameran startar inte
-**Lösning:** 
-- Kontrollera att webbläsaren har tillgång till kamera
-- Använd HTTPS eller localhost (WebRTC-krav)
-- Prova annan webbläsare
-
-### Problem: NumPy/OpenCV fel
-**Lösning:**
+### Tjänsten startar inte
 ```bash
-pip uninstall numpy opencv-python
-pip install "numpy>=1.26.0,<2.0"
-pip install opencv-python==4.10.0.84
+sudo journalctl -u warehouse -n 50
+sudo systemctl status warehouse
 ```
 
-### Problem: Port 5000 är upptagen
-**Lösning:** Ändra port i app.py:
-```python
-app.run(host='0.0.0.0', port=5001, debug=True)
+### Bilder visas inte
+```bash
+sudo chown -R warehouse:warehouse /opt/warehouse/static
+sudo chmod -R 755 /opt/warehouse/static
 ```
 
-## 📈 Framtida Förbättringar
+### Database locked
+```bash
+sudo systemctl restart warehouse
+```
 
-### Fas 2 (Planerat):
-- API-integration med Blocket/Tradera
-- Avancerad rapportering och analytics
-- QR-kod stöd för snabbare skanning
+## 🤝 Contributing
 
-### Fas 3 (Framtid):
-- PostgreSQL för bättre skalbarhet
-- Docker containerisering
-- Mobilapp (React Native)
-- AI-baserad bildigenkänning
-- Automatisk prissättning
+Contributions är välkomna! 
+
+1. Fork repositoryt
+2. Skapa en feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit dina ändringar (`git commit -m 'Add some AmazingFeature'`)
+4. Push till branchen (`git push origin feature/AmazingFeature`)
+5. Öppna en Pull Request
+
+## 📝 License
+
+MIT License - se [LICENSE](LICENSE) för detaljer
+
+## 👤 Author
+
+**404-homelab**
+
+- GitHub: [@404-homelab](https://github.com/404-homelab)
+- Repo: [warehouse_system](https://github.com/404-homelab/warehouse_system)
+
+## ⭐ Show your support
+
+Om du tycker projektet är användbart, ge det en stjärna! ⭐
 
 ## 📞 Support
 
-För problem eller frågor:
-- Kontrollera dokumentationen ovan
-- Kolla felsökningsguiden
-- Granska loggfiler i terminalen
-
-## 📄 Licens
-
-Detta projekt är skapat för internt bruk.
+- **Issues**: [GitHub Issues](https://github.com/404-homelab/warehouse_system/issues)
+- **Diskussioner**: [GitHub Discussions](https://github.com/404-homelab/warehouse_system/discussions)
 
 ---
 
-**Lycka till med ditt lagersystem! 🚀📦**
+**Byggd med ❤️ för enkel lagerhantering**

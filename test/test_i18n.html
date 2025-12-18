@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{% block title %}i18n Test{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mt-5">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-body">
+                    <h1 class="card-title">🌐 i18n Test Page</h1>
+                    
+                    <hr>
+                    
+                    <h3>Test Translations:</h3>
+                    
+                    <table class="table">
+                        <tr>
+                            <td><strong>nav.home:</strong></td>
+                            <td><span data-i18n="nav.home">Hem</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>nav.register:</strong></td>
+                            <td><span data-i18n="nav.register">Registrera</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>register.title:</strong></td>
+                            <td><span data-i18n="register.title">Registrera Produkt</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>common.save:</strong></td>
+                            <td><span data-i18n="common.save">Spara</span></td>
+                        </tr>
+                    </table>
+                    
+                    <hr>
+                    
+                    <h3>Manual Test Buttons:</h3>
+                    
+                    <div class="btn-group" role="group">
+                        <button class="btn btn-primary" onclick="testLanguage('sv')">Svenska</button>
+                        <button class="btn btn-primary" onclick="testLanguage('en')">English</button>
+                        <button class="btn btn-primary" onclick="testLanguage('de')">Deutsch</button>
+                        <button class="btn btn-primary" onclick="testLanguage('fr')">Français</button>
+                        <button class="btn btn-primary" onclick="testLanguage('es')">Español</button>
+                    </div>
+                    
+                    <hr>
+                    
+                    <h3>Debug Info:</h3>
+                    <div id="debug-info" style="background: #f5f5f5; padding: 15px; border-radius: 5px; font-family: monospace;">
+                        <div>Current Language: <strong id="current-lang-debug">-</strong></div>
+                        <div>Translations Loaded: <strong id="translations-loaded">-</strong></div>
+                        <div>Elements Found: <strong id="elements-found">-</strong></div>
+                    </div>
+                    
+                    <hr>
+                    
+                    <div class="alert alert-info">
+                        <strong>Console:</strong> Open Developer Tools (F12) → Console to see debug output
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function testLanguage(lang) {
+    console.log('=== Testing language:', lang);
+    
+    if (typeof setLanguage === 'function') {
+        setLanguage(lang);
+        updateDebugInfo();
+    } else {
+        console.error('setLanguage function not found!');
+        alert('ERROR: setLanguage function not found!');
+    }
+}
+
+function updateDebugInfo() {
+    if (typeof getCurrentLanguage === 'function') {
+        document.getElementById('current-lang-debug').textContent = getCurrentLanguage();
+    }
+    
+    document.getElementById('translations-loaded').textContent = 
+        (typeof window.translations !== 'undefined') ? 'Yes' : 'No';
+    
+    document.getElementById('elements-found').textContent = 
+        document.querySelectorAll('[data-i18n]').length;
+}
+
+// Update debug info on load and language change
+document.addEventListener('DOMContentLoaded', updateDebugInfo);
+document.addEventListener('languageChanged', updateDebugInfo);
+
+// Test immediately
+setTimeout(() => {
+    console.log('=== i18n Test Page Loaded ===');
+    console.log('setLanguage available:', typeof setLanguage);
+    console.log('t available:', typeof t);
+    console.log('getCurrentLanguage available:', typeof getCurrentLanguage);
+    updateDebugInfo();
+}, 500);
+</script>
+{% endblock %}

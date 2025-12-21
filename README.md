@@ -10,7 +10,7 @@ Ett komplett lagerhanteringssystem med streckkodsskanning, bildhantering, orderh
 
 ### 📸 Produktregistrering
 - USB-kamera integration med OpenCV
-- Automatisk bildbeskärning med AI
+- Automatisk bildbeskärning med AI - Under utveckling!!!
 - Bulk-registrering (flera identiska produkter)
 - **Auto-registrering vid hyllplats-scanning** ⚡
 
@@ -28,22 +28,22 @@ Ett komplett lagerhanteringssystem med streckkodsskanning, bildhantering, orderh
 - PDF-generering för packsedlar
 
 ### 🌐 Marknadsplatsintegration
-- Blocket listing
-- Tradera listing
-- Facebook Marketplace
-- Custom platforms
+- Blocket listing - Under utveckling!!!
+- Tradera listing - Under utveckling!!!
+- Facebook Marketplace - Under utveckling!!!
+- Custom platforms - Under utveckling!!!
 
 ### 📊 Rapporter
 - Försäljningsrapporter
 - Lagerrapporter
-- Export till CSV/PDF
+- Export till CSV/PDF - Under utveckling!!!
 
 ### 🔄 Auto-Update System
-- Update server & client
-- Stable/Testing channels
-- Scheduled updates
+- Update server & client - Under utveckling!!!
+- Stable/Testing channels - Under utveckling!!!
+- Scheduled updates - Under utveckling!!!
 - **Auto-restart efter update**
-- Backup före uppdatering
+- Backup före uppdatering - Under utveckling!!!
 
 ## 🚀 Installation
 

@@ -7,6 +7,10 @@ __pycache__/
 venv/
 env/
 ENV/
+migrate_add_quantity.py
+migrate_fix_marketplace.py
+test_marketplace.py
+test_translations.py
 
 # Database
 *.db

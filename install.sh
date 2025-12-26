@@ -7,7 +7,7 @@
 # GitHub: https://github.com/404-homelab/warehouse_system
 #
 # Quick Install:
-#   curl -sSL https://raw.githubusercontent.com/404-homelab/warehouse_system/master/install.sh | sudo bash
+#   curl -sSL https://raw.githubusercontent.com/404-homelab/warehouse_system/main/install.sh | sudo bash
 #
 
 set -e
@@ -24,6 +24,7 @@ APP_PORT="5000"
 GIT_REPO="https://github.com/404-homelab/warehouse_system.git"
 GIT_BRANCH="master"
 UPDATE_MODE="false"
+NON_INTERACTIVE="false"
 
 print_header() {
     echo -e "${BLUE}"
@@ -244,7 +245,7 @@ setup_git_permissions() {
         print_info "Branch: $(sudo -u $SERVICE_USER git branch --show-current)"
     else
         print_warning "Not a git repository - auto-updates will not work"
-        print_info "Install using: curl -sSL https://raw.githubusercontent.com/404-homelab/warehouse_system/master/install.sh | sudo bash"
+        print_info "Install using: curl -sSL https://raw.githubusercontent.com/404-homelab/warehouse_system/main/install.sh | sudo bash"
     fi
 }
 
@@ -370,13 +371,17 @@ show_help() {
     echo ""
     echo "Options:"
     echo "  --help       Show this help"
+    echo "  --yes        Skip confirmation prompts (for automation)"
     echo "  --uninstall  Remove completely"
     echo "  --update     Update existing installation"
     echo "  --port PORT  Set port (default: 5000)"
     echo "  --dir DIR    Set directory (default: /opt/warehouse)"
     echo ""
-    echo "Quick install:"
-    echo "  curl -sSL https://raw.githubusercontent.com/404-homelab/warehouse_system/master/install.sh | sudo bash"
+    echo "Quick install (interactive):"
+    echo "  curl -sSL https://raw.githubusercontent.com/404-homelab/warehouse_system/master/install.sh -o install.sh && sudo bash install.sh"
+    echo ""
+    echo "Quick install (automatic):"
+    echo "  curl -sSL https://raw.githubusercontent.com/404-homelab/warehouse_system/master/install.sh | sudo bash -s -- --yes"
     echo ""
 }
 
@@ -384,6 +389,7 @@ main() {
     while [[ $# -gt 0 ]]; do
         case $1 in
             --help) show_help; exit 0 ;;
+            --yes) NON_INTERACTIVE="true"; shift ;;
             --uninstall) check_root; uninstall; exit 0 ;;
             --update) check_root; update_installation; exit 0 ;;
             --port) APP_PORT="$2"; shift 2 ;;
@@ -404,11 +410,15 @@ main() {
     echo "  • Source: GitHub (404-homelab/warehouse_system)"
     echo ""
     
-    read -p "Continue? (Y/n) " -n 1 -r
-    echo
-    if [[ $REPLY =~ ^[Nn]$ ]]; then
-        print_warning "Cancelled"
-        exit 0
+    if [ "$NON_INTERACTIVE" != "true" ]; then
+        read -p "Continue? (Y/n) " -n 1 -r
+        echo
+        if [[ $REPLY =~ ^[Nn]$ ]]; then
+            print_warning "Cancelled"
+            exit 0
+        fi
+    else
+        print_info "Running in non-interactive mode (--yes)"
     fi
     
     echo ""

@@ -7,7 +7,7 @@
     <div class="row mb-4">
         <div class="col">
             <h1 class="display-4"><i class="bi bi-shop"></i> Marketplace Hantering</h1>
-            <p class="lead">Hantera uppläggning av varor på Blocket och Tradera</p>
+            <p class="lead">{{ _("Manage online listings") }}</p>
         </div>
     </div>
 
@@ -16,9 +16,9 @@
         <div class="col-md-3">
             <div class="card bg-light">
                 <div class="card-body">
-                    <h6 class="card-title text-muted">Ej Upplagda</h6>
+                    <h6 class="card-title text-muted">{{ _("Not Listed") }}</h6>
                     <h2 class="mb-0" id="stat-not-listed">0</h2>
-                    <small class="text-muted">varor i lager</small>
+                    <small class="text-muted">{{ _("items in stock") }}</small>
                 </div>
             </div>
         </div>
@@ -27,7 +27,7 @@
                 <div class="card-body">
                     <h6 class="card-title">Blocket</h6>
                     <h2 class="mb-0" id="stat-blocket">0</h2>
-                    <small>aktiva annonser</small>
+                    <small>{{ _("active ads") }}</small>
                 </div>
             </div>
         </div>
@@ -36,16 +36,16 @@
                 <div class="card-body">
                     <h6 class="card-title">Tradera</h6>
                     <h2 class="mb-0" id="stat-tradera">0</h2>
-                    <small>aktiva annonser</small>
+                    <small>{{ _("active ads") }}</small>
                 </div>
             </div>
         </div>
         <div class="col-md-3">
             <div class="card bg-success text-white">
                 <div class="card-body">
-                    <h6 class="card-title">Sålda</h6>
+                    <h6 class="card-title">{{ _("Sold") }}</h6>
                     <h2 class="mb-0" id="stat-sold">0</h2>
-                    <small>genom marketplace</small>
+                    <small>{{ _("through marketplace") }}</small>
                 </div>
             </div>
         </div>
@@ -55,17 +55,17 @@
     <ul class="nav nav-tabs mb-3" role="tablist">
         <li class="nav-item" role="presentation">
             <button class="nav-link active" id="not-listed-tab" data-bs-toggle="tab" data-bs-target="#not-listed" type="button">
-                <i class="bi bi-inbox"></i> Ej Upplagda (<span id="not-listed-count">0</span>)
+                <i class="bi bi-inbox"></i> {{ _("Not Listed") }} (<span id="not-listed-count">0</span>)
             </button>
         </li>
         <li class="nav-item" role="presentation">
             <button class="nav-link" id="active-tab" data-bs-toggle="tab" data-bs-target="#active" type="button">
-                <i class="bi bi-list-check"></i> Aktiva Annonser (<span id="active-count">0</span>)
+                <i class="bi bi-list-check"></i> {{ _("Active Ads") }} (<span id="active-count">0</span>)
             </button>
         </li>
         <li class="nav-item" role="presentation">
             <button class="nav-link" id="sold-tab" data-bs-toggle="tab" data-bs-target="#sold" type="button">
-                <i class="bi bi-check-circle"></i> Sålda (<span id="sold-count">0</span>)
+                <i class="bi bi-check-circle"></i> {{ _("Sold") }} (<span id="sold-count">0</span>)
             </button>
         </li>
     </ul>
@@ -78,16 +78,16 @@
                 <div class="card-body">
                     <div class="row mb-3">
                         <div class="col-md-6">
-                            <input type="text" class="form-control" id="search-not-listed" placeholder="Sök produkt...">
+                            <input type="text" class="form-control" id="search-not-listed" placeholder="{{ _('Search product...') }}">
                         </div>
                         <div class="col-md-3">
                             <button class="btn btn-success" id="bulk-create-btn" disabled>
-                                <i class="bi bi-plus-circle"></i> Lägg upp Markerade
+                                <i class="bi bi-plus-circle"></i> {{ _("List Selected") }}
                             </button>
                         </div>
                         <div class="col-md-3">
                             <button class="btn btn-outline-primary" id="select-all-btn">
-                                <i class="bi bi-check-square"></i> Markera Alla
+                                <i class="bi bi-check-square"></i> {{ _("Select All") }}
                             </button>
                         </div>
                     </div>
@@ -102,7 +102,7 @@
             <div class="card">
                 <div class="card-body">
                     <div class="btn-group mb-3" role="group">
-                        <button type="button" class="btn btn-outline-primary active filter-marketplace" data-marketplace="">Alla</button>
+                        <button type="button" class="btn btn-outline-primary active filter-marketplace" data-marketplace="">{{ _("All") }}</button>
                         <button type="button" class="btn btn-outline-info filter-marketplace" data-marketplace="blocket">Blocket</button>
                         <button type="button" class="btn btn-outline-warning filter-marketplace" data-marketplace="tradera">Tradera</button>
                     </div>
@@ -128,7 +128,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Lägg upp på Marketplace</h5>
+                <h5 class="modal-title">{{ _("List on Marketplace") }}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
@@ -141,30 +141,30 @@
                     <div class="mb-3">
                         <label class="form-label">Marketplace</label>
                         <select class="form-select" id="modal-marketplace" required>
-                            <option value="">Välj marketplace...</option>
+                            <option value="">{{ _("Choose marketplace...") }}</option>
                             <option value="blocket">Blocket</option>
                             <option value="tradera">Tradera</option>
                             <option value="facebook">Facebook Marketplace</option>
-                            <option value="other">Annan</option>
+                            <option value="other">{{ _("Other") }}</option>
                         </select>
                     </div>
                     <div class="mb-3" id="other-marketplace-container" style="display: none;">
-                        <label class="form-label">Ange marketplace namn</label>
-                        <input type="text" class="form-control" id="modal-marketplace-other" placeholder="T.ex. Instagram, Lokal försäljning...">
+                        <label class="form-label">{{ _("Enter marketplace name") }}</label>
+                        <input type="text" class="form-control" id="modal-marketplace-other" placeholder="{{ _('E.g. Instagram, Local sale...') }}">
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Pris (kr)</label>
+                        <label class="form-label">{{ _("Price (kr)") }}</label>
                         <input type="number" class="form-control" id="modal-price">
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Beskrivning (valfri)</label>
+                        <label class="form-label">{{ _("Description (optional)") }}</label>
                         <textarea class="form-control" id="modal-description" rows="3"></textarea>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Avbryt</button>
-                <button type="button" class="btn btn-success" id="confirm-create-listing">Lägg upp</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ _("Cancel") }}</button>
+                <button type="button" class="btn btn-success" id="confirm-create-listing">{{ _("List") }}</button>
             </div>
         </div>
     </div>
@@ -175,31 +175,31 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Lägg upp <span id="bulk-count">0</span> varor på Marketplace</h5>
+                <h5 class="modal-title">{{ _("List") }} <span id="bulk-count">0</span> {{ _("items on Marketplace") }}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
                 <div class="mb-3">
                     <label class="form-label">Marketplace</label>
                     <select class="form-select" id="bulk-marketplace" required>
-                        <option value="">Välj marketplace...</option>
-                        <option value="blocket">Blocket</option>
-                        <option value="tradera">Tradera</option>
-                        <option value="facebook">Facebook Marketplace</option>
-                        <option value="other">Annan</option>
+                        <option value="">{{ _("Choose marketplace...") }}</option>
+                        <option value="blocket">{{ _("Blocket") }}</option>
+                        <option value="tradera">{{ _("Tradera") }}</option>
+                        <option value="facebook">{{ _("Facebook Marketplace") }}</option>
+                        <option value="other">{{ _("Other") }}</option>
                     </select>
                 </div>
                 <div class="mb-3" id="bulk-other-marketplace-container" style="display: none;">
-                    <label class="form-label">Ange marketplace namn</label>
-                    <input type="text" class="form-control" id="bulk-marketplace-other" placeholder="T.ex. Instagram, Lokal försäljning...">
+                    <label class="form-label">{{ _("Enter marketplace name") }}</label>
+                    <input type="text" class="form-control" id="bulk-marketplace-other" placeholder="{{ _('E.g. Instagram, Local sale...') }}">
                 </div>
                 <div class="alert alert-info">
-                    <i class="bi bi-info-circle"></i> Alla markerade varor kommer läggas upp med sina befintliga priser och beskrivningar.
+                    <i class="bi bi-info-circle"></i> {{ _("All selected items will be listed with their existing prices and descriptions.") }}
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Avbryt</button>
-                <button type="button" class="btn btn-success" id="confirm-bulk-create">Lägg upp alla</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ _("Cancel") }}</button>
+                <button type="button" class="btn btn-success" id="confirm-bulk-create">{{ _("List All") }}</button>
             </div>
         </div>
     </div>
@@ -210,32 +210,32 @@
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Skapa Order från Marketplace</h5>
+                <h5 class="modal-title">{{ _("Create Order from Marketplace") }}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
                 <div class="row">
                     <!-- Left Column: Cart Items -->
                     <div class="col-md-6">
-                        <h6 class="mb-3">Varor i order (<span id="order-total-qty">0</span> st)</h6>
+                        <h6 class="mb-3">{{ _("Items in Order") }} (<span id="order-total-qty">0</span> {{ _("pcs") }})</h6>
                         <div id="order-cart-items" class="mb-3" style="max-height: 400px; overflow-y: auto;">
                             <!-- Cart items loaded dynamically -->
                         </div>
                         
                         <div class="alert alert-success">
-                            <strong>Totalt pris: <span id="order-total-price">0 kr</span></strong>
+                            <strong>{{ _("Total price:") }} <span id="order-total-price">0 kr</span></strong>
                         </div>
                     </div>
                     
                     <!-- Right Column: Customer Info -->
                     <div class="col-md-6">
-                        <h6 class="mb-3">Kunduppgifter</h6>
+                        <h6 class="mb-3">{{ _("Customer Details") }}</h6>
                         
                         <!-- Search existing customer -->
                         <div class="mb-3">
-                            <label class="form-label">Sök befintlig kund</label>
+                            <label class="form-label">{{ _("Search existing customer") }}</label>
                             <div class="input-group">
-                                <input type="text" class="form-control" id="order-customer-search" placeholder="Namn, e-post eller telefon...">
+                                <input type="text" class="form-control" id="order-customer-search" placeholder="{{ _('Name, email or phone...') }}">
                                 <button class="btn btn-outline-secondary" type="button" onclick="searchOrderCustomers()">
                                     <i class="bi bi-search"></i>
                                 </button>
@@ -244,60 +244,60 @@
                         </div>
                         
                         <div class="text-center mb-3">
-                            <small class="text-muted">ELLER ange ny kund</small>
+                            <small class="text-muted">{{ _("OR enter new customer") }}</small>
                         </div>
                         
                         <input type="hidden" id="order-customer-id">
                         
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Namn *</label>
+                                <label class="form-label">{{ _("Name") }} *</label>
                                 <input type="text" class="form-control" id="order-customer-name" required>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Telefon</label>
+                                <label class="form-label">{{ _("Phone") }}</label>
                                 <input type="tel" class="form-control" id="order-customer-phone">
                             </div>
                         </div>
                         
                         <div class="mb-3">
-                            <label class="form-label">E-post</label>
-                            <input type="email" class="form-control" id="order-customer-email">
+                            <label class="form-label">{{ _("Email") }}</label>
+                            <input type="email" class="form-control" id="order-customer-email" required>
                         </div>
                         
                         <div class="mb-3">
-                            <label class="form-label">Adress</label>
-                            <input type="text" class="form-control" id="order-customer-address">
+                            <label class="form-label">{{ _("Address") }}</label>
+                            <input type="text" class="form-control" id="order-customer-address" required>
                         </div>
                         
                         <div class="row">
                             <div class="col-md-4 mb-3">
-                                <label class="form-label">Postnummer</label>
-                                <input type="text" class="form-control" id="order-customer-postal">
+                                <label class="form-label">{{ _("Postal Code") }}</label>
+                                <input type="text" class="form-control" id="order-customer-postal" required>
                             </div>
                             <div class="col-md-5 mb-3">
-                                <label class="form-label">Stad</label>
-                                <input type="text" class="form-control" id="order-customer-city">
+                                <label class="form-label">{{ _("City") }}</label>
+                                <input type="text" class="form-control" id="order-customer-city" required>
                             </div>
                             <div class="col-md-3 mb-3">
-                                <label class="form-label">Land</label>
-                                <input type="text" class="form-control" id="order-customer-country" value="Sverige">
+                                <label class="form-label">{{ _("Country") }}</label>
+                                <input type="text" class="form-control" id="order-customer-country" value="Sverige" required>
                             </div>
                         </div>
                         
                         <div class="mb-3">
-                            <label class="form-label">Fraktmetod</label>
+                            <label class="form-label">{{ _("Shipping Method") }}</label>
                             <select class="form-select" id="order-shipping-method">
-                                <option value="">Välj fraktmetod...</option>
+                                <option value="">{{ _("Choose shipping method...") }}</option>
                             </select>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Avbryt</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ _("Cancel") }}</button>
                 <button type="button" class="btn btn-primary" onclick="createOrderFromCart()">
-                    <i class="bi bi-cart-check"></i> Skapa Order
+                    <i class="bi bi-cart-check"></i> {{ _("Create Order") }}
                 </button>
             </div>
         </div>
@@ -427,7 +427,7 @@ function displayNotListedItems(items) {
     container.empty();
     
     if (items.length === 0) {
-        container.html('<div class="alert alert-info">Inga varor att lägga upp. Alla varor är redan upplagda eller sålda!</div>');
+        container.html('<div class="alert alert-info">{{ _("No items to list. All items are already listed or sold!") }}</div>');
         return;
     }
     
@@ -508,9 +508,9 @@ function toggleSelectAll() {
 function updateBulkButton() {
     $('#bulk-create-btn').prop('disabled', selectedItems.size === 0);
     if (selectedItems.size > 0) {
-        $('#bulk-create-btn').html(`<i class="bi bi-plus-circle"></i> Lägg upp Markerade (${selectedItems.size})`);
+        $('#bulk-create-btn').html(`<i class="bi bi-plus-circle"></i> ${t.list_selected} (${selectedItems.size})`);
     } else {
-        $('#bulk-create-btn').html(`<i class="bi bi-plus-circle"></i> Lägg upp Markerade`);
+        $('#bulk-create-btn').html(`<i class="bi bi-plus-circle"></i> ${t.list_selected}`);
     }
 }
 
@@ -698,7 +698,7 @@ function displayActiveListings(listings) {
     container.empty();
     
     if (listings.length === 0) {
-        container.html('<div class="alert alert-info">Inga aktiva annonser</div>');
+        container.html('<div class="alert alert-info">{{ _("No active ads") }}</div>');
         return;
     }
     
@@ -732,7 +732,7 @@ function displayActiveListings(listings) {
                     <div class="col">
                         <h6 class="mb-1">
                             <strong>${listing.inventory_id}</strong> ${marketplaceBadge}
-                            ${isBulk ? `<span class="badge bg-primary ms-1">${qtyAvailable}/${qty} st tillgängliga</span>` : ''}
+                            ${isBulk ? `<span class="badge bg-primary ms-1">${qtyAvailable}/${qty} {{ _("pcs available") }}</span>` : ''}
                             ${inCart ? '<span class="badge bg-success ms-2">I varukorg</span>' : ''}
                         </h6>
                         <p class="mb-1">${listing.description || '-'}</p>

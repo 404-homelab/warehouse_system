@@ -1,0 +1,1742 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language: sv\n"
+
+# ==================== NAVIGATION ====================
+msgid "Home"
+msgstr "Hem"
+
+msgid "Register"
+msgstr "Registrera"
+
+msgid "Orders"
+msgstr "Ordrar"
+
+msgid "Packing"
+msgstr "Packa"
+
+msgid "Marketplace"
+msgstr "Marknadsplats"
+
+msgid "Search"
+msgstr "Sök"
+
+msgid "Reports"
+msgstr "Rapporter"
+
+msgid "Admin"
+msgstr "Admin"
+
+# ==================== COMMON ====================
+msgid "Save"
+msgstr "Spara"
+
+msgid "Cancel"
+msgstr "Avbryt"
+
+msgid "Delete"
+msgstr "Ta bort"
+
+msgid "Edit"
+msgstr "Redigera"
+
+msgid "Close"
+msgstr "Stäng"
+
+msgid "Back"
+msgstr "Tillbaka"
+
+msgid "Next"
+msgstr "Nästa"
+
+msgid "Previous"
+msgstr "Föregående"
+
+msgid "Loading..."
+msgstr "Laddar..."
+
+msgid "Success!"
+msgstr "Lyckades!"
+
+msgid "Error"
+msgstr "Fel"
+
+msgid "Warning"
+msgstr "Varning"
+
+msgid "Confirm"
+msgstr "Bekräfta"
+
+msgid "Yes"
+msgstr "Ja"
+
+msgid "No"
+msgstr "Nej"
+
+msgid "Total"
+msgstr "Totalt"
+
+msgid "Status"
+msgstr "Status"
+
+msgid "Date"
+msgstr "Datum"
+
+msgid "Time"
+msgstr "Tid"
+
+msgid "Actions"
+msgstr "Åtgärder"
+
+msgid "Export"
+msgstr "Exportera"
+
+msgid "Print"
+msgstr "Skriv ut"
+
+msgid "Download"
+msgstr "Ladda ner"
+
+# ==================== REGISTER PAGE ====================
+msgid "Register Product"
+msgstr "Registrera Produkt"
+
+msgid "Photograph and register new products"
+msgstr "Fotografera och registrera nya produkter"
+
+msgid "Quick registration: Fill in description, condition and price → Scan shelf location → Product registered automatically!"
+msgstr "Snabb-registrering: Fyll i beskrivning, skick och pris → Scanna hyllplats → Produkten registreras automatiskt!"
+
+msgid "Camera"
+msgstr "Kamera"
+
+msgid "images"
+msgstr "bilder"
+
+msgid "Start Camera"
+msgstr "Starta Kamera"
+
+msgid "Stop Camera"
+msgstr "Stoppa Kamera"
+
+msgid "Capture Image"
+msgstr "Ta Bild"
+
+msgid "Upload Images"
+msgstr "Ladda upp Bilder"
+
+msgid "Camera does not work over HTTP network"
+msgstr "Kamera fungerar inte över HTTP-nätverk"
+
+msgid "Use Upload Image to take pictures from another device"
+msgstr "Använd 'Ladda upp Bild' för att ta bilder från annan enhet"
+
+msgid "Click Start Camera or Upload Images"
+msgstr "Klicka 'Starta Kamera' eller 'Ladda upp Bilder'"
+
+msgid "Product Information"
+msgstr "Produktinformation"
+
+msgid "Description"
+msgstr "Beskrivning"
+
+msgid "Condition"
+msgstr "Skick"
+
+msgid "New"
+msgstr "Ny"
+
+msgid "Very Good"
+msgstr "Mycket Bra"
+
+msgid "Good"
+msgstr "Bra"
+
+msgid "Used"
+msgstr "Använd"
+
+msgid "Defect"
+msgstr "Defekt"
+
+msgid "Price"
+msgstr "Pris"
+
+msgid "Price (SEK)"
+msgstr "Pris (SEK)"
+
+msgid "Shelf Location"
+msgstr "Hyllplats"
+
+msgid "Scan location"
+msgstr "Scanna hyllplats"
+
+msgid "Scan or type shelf location"
+msgstr "Scanna eller skriv hyllplats"
+
+msgid "Bulk Location"
+msgstr "Bulkplats"
+
+msgid "Length (cm)"
+msgstr "Längd (cm)"
+
+msgid "Width (cm)"
+msgstr "Bredd (cm)"
+
+msgid "Height (cm)"
+msgstr "Höjd (cm)"
+
+msgid "Weight (kg)"
+msgstr "Vikt (kg)"
+
+msgid "Article Number"
+msgstr "Artikelnummer"
+
+msgid "Notes"
+msgstr "Anteckningar"
+
+msgid "Clear Form"
+msgstr "Rensa Formulär"
+
+# ==================== ORDERS PAGE ====================
+msgid "Orders"
+msgstr "Ordrar"
+
+msgid "Manage customer orders"
+msgstr "Hantera kundordrar"
+
+msgid "Create Order"
+msgstr "Skapa Order"
+
+msgid "New Order"
+msgstr "Ny Order"
+
+msgid "Order Number"
+msgstr "Ordernummer"
+
+msgid "Customer"
+msgstr "Kund"
+
+msgid "Customer Name"
+msgstr "Kundnamn"
+
+msgid "Customer Email"
+msgstr "Kund E-post"
+
+msgid "Customer Phone"
+msgstr "Kund Telefon"
+
+msgid "Shipping Address"
+msgstr "Leveransadress"
+
+msgid "Order Date"
+msgstr "Orderdatum"
+
+msgid "Order Status"
+msgstr "Orderstatus"
+
+msgid "Pending"
+msgstr "Väntande"
+
+msgid "Processing"
+msgstr "Bearbetar"
+
+msgid "Packed"
+msgstr "Packad"
+
+msgid "Shipped"
+msgstr "Skickad"
+
+msgid "Delivered"
+msgstr "Levererad"
+
+msgid "Cancelled"
+msgstr "Avbruten"
+
+msgid "Add Product"
+msgstr "Lägg till Produkt"
+
+msgid "Remove"
+msgstr "Ta bort"
+
+msgid "Quantity"
+msgstr "Antal"
+
+msgid "Unit Price"
+msgstr "Styckpris"
+
+msgid "Subtotal"
+msgstr "Delsumma"
+
+msgid "Shipping Cost"
+msgstr "Fraktkostnad"
+
+msgid "Total Amount"
+msgstr "Totalsumma"
+
+msgid "Payment Status"
+msgstr "Betalningsstatus"
+
+msgid "Paid"
+msgstr "Betald"
+
+msgid "Unpaid"
+msgstr "Obetald"
+
+# ==================== PACKING PAGE ====================
+msgid "Pack Orders"
+msgstr "Packa Ordrar"
+
+msgid "Pack and ship orders"
+msgstr "Packa och skicka ordrar"
+
+msgid "Scan Order"
+msgstr "Scanna Order"
+
+msgid "Scan order barcode"
+msgstr "Scanna order streckkod"
+
+msgid "Items to Pack"
+msgstr "Artiklar att packa"
+
+msgid "Scan Item"
+msgstr "Scanna Artikel"
+
+msgid "Mark as Packed"
+msgstr "Markera som Packad"
+
+msgid "Complete Packing"
+msgstr "Slutför Packning"
+
+msgid "Print Shipping Label"
+msgstr "Skriv ut Fraktetikett"
+
+msgid "Box Size"
+msgstr "Låd-storlek"
+
+msgid "Small"
+msgstr "Liten"
+
+msgid "Medium"
+msgstr "Mellan"
+
+msgid "Large"
+msgstr "Stor"
+
+msgid "Shipping Method"
+msgstr "Fraktmetod"
+
+msgid "Tracking Number"
+msgstr "Spårningsnummer"
+
+msgid "Packed By"
+msgstr "Packad av"
+
+msgid "Packing Date"
+msgstr "Packningsdatum"
+
+msgid "All items packed!"
+msgstr "Alla artiklar packade!"
+
+msgid "Congratulations!"
+msgstr "Grattis!"
+
+msgid "All orders are packed!"
+msgstr "Alla ordrar är packade!"
+
+msgid "Packed today"
+msgstr "Packade idag"
+
+msgid "Check for new orders"
+msgstr "Kolla efter nya ordrar"
+
+# ==================== SEARCH PAGE ====================
+msgid "Search Products"
+msgstr "Sök Produkter"
+
+msgid "Search"
+msgstr "Sök"
+
+msgid "Search by name, SKU, or barcode"
+msgstr "Sök med namn, SKU eller streckkod"
+
+msgid "Filters"
+msgstr "Filter"
+
+msgid "All Conditions"
+msgstr "Alla Skick"
+
+msgid "All Locations"
+msgstr "Alla Platser"
+
+msgid "Clear Filters"
+msgstr "Rensa Filter"
+
+msgid "Results"
+msgstr "Resultat"
+
+msgid "No results found"
+msgstr "Inga resultat"
+
+msgid "items found"
+msgstr "artiklar hittade"
+
+msgid "Sort by"
+msgstr "Sortera efter"
+
+msgid "Name"
+msgstr "Namn"
+
+msgid "Date Added"
+msgstr "Datum Tillagd"
+
+msgid "Price Low to High"
+msgstr "Pris Låg till Hög"
+
+msgid "Price High to Low"
+msgstr "Pris Hög till Låg"
+
+# ==================== MARKETPLACE PAGE ====================
+msgid "Marketplace Listings"
+msgstr "Marknadsplats Annonser"
+
+msgid "Manage online listings"
+msgstr "Hantera online-annonser"
+
+msgid "Create Listing"
+msgstr "Skapa Annons"
+
+msgid "Platform"
+msgstr "Plattform"
+
+msgid "Listing Title"
+msgstr "Annonstitel"
+
+msgid "Listing Description"
+msgstr "Annonsbeskrivning"
+
+msgid "Listing Price"
+msgstr "Annonspris"
+
+msgid "Listed"
+msgstr "Publicerad"
+
+msgid "Sold"
+msgstr "Såld"
+
+msgid "Draft"
+msgstr "Utkast"
+
+msgid "Publish"
+msgstr "Publicera"
+
+msgid "Unpublish"
+msgstr "Avpublicera"
+
+msgid "Views"
+msgstr "Visningar"
+
+msgid "Watchers"
+msgstr "Bevakare"
+
+# ==================== REPORTS PAGE ====================
+msgid "Reports & Analytics"
+msgstr "Rapporter & Analys"
+
+msgid "View statistics and reports"
+msgstr "Visa statistik och rapporter"
+
+msgid "Inventory Report"
+msgstr "Lagerrapport"
+
+msgid "Sales Report"
+msgstr "Försäljningsrapport"
+
+msgid "Revenue Report"
+msgstr "Intäktsrapport"
+
+msgid "Product Performance"
+msgstr "Produktprestanda"
+
+msgid "Date Range"
+msgstr "Datumintervall"
+
+msgid "From"
+msgstr "Från"
+
+msgid "To"
+msgstr "Till"
+
+msgid "Generate Report"
+msgstr "Generera Rapport"
+
+msgid "Export to PDF"
+msgstr "Exportera till PDF"
+
+msgid "Export to Excel"
+msgstr "Exportera till Excel"
+
+msgid "Total Products"
+msgstr "Totalt Produkter"
+
+msgid "Total Value"
+msgstr "Totalt Värde"
+
+msgid "Total Sales"
+msgstr "Total Försäljning"
+
+msgid "Revenue"
+msgstr "Intäkter"
+
+msgid "Profit"
+msgstr "Vinst"
+
+msgid "Top Selling Products"
+msgstr "Bästsäljande Produkter"
+
+# ==================== ADMIN PAGE ====================
+msgid "Administration"
+msgstr "Administration"
+
+msgid "System settings and configuration"
+msgstr "Systeminställningar och konfiguration"
+
+msgid "Locations"
+msgstr "Platser"
+
+msgid "Location Name"
+msgstr "Platsnamn"
+
+msgid "Location Type"
+msgstr "Platstyp"
+
+msgid "Shelf"
+msgstr "Hylla"
+
+msgid "Bulk Storage"
+msgstr "Bulklagring"
+
+msgid "Add Location"
+msgstr "Lägg till Plats"
+
+msgid "Shipping Methods"
+msgstr "Fraktmetoder"
+
+msgid "Method Name"
+msgstr "Metodnamn"
+
+msgid "Base Cost"
+msgstr "Grundkostnad"
+
+msgid "Active"
+msgstr "Aktiv"
+
+msgid "Inactive"
+msgstr "Inaktiv"
+
+msgid "Settings"
+msgstr "Inställningar"
+
+msgid "General Settings"
+msgstr "Allmänna Inställningar"
+
+msgid "Company Name"
+msgstr "Företagsnamn"
+
+msgid "Contact Email"
+msgstr "Kontakt E-post"
+
+msgid "Phone Number"
+msgstr "Telefonnummer"
+
+msgid "Address"
+msgstr "Adress"
+
+msgid "Currency"
+msgstr "Valuta"
+
+msgid "Tax Rate"
+msgstr "Skattesats"
+
+msgid "Language"
+msgstr "Språk"
+
+msgid "Timezone"
+msgstr "Tidszon"
+
+msgid "Database"
+msgstr "Databas"
+
+msgid "Backup Database"
+msgstr "Backup Databas"
+
+msgid "Restore Database"
+msgstr "Återställ Databas"
+
+msgid "Reset Database"
+msgstr "Återställ Databas"
+
+msgid "Are you sure?"
+msgstr "Är du säker?"
+
+msgid "This action cannot be undone"
+msgstr "Denna åtgärd kan inte ångras"
+
+# ==================== DASHBOARD ====================
+msgid "Dashboard"
+msgstr "Översikt"
+
+msgid "Welcome to Warehouse System"
+msgstr "Välkommen till Lagersystemet"
+
+msgid "Quick Stats"
+msgstr "Snabbstatistik"
+
+msgid "Recent Activity"
+msgstr "Senaste Aktivitet"
+
+msgid "Low Stock Alert"
+msgstr "Lågt Lager Varning"
+
+msgid "Pending Orders"
+msgstr "Väntande Ordrar"
+
+msgid "Recent Products"
+msgstr "Senaste Produkter"
+
+msgid "View All"
+msgstr "Visa Alla"
+
+# ==================== MESSAGES ====================
+msgid "Product registered successfully"
+msgstr "Produkten registrerades"
+
+msgid "Order created successfully"
+msgstr "Order skapad"
+
+msgid "Order updated successfully"
+msgstr "Order uppdaterad"
+
+msgid "Product not found"
+msgstr "Produkt hittades ej"
+
+msgid "Invalid barcode"
+msgstr "Ogiltig streckkod"
+
+msgid "Location already exists"
+msgstr "Plats finns redan"
+
+msgid "Please fill in all required fields"
+msgstr "Fyll i alla obligatoriska fält"
+
+msgid "Changes saved"
+msgstr "Ändringar sparade"
+
+msgid "Operation completed"
+msgstr "Operation slutförd"
+
+msgid "Something went wrong"
+msgstr "Något gick fel"
+
+msgid "In Stock"
+msgstr "I Lager"
+
+msgid "Packed Today"
+msgstr "Packade Idag"
+
+msgid "Manage customer orders"
+msgstr "Hantera och följ upp alla ordrar"
+
+msgid "Manage online listings"
+msgstr "Hantera uppläggning av varor på Blocket och Tradera"
+
+msgid "Search and filter inventory"
+msgstr "Sök och filtrera i hela lagret"
+
+msgid "View statistics and reports"
+msgstr "Insikter och statistik om din verksamhet"
+
+msgid "System settings and configuration"
+msgstr "Systeminställningar och konfiguration"
+
+msgid "Pack and ship orders"
+msgstr "Packa och skicka ordrar"
+
+msgid "Fetch Next Order"
+msgstr "Hämta Nästa Order"
+
+msgid "Go to Dashboard"
+msgstr "Gå till Dashboard"
+
+msgid "Check for new orders"
+msgstr "Kolla efter nya ordrar"
+
+msgid "Advanced Filter"
+msgstr "Avancerade Filter"
+
+msgid "Clear All"
+msgstr "Rensa Allt"
+
+# Packing page - detailed
+msgid "Order Information"
+msgstr "Orderinformation"
+
+msgid "Order Number:"
+msgstr "Ordernummer:"
+
+msgid "Buyer:"
+msgstr "Köpare:"
+
+msgid "Address:"
+msgstr "Adress:"
+
+msgid "Number of products:"
+msgstr "Antal produkter:"
+
+msgid "Box Suggestion"
+msgstr "Kartongförslag"
+
+msgid "No box fits"
+msgstr "Ingen kartong passar"
+
+msgid "Scan product:"
+msgstr "Scanna produkt:"
+
+msgid "Products packed"
+msgstr "Produkter packade"
+
+msgid "Products to Pack"
+msgstr "Produkter att Packa"
+
+msgid "Complete Order"
+msgstr "Färdigställ Order"
+
+msgid "item left to scan"
+msgstr "st kvar att scanna"
+
+msgid "Mark as Shipped"
+msgstr "Markera som Skickad"
+
+msgid "Waiting"
+msgstr "Väntande"
+
+# Marketplace detailed
+msgid "Not Listed"
+msgstr "Ej Upplagda"
+
+msgid "items in stock"
+msgstr "varor i lager"
+
+msgid "active ads"
+msgstr "aktiva annonser"
+
+msgid "through marketplace"
+msgstr "genom marketplace"
+
+msgid "Active Ads"
+msgstr "Aktiva Annonser"
+
+msgid "Not Listed"
+msgstr "Ej Upplagda"
+
+msgid "Add to Marketplace"
+msgstr "Lägg upp Markerade"
+
+msgid "Mark All"
+msgstr "Markera Alla"
+
+msgid "Search product..."
+msgstr "Sök produkt..."
+
+msgid "No items to list. All items are already listed or sold!"
+msgstr "Inga varor att lägga upp. Alla varor är redan upplagda eller sålda!"
+
+# Admin - Locations
+msgid "Locations"
+msgstr "Hyllplatser"
+
+msgid "Box Sizes"
+msgstr "Kartongstorlekar"
+
+msgid "Shipping Methods"
+msgstr "Fraktmetoder"
+
+msgid "Bulk Barcodes"
+msgstr "Bulk Streckkoder"
+
+msgid "Updates"
+msgstr "Updates"
+
+msgid "Create Location"
+msgstr "Skapa Hyllplats"
+
+msgid "Location Code *"
+msgstr "Platskod *"
+
+msgid "Barcode *"
+msgstr "Streckkod *"
+
+msgid "Description"
+msgstr "Beskrivning"
+
+msgid "Own barcode (must be unique)"
+msgstr "Egen streckkod (måste vara unik)"
+
+msgid "Create Location"
+msgstr "Skapa Hyllplats"
+
+msgid "Print All"
+msgstr "Skriv ut Alla"
+
+msgid "Print Selected"
+msgstr "Skriv ut Valda"
+
+msgid "Code"
+msgstr "Kod"
+
+msgid "Barcode"
+msgstr "Streckkod"
+
+msgid "Action"
+msgstr "Åtgärd"
+
+msgid "No locations"
+msgstr "Inga hyllplatser"
+
+msgid "Create Box Size"
+msgstr "Skapa Kartongstorlek"
+
+msgid "Name"
+msgstr "Namn"
+
+msgid "Length (cm)"
+msgstr "Längd (cm)"
+
+msgid "Width (cm)"
+msgstr "Bredd (cm)"
+
+msgid "Height (cm)"
+msgstr "Höjd (cm)"
+
+msgid "Max Weight (kg)"
+msgstr "Max Vikt (kg)"
+
+msgid "Create"
+msgstr "Skapa"
+
+msgid "Dimensions (L×W×H cm)"
+msgstr "Mått (L×B×H cm)"
+
+msgid "Max Weight (kg)"
+msgstr "Max Vikt (kg)"
+
+msgid "No box sizes"
+msgstr "Inga kartongstorlekar"
+
+msgid "Add Shipping Method"
+msgstr "Lägg till Fraktmetod"
+
+msgid "Add"
+msgstr "Lägg till"
+
+msgid "Active"
+msgstr "Aktiv"
+
+msgid "Generate Bulk Barcodes"
+msgstr "Generera Bulk Streckkoder"
+
+msgid "Prefix"
+msgstr "Prefix"
+
+msgid "Start Number"
+msgstr "Start Nummer"
+
+msgid "End Number"
+msgstr "Slut Nummer"
+
+msgid "Number of barcodes:"
+msgstr "Antal streckkoder:"
+
+msgid "Quick select:"
+msgstr "Snabbval:"
+
+msgid "Generate PDF"
+msgstr "Generera PDF"
+
+msgid "Previously Generated:"
+msgstr "Tidigare Genererade:"
+
+msgid "Time"
+msgstr "Tid"
+
+msgid "Range"
+msgstr "Range"
+
+msgid "Number"
+msgstr "Antal"
+
+# Orders detailed
+msgid "Filter by status:"
+msgstr "Filtrera på status:"
+
+msgid "Payment status:"
+msgstr "Betalningsstatus:"
+
+msgid "Search:"
+msgstr "Sök:"
+
+msgid "All orders"
+msgstr "Alla ordrar"
+
+msgid "All"
+msgstr "Alla"
+
+msgid "Filter"
+msgstr "Filtrera"
+
+msgid "Waiting"
+msgstr "Väntande"
+
+msgid "Confirmed"
+msgstr "Bekräftade"
+
+msgid "Packed"
+msgstr "Packade"
+
+msgid "Shipped"
+msgstr "Skickade"
+
+msgid "Order#"
+msgstr "Ordernr"
+
+msgid "Customer"
+msgstr "Kund"
+
+msgid "Items"
+msgstr "Antal varor"
+
+msgid "Amount"
+msgstr "Belopp"
+
+msgid "Payment"
+msgstr "Betalning"
+
+msgid "Status"
+msgstr "Status"
+
+msgid "Created"
+msgstr "Skapad"
+
+msgid "Actions"
+msgstr "Åtgärder"
+
+msgid "No orders found"
+msgstr "Inga ordrar hittades"
+
+msgid "Create New Order"
+msgstr "Skapa Ny Order"
+
+# Dashboard detailed
+msgid "Sales This Month"
+msgstr "Försäljning Denna Månad"
+
+msgid "Sold Products"
+msgstr "Sålda Produkter"
+
+msgid "Revenue"
+msgstr "Intäkter"
+
+msgid "Quick Links"
+msgstr "Snabblänkar"
+
+msgid "Recent Activity"
+msgstr "Senaste Aktivitet"
+
+msgid "Action"
+msgstr "Åtgärd"
+
+msgid "Details"
+msgstr "Detaljer"
+
+msgid "User"
+msgstr "Användare"
+
+msgid "Created item:"
+msgstr "Skapat artikel:"
+
+# Register detailed
+msgid "Choose condition"
+msgstr "Välj skick"
+
+msgid "Describe product..."
+msgstr "Beskriv produkten..."
+
+msgid "Clear Form"
+msgstr "Rensa Formulär"
+
+msgid "Or choose manually..."
+msgstr "Eller välj manuellt..."
+
+msgid "Create multiple identical products"
+msgstr "Skapa flera identiska produkter"
+
+msgid "Extra information..."
+msgstr "Extra information..."
+
+# Packing detailed
+msgid "Fetch Next Order"
+msgstr "Hämta Nästa Order"
+
+msgid "Waiting..."
+msgstr "Väntar..."
+
+msgid "No location"
+msgstr "Ingen plats"
+
+# Search detailed
+msgid "products"
+msgstr "produkter"
+
+msgid "units"
+msgstr "enheter"
+
+msgid "Total value:"
+msgstr "Totalt värde:"
+
+# Reports detailed
+msgid "Today"
+msgstr "Idag"
+
+msgid "This Week"
+msgstr "Denna Vecka"
+
+msgid "This Month"
+msgstr "Denna Månad"
+
+msgid "This Year"
+msgstr "Detta År"
+
+msgid "Sales Trend"
+msgstr "Försäljningstrend"
+
+msgid "Sales per Day"
+msgstr "Försäljning per Dag"
+
+msgid "No sales during this period"
+msgstr "Ingen försäljning under denna period"
+
+msgid "Inventory Status"
+msgstr "Lagerstatus"
+
+msgid "In Storage"
+msgstr "I Lager"
+
+msgid "Uploaded"
+msgstr "Uppladdat"
+
+msgid "Stuck"
+msgstr "Stickat"
+
+msgid "Stock Status"
+msgstr "Lagerstatus"
+
+msgid "Good"
+msgstr "Bra"
+
+msgid "Average Price"
+msgstr "Genomsnittspris"
+
+msgid "Inventory Value per Location"
+msgstr "Lagervärde per Plats"
+
+msgid "Location"
+msgstr "Hyllplats"
+
+msgid "Number of Products"
+msgstr "Antal Produkter"
+
+msgid "No inventory data"
+msgstr "Ingen lagerdata"
+
+msgid "Best Selling Products"
+msgstr "Mest Sålda Produkter"
+
+msgid "Article Code"
+msgstr "Artikelkod"
+
+msgid "Number Sold"
+msgstr "Antal Sålda"
+
+msgid "No sales data yet"
+msgstr "Ingen försäljningsdata än"
+
+# Orders_new (Create Order)
+msgid "Create Order"
+msgstr "Skapa Order"
+
+msgid "3-step order process: Customer → Items → Confirm"
+msgstr "3-stegs orderprocess: Kund → Varor → Bekräfta"
+
+msgid "Customer Info"
+msgstr "Kundinfo"
+
+msgid "Add Items"
+msgstr "Lägg till varor"
+
+msgid "Confirm"
+msgstr "Bekräfta"
+
+msgid "Customer Details"
+msgstr "Kunduppgifter"
+
+msgid "Search existing customer"
+msgstr "Sök befintlig kund"
+
+msgid "OR"
+msgstr "ELLER"
+
+msgid "Postal Code"
+msgstr "Postnummer"
+
+msgid "City"
+msgstr "Stad"
+
+msgid "Country"
+msgstr "Land"
+
+msgid "Sweden"
+msgstr "Sverige"
+
+msgid "Phone"
+msgstr "Telefon"
+
+msgid "Email"
+msgstr "E-post"
+
+msgid "Next: Add Items"
+msgstr "Nästa: Lägg till varor"
+
+msgid "Search Item"
+msgstr "Sök vara"
+
+msgid "Inventory ID or Description"
+msgstr "Inventory ID eller Beskrivning"
+
+msgid "Items in Order"
+msgstr "Varor i order"
+
+msgid "No items added yet"
+msgstr "Inga varor tillagda ännu"
+
+msgid "Number of items:"
+msgstr "Antal varor:"
+
+msgid "Back to Customer Info"
+msgstr "Tillbaka till kundinfo"
+
+msgid "Next: Review Order"
+msgstr "Nästa: Granska order"
+
+msgid "Review Order"
+msgstr "Granska order"
+
+msgid "pcs"
+msgstr "st"
+
+# Search advanced
+msgid "Price (min)"
+msgstr "Pris (min)"
+
+msgid "Price (max)"
+msgstr "Pris (max)"
+
+msgid "All locations"
+msgstr "Alla platser"
+
+msgid "Newest first"
+msgstr "Nyast först"
+
+msgid "Oldest first"
+msgstr "Äldst först"
+
+msgid "Show only"
+msgstr "Visa endast"
+
+msgid "With images"
+msgstr "Med bilder"
+
+msgid "Bulk (multiple)"
+msgstr "Bulk (flera st)"
+
+msgid "Condition: New"
+msgstr "Skick: Nytt"
+
+# Reports additional
+msgid "Revenue (SEK)"
+msgstr "Intäkt (SEK)"
+
+msgid "Total Revenue"
+msgstr "Total Intäkt"
+
+# Packing
+msgid "Scan products or SHIPPED when done..."
+msgstr "Scanna produkter eller 'SHIPPED' när klar..."
+
+# Dashboard
+msgid "No activity yet"
+msgstr "Ingen aktivitet än"
+
+msgid "Operator"
+msgstr "Operatör"
+
+# Register page detailed
+msgid "Article Number"
+msgstr "Artikelnummer"
+
+msgid "Choose condition"
+msgstr "Välj skick"
+
+msgid "Length (cm)"
+msgstr "Längd (cm)"
+
+msgid "Width (cm)"
+msgstr "Bredd (cm)"
+
+msgid "Height (cm)"
+msgstr "Höjd (cm)"
+
+msgid "Weight (kg)"
+msgstr "Vikt (kg)"
+
+msgid "Quantity (bulk)"
+msgstr "Antal (bulk)"
+
+# Orders page JavaScript
+msgid "Product added"
+msgstr "Produkt tillagd"
+
+msgid "Product not found"
+msgstr "Produkt hittades inte"
+
+msgid "No products yet"
+msgstr "Inga produkter ännu"
+
+msgid "Add at least one product"
+msgstr "Lägg till minst en produkt"
+
+msgid "Order created:"
+msgstr "Order skapad:"
+
+msgid "No orders"
+msgstr "Inga ordrar"
+
+msgid "No buyer"
+msgstr "Ingen köpare"
+
+msgid "Existing Orders"
+msgstr "Befintliga Ordrar"
+
+msgid "Scan Item"
+msgstr "Scanna Vara"
+
+# Orders_list page
+msgid "Manage and track all orders"
+msgstr "Hantera och följ upp alla ordrar"
+
+msgid "Order number, customer name..."
+msgstr "Ordernummer, kundnamn..."
+
+msgid "Unpaid"
+msgstr "Obetald"
+
+msgid "Partially paid"
+msgstr "Delvis betald"
+
+msgid "Pending"
+msgstr "Väntande"
+
+# Orders_new page
+msgid "Name, Email or Phone..."
+msgstr "Namn, E-post eller telefon..."
+
+msgid "INV-000001 or search text..."
+msgstr "INV-000001 eller sök text..."
+
+msgid "Scan Barcode"
+msgstr "Scanna Streckkod"
+
+msgid "Review and confirm order"
+msgstr "Granska och bekräfta order"
+
+msgid "Customer Details:"
+msgstr "Kunduppgifter:"
+
+msgid "Payment & Shipping:"
+msgstr "Betalning & Frakt:"
+
+msgid "Payment Status"
+msgstr "Betalningsstatus"
+
+msgid "Shipping Method"
+msgstr "Fraktmetod"
+
+msgid "Choose shipping method..."
+msgstr "Välj fraktmetod..."
+
+msgid "Tracking Number"
+msgstr "Spårningsnummer"
+
+msgid "Add later if you want"
+msgstr "Lägg till senare om du vill"
+
+msgid "Extra information about the order..."
+msgstr "Extra information om ordern..."
+
+msgid "Total amount:"
+msgstr "Total belopp:"
+
+msgid "Back to Items"
+msgstr "Tillbaka till varor"
+
+msgid "Order created!"
+msgstr "Order skapad!"
+
+msgid "Customer info saved"
+msgstr "Kundinfo sparad"
+
+msgid "items added"
+msgstr "varor tillagda"
+
+msgid "Items marked as sold"
+msgstr "Varor markerade som \"sold\""
+
+msgid "Marketplace listings updated"
+msgstr "Marketplace-listings uppdaterade"
+
+msgid "Go to Packing"
+msgstr "Gå till Packning"
+
+msgid "Print Packing List"
+msgstr "Skriv ut Packlista"
+
+msgid "See All Orders"
+msgstr "Se Alla Ordrar"
+
+# orders_new.html JavaScript strings
+msgid "Customer selected:"
+msgstr "Kund vald:"
+
+msgid "No customer found"
+msgstr "Ingen kund hittades"
+
+msgid "in stock"
+msgstr "i lager"
+
+msgid "Out of stock"
+msgstr "Slut i lager"
+
+msgid "No item found"
+msgstr "Ingen vara hittades"
+
+msgid "Scan barcode..."
+msgstr "Scanna streckkod..."
+
+msgid "Out of stock!"
+msgstr "Slut i lager!"
+
+msgid "added"
+msgstr "tillagd"
+
+msgid "removed"
+msgstr "borttagen"
+
+msgid "Enter a valid quantity (minimum 1)"
+msgstr "Ange ett giltigt antal (minst 1)"
+
+msgid "Increased to"
+msgstr "Ökade till"
+
+msgid "Decreased to"
+msgstr "Minskade till"
+
+msgid "No items added yet"
+msgstr "Inga varor tillagda ännu"
+
+msgid "Location:"
+msgstr "Plats:"
+
+msgid "Decrease quantity"
+msgstr "Minska antal"
+
+msgid "Increase quantity"
+msgstr "Öka antal"
+
+msgid "per unit"
+msgstr "kr/st"
+
+msgid "Creating..."
+msgstr "Skapar..."
+
+msgid "Error creating order"
+msgstr "Fel vid skapande av order"
+
+msgid "Tel:"
+msgstr "Tel:"
+
+msgid "Email:"
+msgstr "E-post:"
+
+msgid "Choose shipping method..."
+msgstr "Välj fraktmetod..."
+
+msgid "Max"
+msgstr "Max"
+
+msgid "available in stock"
+msgstr "finns i lager"
+
+msgid "Enter quantity"
+msgstr "Ange antal"
+
+msgid "Now in order:"
+msgstr "Nu i ordern:"
+
+msgid "available"
+msgstr "finns"
+
+msgid "already in order"
+msgstr "redan i order"
+
+# Packing page
+msgid "Packing"
+msgstr "Packning"
+
+msgid "Load Next Order"
+msgstr "Hämta Nästa Order"
+
+msgid "Order Information"
+msgstr "Orderinformation"
+
+msgid "Box Suggestion"
+msgstr "Kartongförslag"
+
+msgid "Scan products or SHIPPED when done..."
+msgstr "Scanna produkter eller SHIPPED när klar..."
+
+msgid "Scan products or 'SHIPPED' when done..."
+msgstr "Scanna produkter eller 'SHIPPED' när klar..."
+
+msgid "Scan all products, then scan"
+msgstr "Scanna alla produkter, sedan scanna"
+
+msgid "to complete."
+msgstr "för att färdigställa."
+
+msgid "Products to Pack"
+msgstr "Produkter att Packa"
+
+msgid "Complete Order"
+msgstr "Färdigställ Order"
+
+msgid "Scan all products before completing"
+msgstr "Scanna alla produkter innan du färdigställer"
+
+msgid "Mark as Shipped"
+msgstr "Markera som Skickad"
+
+msgid "Congratulations!"
+msgstr "Grattis!"
+
+msgid "There are no more orders to pack right now."
+msgstr "Det finns inga fler ordrar att packa just nu."
+
+msgid "Good job!"
+msgstr "Bra jobbat!"
+
+msgid "Packed today"
+msgstr "Packade idag"
+
+msgid "Check for new orders"
+msgstr "Kolla efter nya ordrar"
+
+msgid "Go to Dashboard"
+msgstr "Gå till Dashboard"
+
+msgid "Unknown customer"
+msgstr "Okänd kund"
+
+msgid "No address"
+msgstr "Ingen adress"
+
+msgid "Product not in this order!"
+msgstr "Produkt finns inte i denna order!"
+
+msgid "Product %s not in this order!"
+msgstr "Produkt %s finns inte i denna order!"
+
+msgid "already fully scanned!"
+msgstr "redan fullständigt scannad!"
+
+msgid "fully packed!"
+msgstr "fullständigt packad!"
+
+msgid "All products must be scanned first!"
+msgstr "Alla produkter måste scannas först!"
+
+msgid "No order selected"
+msgstr "Ingen order vald"
+
+msgid "Completing order and loading next..."
+msgstr "Färdigställer order och laddar nästa..."
+
+msgid "Order shipped!"
+msgstr "Order skickad!"
+
+msgid "Error completing order"
+msgstr "Fel vid färdigställning"
+
+msgid "All products scanned!"
+msgstr "Alla produkter scannade!"
+
+msgid "Scan SHIPPED to complete and load next order."
+msgstr "Scanna SHIPPED för att färdigställa och ladda nästa order."
+
+msgid "Scan \"SHIPPED\" to complete and load next order."
+msgstr "Scanna \"SHIPPED\" för att färdigställa och ladda nästa order."
+
+msgid "items left to scan"
+msgstr "varor kvar att scanna"
+
+msgid "All products scanned! Scan SHIPPED to complete."
+msgstr "Alla produkter scannade! Scanna SHIPPED för att färdigställa."
+
+msgid "All products scanned! Scan \"SHIPPED\" to complete."
+msgstr "Alla produkter scannade! Scanna \"SHIPPED\" för att färdigställa."
+
+msgid "No box suggestion available"
+msgstr "Inget kartongförslag tillgängligt"
+
+# Marketplace
+msgid "Marketplace Management"
+msgstr "Marketplace Hantering"
+
+msgid "Sold"
+msgstr "Sålda"
+
+msgid "Active Ads"
+msgstr "Aktiva Annonser"
+
+msgid "List Selected"
+msgstr "Lägg upp Markerade"
+
+msgid "Select All"
+msgstr "Markera Alla"
+
+msgid "List on Marketplace"
+msgstr "Lägg upp på Marketplace"
+
+msgid "Blocket"
+msgstr "Blocket"
+
+msgid "Tradera"
+msgstr "Tradera"
+
+msgid "List"
+msgstr "Lägg upp"
+
+msgid "items on Marketplace"
+msgstr "varor på Marketplace"
+
+msgid "List All"
+msgstr "Lägg upp alla"
+
+# Search
+msgid "Search Products"
+msgstr "Sök Produkter"
+
+msgid "Search by INV-ID, article number, description..."
+msgstr "Sök på INV-ID, artikelnummer, beskrivning..."
+
+msgid "Tip: Search by INV-000001, article number, or product description. Press Enter to search."
+msgstr "Tips: Sök på INV-000001, artikelnummer, eller produktbeskrivning. Tryck Enter för att söka."
+
+msgid "Advanced Filters"
+msgstr "Avancerade Filter"
+
+msgid "Clear All"
+msgstr "Rensa Allt"
+
+msgid "In stock"
+msgstr "I lager"
+
+msgid "Listed"
+msgstr "Upplagd"
+
+msgid "All locations"
+msgstr "Alla platser"
+
+msgid "Price (min)"
+msgstr "Pris (min)"
+
+msgid "Price (max)"
+msgstr "Pris (max)"
+
+msgid "Sort by"
+msgstr "Sortera efter"
+
+msgid "Newest first"
+msgstr "Nyast först"
+
+msgid "Oldest first"
+msgstr "Äldst först"
+
+msgid "Highest price"
+msgstr "Högst pris"
+
+msgid "Lowest price"
+msgstr "Lägst pris"
+
+msgid "INV-ID (A-Z)"
+msgstr "INV-ID (A-Ö)"
+
+msgid "INV-ID (Z-A)"
+msgstr "INV-ID (Ö-A)"
+
+msgid "Show only"
+msgstr "Visa endast"
+
+msgid "With images"
+msgstr "Med bilder"
+
+msgid "Bulk (multiple pcs)"
+msgstr "Bulk (flera st)"
+
+# Reports
+msgid "Reports & Analysis"
+msgstr "Rapporter & Analys"
+
+msgid "Today"
+msgstr "Idag"
+
+msgid "This Week"
+msgstr "Denna Vecka"
+
+msgid "This Month"
+msgstr "Denna Månad"
+
+msgid "This Year"
+msgstr "Detta År"
+
+msgid "Products Sold"
+msgstr "Sålda Produkter"
+
+msgid "Total Revenue"
+msgstr "Total Intäkt"
+
+msgid "Sales Trend"
+msgstr "Försäljningstrend"
+
+msgid "Sales per Day"
+msgstr "Försäljning per Dag"
+
+# Admin
+msgid "E.g. A1, B2, C3"
+msgstr "T.ex. A1, B2, C3"
+
+msgid "E.g. PostNord"
+msgstr "T.ex. PostNord"
+
+msgid "E.g. Standard package delivery"
+msgstr "T.ex. Standard paketleverans"
+
+msgid "Add"
+msgstr "Lägg till"
+
+msgid "E.g. ITEM, PROD, SKU"
+msgstr "T.ex. ITEM, PROD, SKU"
+
+msgid "Delete this location?"
+msgstr "Ta bort denna hyllplats?"
+
+msgid "Delete this box size?"
+msgstr "Ta bort denna kartongstorlek?"
+
+msgid "Delete this shipping method?"
+msgstr "Ta bort denna fraktmetod?"
+
+msgid "to"
+msgstr "till"
+
+# Status translations
+msgid "Pending"
+msgstr "Väntande"
+
+msgid "Confirmed"
+msgstr "Bekräftad"
+
+msgid "Packed"
+msgstr "Packad"
+
+msgid "Unpaid"
+msgstr "Obetald"
+
+msgid "Partial"
+msgstr "Delvis"
+
+msgid "3-step order process: Customer → Items → Confirm"
+msgstr "3-stegs orderprocess: Kund → Varor → Bekräfta"
+
+msgid "Name, email or phone..."
+msgstr "Namn, e-post eller telefon..."
+
+# orders_new.html additional translations
+msgid "Customer Info"
+msgstr "Kundinfo"
+
+msgid "Add Items"
+msgstr "Lägg till varor"
+
+msgid "Search existing customer"
+msgstr "Sök befintlig kund"
+
+msgid "Search Item"
+msgstr "Sök vara"
+
+msgid "Inventory ID or Description"
+msgstr "Inventory ID eller Beskrivning"
+
+msgid "Items in Order"
+msgstr "Varor i order"
+
+msgid "Review and confirm order"
+msgstr "Granska och bekräfta order"
+
+msgid "Customer Details:"
+msgstr "Kunduppgifter:"
+
+msgid "Payment & Shipping:"
+msgstr "Betalning & Frakt:"
+
+msgid "Add later if you want"
+msgstr "Lägg till senare om du vill"
+
+msgid "Extra information about the order..."
+msgstr "Extra information om ordern..."
+
+msgid "No items added yet"
+msgstr "Inga varor tillagda ännu"
+
+msgid "Inventory Value"
+msgstr "Lagervärde"
+
+msgid "Inventory Value per Location"
+msgstr "Lagervärde per Plats"
+
+msgid "INV-000001 or search text..."
+msgstr "INV-000001 eller sök text..."
+
+msgid "Create Order"
+msgstr "Skapa Order"
+
+msgid "Sweden"
+msgstr "Sverige"

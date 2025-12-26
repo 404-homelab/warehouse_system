@@ -223,33 +223,45 @@ $(document).ready(function() {
 });
 
 function checkUpdates() {
-    $('#check-btn').prop('disabled', true).html('<span class="spinner-border spinner-border-sm"></span> Checking...');
+    const checkBtn = $('#check-btn');
+    if (checkBtn.length) {
+        checkBtn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm"></span> Checking...');
+    }
     
     $.get('/api/git/status', function(data) {
+        console.log('Git status response:', data);
         if (data.success) {
             updateStatus = data;
             displayStatus(data);
         } else {
             showError(data.error || 'Failed to check status');
         }
-    }).fail(function() {
-        showError('Network error');
+    }).fail(function(xhr, status, error) {
+        console.error('Git status error:', error);
+        showError('Network error: ' + error);
     }).always(function() {
-        $('#check-btn').prop('disabled', false).html('<i class="bi bi-arrow-repeat"></i> Check for Updates');
+        if (checkBtn.length) {
+            checkBtn.prop('disabled', false).html('<i class="bi bi-arrow-repeat"></i> Check for Updates');
+        }
     });
 }
 
 function displayStatus(data) {
+    console.log('displayStatus called with:', data);
+    console.log('is_git_repo:', data.is_git_repo);
+    
     $('#status-loading').hide();
     $('#status-error').hide();
     
     // Check if it's a git repo
     if (!data.is_git_repo) {
+        console.log('Not a git repo, showing init section');
         $('#not-git-repo').show();
         $('#status-content').hide();
         return;
     }
     
+    console.log('Is a git repo, showing status');
     $('#not-git-repo').hide();
     $('#status-content').show();
     

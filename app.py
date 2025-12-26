@@ -3,6 +3,7 @@ Warehouse Management System
 Main Flask Application
 """
 from flask import Flask, render_template, request, jsonify, send_file, make_response, redirect
+from flask_babel import Babel, gettext, lazy_gettext
 from datetime import datetime
 import os
 from database import Database
@@ -16,6 +17,35 @@ app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max
 
+# Babel configuration
+app.config['BABEL_DEFAULT_LOCALE'] = 'sv'
+app.config['BABEL_TRANSLATION_DIRECTORIES'] = 'translations'
+
+# Initialize Babel
+babel = Babel(app)
+
+def get_locale():
+    """Get user's preferred language from cookie or Accept-Language header"""
+    # First check cookie
+    lang = request.cookies.get('language')
+    if lang in ['sv', 'en', 'de', 'fr', 'es', 'no', 'da', 'fi', 'pl']:
+        return lang
+    
+    # Fallback to Accept-Language header
+    return request.accept_languages.best_match(['sv', 'en', 'de', 'fr', 'es', 'no', 'da', 'fi', 'pl']) or 'sv'
+
+# Register locale selector (compatible with Flask-Babel 3.x and 4.x)
+try:
+    babel.init_app(app, locale_selector=get_locale)
+except:
+    # Fallback for older versions
+    babel.localeselector(get_locale)
+
+# Make get_locale available in templates
+@app.context_processor
+def inject_locale():
+    return {'get_locale': get_locale}
+
 # Initialize components
 db = Database()
 camera = CameraHandler()
@@ -28,52 +58,6 @@ os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 os.makedirs('static/barcodes', exist_ok=True)
 os.makedirs('static/exports', exist_ok=True)
 
-# Load translations
-TRANSLATIONS = {}
-try:
-    with open('static/translations.json', 'r', encoding='utf-8') as f:
-        TRANSLATIONS = json.load(f)
-    print(f"✓ Loaded translations for: {', '.join(TRANSLATIONS.keys())}")
-except FileNotFoundError:
-    print("⚠ translations.json not found, using Swedish only")
-    TRANSLATIONS = {'sv': {}}
-
-def get_language():
-    """Get user's preferred language from cookie or Accept-Language header"""
-    try:
-        # First check cookie
-        lang = request.cookies.get('language')
-        if lang and lang in TRANSLATIONS:
-            return lang
-        
-        # Fallback to Accept-Language header
-        lang = request.accept_languages.best_match(TRANSLATIONS.keys())
-        return lang or 'sv'
-    except RuntimeError:
-        # No request context (e.g., in CLI commands)
-        return 'sv'
-
-@app.context_processor
-def inject_translations():
-    """Make translations and language available in all templates"""
-    lang = get_language()
-    translations = TRANSLATIONS.get(lang, TRANSLATIONS.get('sv', {}))
-    
-    # Provide empty dict structure if translations not loaded
-    if not translations:
-        translations = {
-            'nav': {},
-            'register': {},
-            'packing': {},
-            'common': {}
-        }
-    
-    return {
-        't': translations,
-        'current_lang': lang,
-        'available_langs': list(TRANSLATIONS.keys()) if TRANSLATIONS else ['sv']
-    }
-
 
 
 # ==================== WEB ROUTES ====================
@@ -83,7 +67,9 @@ def inject_translations():
 @app.route('/set-language/<lang>')
 def set_language(lang):
     """Set user's preferred language"""
-    if lang not in TRANSLATIONS:
+    supported_languages = ['sv', 'en', 'de', 'fr', 'es', 'no', 'da', 'fi', 'pl']
+    
+    if lang not in supported_languages:
         return jsonify({'success': False, 'error': 'Language not supported'}), 400
     
     # Redirect back to referring page or home
@@ -151,8 +137,14 @@ def admin():
 
 @app.route('/test/i18n')
 def test_i18n():
-    """i18n test page"""
-    return render_template('test_i18n.html')
+    """i18n debug page"""
+    import os
+    
+    def check_mo_exists(lang):
+        mo_path = f'translations/{lang}/LC_MESSAGES/messages.mo'
+        return os.path.exists(mo_path)
+    
+    return render_template('debug_i18n.html', check_mo_exists=check_mo_exists)
 
 
 @app.route('/reports')

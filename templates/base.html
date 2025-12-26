@@ -196,42 +196,42 @@
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
                         <a class="nav-link" href="/">
-                            <i class="bi bi-speedometer2"></i> {{ t.nav.home }}
+                            <i class="bi bi-speedometer2"></i> {{ _('Home') }}
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/register">
-                            <i class="bi bi-plus-circle"></i> {{ t.nav.register }}
+                            <i class="bi bi-plus-circle"></i> {{ _('Register') }}
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/orders">
-                            <i class="bi bi-cart"></i> {{ t.nav.orders }}
+                            <i class="bi bi-cart"></i> {{ _('Orders') }}
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/packing">
-                            <i class="bi bi-box-seam"></i> {{ t.nav.packing }}
+                            <i class="bi bi-box-seam"></i> {{ _('Packing') }}
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/marketplace">
-                            <i class="bi bi-shop"></i> {{ t.nav.marketplace }}
+                            <i class="bi bi-shop"></i> {{ _('Marketplace') }}
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/search">
-                            <i class="bi bi-search"></i> {{ t.nav.search }}
+                            <i class="bi bi-search"></i> {{ _('Search') }}
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/reports">
-                            <i class="bi bi-graph-up"></i> {{ t.nav.reports }}
+                            <i class="bi bi-graph-up"></i> {{ _('Reports') }}
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/admin">
-                            <i class="bi bi-gear"></i> {{ t.nav.admin }}
+                            <i class="bi bi-gear"></i> {{ _('Admin') }}
                         </a>
                     </li>
                 </ul>
@@ -239,18 +239,18 @@
                 <!-- Language Selector -->
                 <div class="language-selector me-3">
                     <button class="lang-btn" onclick="toggleLangDropdown()">
-                        <i class="bi bi-globe"></i> <span id="current-lang">{{ current_lang.upper() }}</span>
+                        <i class="bi bi-globe"></i> <span id="current-lang">{{ get_locale().upper() }}</span>
                     </button>
                     <div class="lang-dropdown" id="langDropdown">
-                        <a href="/set-language/sv" class="lang-option {% if current_lang == 'sv' %}active{% endif %}">🇸🇪 Svenska</a>
-                        <a href="/set-language/en" class="lang-option {% if current_lang == 'en' %}active{% endif %}">🇬🇧 English</a>
-                        <a href="/set-language/de" class="lang-option {% if current_lang == 'de' %}active{% endif %}">🇩🇪 Deutsch</a>
-                        <a href="/set-language/fr" class="lang-option {% if current_lang == 'fr' %}active{% endif %}">🇫🇷 Français</a>
-                        <a href="/set-language/es" class="lang-option {% if current_lang == 'es' %}active{% endif %}">🇪🇸 Español</a>
-                        <a href="/set-language/no" class="lang-option {% if current_lang == 'no' %}active{% endif %}">🇳🇴 Norsk</a>
-                        <a href="/set-language/da" class="lang-option {% if current_lang == 'da' %}active{% endif %}">🇩🇰 Dansk</a>
-                        <a href="/set-language/fi" class="lang-option {% if current_lang == 'fi' %}active{% endif %}">🇫🇮 Suomi</a>
-                        <a href="/set-language/pl" class="lang-option {% if current_lang == 'pl' %}active{% endif %}">🇵🇱 Polski</a>
+                        <a href="/set-language/sv" class="lang-option {% if get_locale() == 'sv' %}active{% endif %}">🇸🇪 Svenska</a>
+                        <a href="/set-language/en" class="lang-option {% if get_locale() == 'en' %}active{% endif %}">🇬🇧 English</a>
+                        <a href="/set-language/de" class="lang-option {% if get_locale() == 'de' %}active{% endif %}">🇩🇪 Deutsch</a>
+                        <a href="/set-language/fr" class="lang-option {% if get_locale() == 'fr' %}active{% endif %}">🇫🇷 Français</a>
+                        <a href="/set-language/es" class="lang-option {% if get_locale() == 'es' %}active{% endif %}">🇪🇸 Español</a>
+                        <a href="/set-language/no" class="lang-option {% if get_locale() == 'no' %}active{% endif %}">🇳🇴 Norsk</a>
+                        <a href="/set-language/da" class="lang-option {% if get_locale() == 'da' %}active{% endif %}">🇩🇰 Dansk</a>
+                        <a href="/set-language/fi" class="lang-option {% if get_locale() == 'fi' %}active{% endif %}">🇫🇮 Suomi</a>
+                        <a href="/set-language/pl" class="lang-option {% if get_locale() == 'pl' %}active{% endif %}">🇵🇱 Polski</a>
                     </div>
                 </div>
                 

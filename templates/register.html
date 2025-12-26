@@ -6,8 +6,8 @@
 <div class="container">
     <div class="row mb-4">
         <div class="col">
-            <h1 class="display-4"><i class="bi bi-plus-circle"></i> {{ t.register.title }}</h1>
-            <p class="lead">Fotografera och registrera nya produkter</p>
+            <h1 class="display-4"><i class="bi bi-plus-circle"></i> {{ _('Register Product') }}</h1>
+            <p class="lead">{{ _('Photograph and register new products') }}</p>
         </div>
     </div>
     
@@ -15,7 +15,7 @@
     <div class="row mb-3">
         <div class="col">
             <div class="alert alert-info border-info">
-                <i class="bi bi-lightning-charge"></i> <strong>{{ t.register.quick_info }}</strong>
+                <i class="bi bi-lightning-charge"></i> <strong>{{ _('Quick registration: Fill in description, condition and price → Scan shelf location → Product registered automatically!') }}</strong>
             </div>
         </div>
     </div>
@@ -25,13 +25,13 @@
         <div class="col-md-5">
             <div class="card mb-3">
                 <div class="card-body">
-                    <h5 class="card-title"><i class="bi bi-camera"></i> {{ t.register.camera }} (<span id="image-count-display">0</span> {{ t.register.images }})</h5>
+                    <h5 class="card-title"><i class="bi bi-camera"></i> {{ _('Camera') }} (<span id="image-count-display">0</span> {{ _('images') }})</h5>
                     
                     <!-- Info about camera limitations -->
                     <div id="camera-info" class="alert alert-warning" style="display:none;">
                         <i class="bi bi-exclamation-triangle"></i> 
-                        <strong>Kamera fungerar inte över HTTP-nätverk</strong><br>
-                        Använd "Ladda upp Bild" för att ta bilder från annan enhet.
+                        <strong>{{ _('Camera does not work over HTTP network') }}</strong><br>
+                        {{ _('Use Upload Image to take pictures from another device') }}
                     </div>
                     
                     <div class="text-center mb-3">
@@ -45,7 +45,7 @@
                         
                         <div id="camera-placeholder" class="p-5 bg-light rounded">
                             <i class="bi bi-camera" style="font-size: 4rem; color: #ccc;"></i>
-                            <p class="text-muted mt-2">Klicka "Starta Kamera" eller "Ladda upp Bilder"</p>
+                            <p class="text-muted mt-2">{{ _('Click Start Camera or Upload Images') }}</p>
                         </div>
                         
                         <input type="file" id="file-input" accept="image/*" multiple style="display:none;">
@@ -61,16 +61,16 @@
                     
                     <div class="d-grid gap-2">
                         <button id="start-camera-btn" class="btn btn-primary">
-                            <i class="bi bi-camera-video"></i> Starta Kamera
+                            <i class="bi bi-camera-video"></i> {{ _('Start Camera') }}
                         </button>
                         <button id="upload-image-btn" class="btn btn-outline-primary">
-                            <i class="bi bi-upload"></i> Ladda upp Bilder
+                            <i class="bi bi-upload"></i> {{ _('Upload Images') }}
                         </button>
                         <button id="capture-btn" class="btn btn-success" style="display:none;">
-                            <i class="bi bi-camera"></i> Ta Bild
+                            <i class="bi bi-camera"></i> {{ _('Capture Image') }}
                         </button>
                         <button id="stop-camera-btn" class="btn btn-info" style="display:none;">
-                            <i class="bi bi-stop-circle"></i> Stoppa Kamera
+                            <i class="bi bi-stop-circle"></i> {{ _('Stop Camera') }}
                         </button>
                         <button id="view-gallery-btn" class="btn btn-secondary" style="display:none;">
                             <i class="bi bi-images"></i> Visa Bildgalleri
@@ -101,95 +101,95 @@
         <div class="col-md-7">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title"><i class="bi bi-clipboard-check"></i> Produktinformation</h5>
+                    <h5 class="card-title"><i class="bi bi-clipboard-check"></i> {{ _('Product Information') }}</h5>
                     
                     <form id="register-form">
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Artikelnummer</label>
+                                <label class="form-label">{{ _('Article Number') }}</label>
                                 <input type="text" class="form-control" id="article-code" placeholder="Art-12345">
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Skick *</label>
+                                <label class="form-label">{{ _('Condition') }} *</label>
                                 <select class="form-select" id="condition" required>
-                                    <option value="">Välj skick</option>
-                                    <option value="Nytt">Nytt</option>
-                                    <option value="Mycket Gott">Mycket Gott</option>
-                                    <option value="Gott">Gott</option>
-                                    <option value="Använt">Använt</option>
+                                    <option value="">{{ _('Choose condition') }}</option>
+                                    <option value="Nytt">{{ _('New') }}</option>
+                                    <option value="Mycket Gott">{{ _('Very Good') }}</option>
+                                    <option value="Gott">{{ _('Good') }}</option>
+                                    <option value="Använt">{{ _('Used') }}</option>
                                     <option value="Defekt">Defekt</option>
                                 </select>
                             </div>
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label">Beskrivning *</label>
-                            <textarea class="form-control" id="description" rows="2" required placeholder="Beskriv produkten..."></textarea>
+                            <label class="form-label">{{ _('Description') }} *</label>
+                            <textarea class="form-control" id="description" rows="2" required placeholder="{{ _('Describe product...') }}"></textarea>
                         </div>
 
                         <div class="row">
                             <div class="col-md-4 mb-3">
-                                <label class="form-label">Längd (cm)</label>
+                                <label class="form-label">{{ _('Length (cm)') }}</label>
                                 <input type="number" class="form-control" id="length" step="0.1" placeholder="0.0">
                             </div>
                             <div class="col-md-4 mb-3">
-                                <label class="form-label">Bredd (cm)</label>
+                                <label class="form-label">{{ _('Width (cm)') }}</label>
                                 <input type="number" class="form-control" id="width" step="0.1" placeholder="0.0">
                             </div>
                             <div class="col-md-4 mb-3">
-                                <label class="form-label">Höjd (cm)</label>
+                                <label class="form-label">{{ _('Height (cm)') }}</label>
                                 <input type="number" class="form-control" id="height" step="0.1" placeholder="0.0">
                             </div>
                         </div>
 
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Vikt (kg)</label>
+                                <label class="form-label">{{ _('Weight (kg)') }}</label>
                                 <input type="number" class="form-control" id="weight" step="0.01" placeholder="0.00">
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Pris (SEK) *</label>
+                                <label class="form-label">{{ _('Price (SEK)') }} *</label>
                                 <input type="number" class="form-control" id="price" step="1" required placeholder="0">
                             </div>
                         </div>
 
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Hyllplats</label>
+                                <label class="form-label">{{ _('Shelf Location') }}</label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control" id="location-scan" placeholder="Scanna hyllplats streckkod...">
+                                    <input type="text" class="form-control" id="location-scan" placeholder="{{ _('Scan location') }}">
                                     <button class="btn btn-outline-secondary" type="button" id="clear-location-btn">
                                         <i class="bi bi-x-circle"></i>
                                     </button>
                                 </div>
-                                <small class="text-muted">Scanna LOC-koden eller välj manuellt nedan</small>
+                                <small class="text-muted">{{ _('Scan or type shelf location') }}</small>
                                 <select class="form-select mt-2" id="location-id">
-                                    <option value="">Eller välj manuellt...</option>
+                                    <option value="">{{ _("Or choose manually...") }}</option>
                                 </select>
                                 <div id="location-info" class="alert alert-success mt-2" style="display:none;">
                                     <i class="bi bi-check-circle"></i> <strong id="location-name"></strong>
                                 </div>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Antal (bulk)</label>
+                                <label class="form-label">{{ _('Quantity (bulk)') }}</label>
                                 <input type="number" class="form-control" id="quantity" min="1" value="1">
-                                <small class="text-muted">Skapa flera identiska produkter</small>
+                                <small class="text-muted">{{ _("Create multiple identical products") }}</small>
                             </div>
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label">Anteckningar</label>
-                            <textarea class="form-control" id="notes" rows="2" placeholder="Extra information..."></textarea>
+                            <label class="form-label">{{ _('Notes') }}</label>
+                            <textarea class="form-control" id="notes" rows="2" placeholder="{{ _('Extra information...') }}"></textarea>
                         </div>
 
                         <hr>
 
                         <div class="d-grid gap-2">
                             <button type="submit" class="btn btn-success btn-lg">
-                                <i class="bi bi-check-circle"></i> Registrera Produkt
+                                <i class="bi bi-check-circle"></i> {{ _('Register Product') }}
                             </button>
                             <button type="button" class="btn btn-secondary" id="clear-form-btn">
-                                <i class="bi bi-x-circle"></i> Rensa Formulär
+                                <i class="bi bi-x-circle"></i> {{ _('Clear Form') }}
                             </button>
                         </div>
                     </form>

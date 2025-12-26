@@ -1,0 +1,184 @@
+{% extends "base.html" %}
+{% block title %}Ordrar - Warehouse System{% endblock %}
+{% block content %}
+<div class="container">
+    <h1 class="display-4"><i class="bi bi-cart"></i> {{ _("Orders") }}</h1>
+    <p class="lead">{{ _("Manage customer orders") }}</p>
+    
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="bi bi-plus-circle"></i> {{ _("Create New Order") }}</h5>
+                    <form id="create-order-form">
+                        <div class="mb-3">
+                            <label class="form-label">{{ _("Customer") }}</label>
+                            <input type="text" class="form-control" id="buyer-info" placeholder="Blocket, Tradera, etc.">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">{{ _("Scan Item") }}</label>
+                            <input type="text" class="form-control" id="item-scan" placeholder="INV-000001">
+                        </div>
+                        <div id="order-items-list" class="mb-3"></div>
+                        <button type="submit" class="btn btn-success w-100">{{ _("Create Order") }}</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="bi bi-list-check"></i> {{ _("Existing Orders") }}</h5>
+                    <div class="btn-group mb-3" role="group">
+                        <button type="button" class="btn btn-sm btn-outline-primary status-filter active" data-status="">{{ _("All") }}</button>
+                        <button type="button" class="btn btn-sm btn-outline-warning status-filter" data-status="pending">{{ _("Waiting") }}</button>
+                        <button type="button" class="btn btn-sm btn-outline-success status-filter" data-status="shipped">{{ _("Shipped") }}</button>
+                    </div>
+                    <div id="orders-list"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script>
+// Translations
+const translations = {
+    'product_added': "{{ _('Product added') }}",
+    'product_not_found': "{{ _('Product not found') }}",
+    'no_products_yet': "{{ _('No products yet') }}",
+    'add_at_least_one': "{{ _('Add at least one product') }}",
+    'order_created': "{{ _('Order created:') }}",
+    'no_orders': "{{ _('No orders') }}",
+    'no_buyer': "{{ _('No buyer') }}",
+    'items': "{{ _('items') }}"
+};
+
+let orderItems = [];
+
+$(document).ready(function() {
+    loadOrders();
+    
+    $('#item-scan').keypress(function(e) {
+        if (e.which == 13) {
+            e.preventDefault();
+            addItemToOrder();
+        }
+    });
+    
+    $('#create-order-form').submit(createOrder);
+    
+    $('.status-filter').click(function() {
+        $('.status-filter').removeClass('active');
+        $(this).addClass('active');
+        loadOrders($(this).data('status'));
+    });
+});
+
+function addItemToOrder() {
+    const inventoryId = $('#item-scan').val().trim();
+    if (!inventoryId) return;
+    
+    $.get('/api/items/' + inventoryId, function(data) {
+        if (data.success && data.item) {
+            orderItems.push(data.item);
+            updateOrderItemsList();
+            $('#item-scan').val('');
+            showToast(translations.product_added, 'success');
+        } else {
+            showToast(translations.product_not_found, 'error');
+        }
+    });
+}
+
+function updateOrderItemsList() {
+    const list = $('#order-items-list');
+    list.empty();
+    
+    if (orderItems.length === 0) {
+        list.html(`<p class="text-muted">${translations.no_products_yet}</p>`);
+        return;
+    }
+    
+    orderItems.forEach(function(item, idx) {
+        list.append(`
+            <div class="alert alert-info d-flex justify-content-between align-items-center">
+                <span>${item.inventory_id} - ${item.description}</span>
+                <button class="btn btn-sm btn-danger" onclick="removeOrderItem(${idx})">×</button>
+            </div>
+        `);
+    });
+}
+
+function removeOrderItem(idx) {
+    orderItems.splice(idx, 1);
+    updateOrderItemsList();
+}
+
+function createOrder(e) {
+    e.preventDefault();
+    
+    if (orderItems.length === 0) {
+        showToast(translations.add_at_least_one, 'error');
+        return;
+    }
+    
+    const orderData = {
+        buyer_info: $('#buyer-info').val(),
+        item_ids: orderItems.map(i => i.id)
+    };
+    
+    $.ajax({
+        url: '/api/orders',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(orderData),
+        success: function(data) {
+            if (data.success) {
+                showToast(translations.order_created + ' ' + data.order_number, 'success');
+                $('#create-order-form')[0].reset();
+                orderItems = [];
+                updateOrderItemsList();
+                loadOrders();
+            }
+        }
+    });
+}
+
+function loadOrders(status) {
+    const url = status ? `/api/orders?status=${status}` : '/api/orders';
+    
+    $.get(url, function(data) {
+        const list = $('#orders-list');
+        list.empty();
+        
+        if (!data.orders || data.orders.length === 0) {
+            list.html(`<p class="text-muted">${translations.no_orders}</p>`);
+            return;
+        }
+        
+        data.orders.forEach(function(order) {
+            const badge = order.status === 'pending' ? 'bg-warning' : 'bg-success';
+            list.append(`
+                <div class="card mb-2">
+                    <div class="card-body p-2">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <strong>${order.order_number}</strong>
+                                <br><small>${order.buyer_info || translations.no_buyer}</small>
+                            </div>
+                            <div>
+                                <span class="badge ${badge}">${order.status}</span>
+                                <br><small>${order.item_count || 0} ${translations.items}</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `);
+        });
+    });
+}
+</script>
+{% endblock %}

@@ -1,0 +1,37 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language: de\n"
+
+msgid "Home"
+msgstr "Startseite"
+
+msgid "Register"
+msgstr "Registrieren"
+
+msgid "Orders"
+msgstr "Bestellungen"
+
+msgid "Packing"
+msgstr "Packen"
+
+msgid "Marketplace"
+msgstr "Marktplatz"
+
+msgid "Search"
+msgstr "Suchen"
+
+msgid "Reports"
+msgstr "Berichte"
+
+msgid "Admin"
+msgstr "Admin"
+
+msgid "Camera"
+msgstr "Kamera"
+
+msgid "Save"
+msgstr "Speichern"
+
+msgid "Cancel"
+msgstr "Abbrechen"

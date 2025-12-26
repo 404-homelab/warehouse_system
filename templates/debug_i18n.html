@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %}Translation Debug{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card">
+        <div class="card-body">
+            <h1 class="card-title">🐛 Translation Debug</h1>
+            
+            <hr>
+            
+            <h3>Current Language Info:</h3>
+            <table class="table">
+                <tr>
+                    <td><strong>get_locale():</strong></td>
+                    <td><code>{{ get_locale() }}</code></td>
+                </tr>
+                <tr>
+                    <td><strong>Cookie 'language':</strong></td>
+                    <td><code>{{ request.cookies.get('language', 'not set') }}</code></td>
+                </tr>
+            </table>
+            
+            <hr>
+            
+            <h3>Translation Tests:</h3>
+            <table class="table">
+                <tr>
+                    <td><strong>{{ _('Home') }}</strong></td>
+                    <td>Should be: Svenska=Hem, English=Home</td>
+                </tr>
+                <tr>
+                    <td><strong>{{ _('Register') }}</strong></td>
+                    <td>Should be: Svenska=Registrera, English=Register</td>
+                </tr>
+                <tr>
+                    <td><strong>{{ _('Save') }}</strong></td>
+                    <td>Should be: Svenska=Spara, English=Save</td>
+                </tr>
+            </table>
+            
+            <hr>
+            
+            <h3>Available .mo files:</h3>
+            <ul>
+                {% for lang in ['sv', 'en', 'de', 'fr', 'es', 'no', 'da', 'fi', 'pl'] %}
+                <li>translations/{{ lang }}/LC_MESSAGES/messages.mo - 
+                    {% if check_mo_exists(lang) %}
+                    <span class="badge bg-success">✓ Exists</span>
+                    {% else %}
+                    <span class="badge bg-danger">✗ Missing</span>
+                    {% endif %}
+                </li>
+                {% endfor %}
+            </ul>
+            
+            <hr>
+            
+            <h3>Change Language:</h3>
+            <div class="btn-group" role="group">
+                <a href="/set-language/sv" class="btn btn-primary">Svenska</a>
+                <a href="/set-language/en" class="btn btn-primary">English</a>
+                <a href="/set-language/de" class="btn btn-primary">Deutsch</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

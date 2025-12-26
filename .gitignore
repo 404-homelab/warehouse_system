@@ -45,3 +45,17 @@ Thumbs.db
 # Environment variables
 .env
 .env.local
+create_complete_translations.sh
+fix_order_templates.sh
+fix_orders_final.sh
+.gitignore
+fix_orders_new_html_complete.sh
+fix_orders_new_javascript.sh
+fix_orders_new_js_complete.sh
+fix_packing_html.sh
+fix_packing_javascript.sh
+init_translations.sh
+master_translation_fix.sh
+fix_orders_master.sh
+fill_translations.py
+remove_fuzzy.py

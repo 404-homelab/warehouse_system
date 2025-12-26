@@ -6,8 +6,8 @@
 <div class="container">
     <div class="row mb-4">
         <div class="col">
-            <h1 class="display-4"><i class="bi bi-speedometer2"></i> Dashboard</h1>
-            <p class="lead">Översikt av lagersystemet</p>
+            <h1 class="display-4"><i class="bi bi-speedometer2"></i> {{ _('Dashboard') }}</h1>
+            <p class="lead">{{ _('Welcome to Warehouse System') }}</p>
         </div>
     </div>
 
@@ -18,7 +18,7 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <p class="text-muted mb-1">Totalt Produkter</p>
+                            <p class="text-muted mb-1">{{ _("Total Products") }}</p>
                             <h3 class="mb-0" id="stat-total-items">-</h3>
                         </div>
                         <div class="text-primary">
@@ -34,7 +34,7 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <p class="text-muted mb-1">I Lager</p>
+                            <p class="text-muted mb-1">{{ _("In Stock") }}</p>
                             <h3 class="mb-0" id="stat-in-stock">-</h3>
                         </div>
                         <div class="text-success">
@@ -50,7 +50,7 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <p class="text-muted mb-1">Väntande Ordrar</p>
+                            <p class="text-muted mb-1">{{ _("Pending Orders") }}</p>
                             <h3 class="mb-0" id="stat-pending-orders">-</h3>
                         </div>
                         <div class="text-warning">
@@ -66,7 +66,7 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <p class="text-muted mb-1">Lagervärde</p>
+                            <p class="text-muted mb-1">{{ _("Inventory Value") }}</p>
                             <h3 class="mb-0" id="stat-inventory-value">-</h3>
                         </div>
                         <div class="text-info">
@@ -84,15 +84,15 @@
             <div class="card h-100">
                 <div class="card-body">
                     <h5 class="card-title">
-                        <i class="bi bi-graph-up-arrow"></i> Försäljning Denna Månad
+                        <i class="bi bi-graph-up-arrow"></i> {{ _("Sales This Month") }}
                     </h5>
                     <div class="row">
                         <div class="col-6">
-                            <p class="text-muted mb-1">Sålda Produkter</p>
+                            <p class="text-muted mb-1">{{ _("Sold Products") }}</p>
                             <h4 id="stat-sold-month">-</h4>
                         </div>
                         <div class="col-6">
-                            <p class="text-muted mb-1">Intäkter</p>
+                            <p class="text-muted mb-1">{{ _("Revenue") }}</p>
                             <h4 id="stat-revenue-month">-</h4>
                         </div>
                     </div>
@@ -126,26 +126,26 @@
         <div class="col">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title"><i class="bi bi-lightning-charge"></i> Snabblänkar</h5>
+                    <h5 class="card-title"><i class="bi bi-lightning-charge"></i> {{ _("Quick Links") }}</h5>
                     <div class="row g-2">
                         <div class="col-md-3">
                             <a href="/register" class="btn btn-primary w-100">
-                                <i class="bi bi-plus-circle"></i> Registrera Produkt
+                                <i class="bi bi-plus-circle"></i> {{ _("Register Product") }}
                             </a>
                         </div>
                         <div class="col-md-3">
                             <a href="/orders" class="btn btn-success w-100">
-                                <i class="bi bi-cart-plus"></i> Skapa Order
+                                <i class="bi bi-cart-plus"></i> {{ _("Create Order") }}
                             </a>
                         </div>
                         <div class="col-md-3">
                             <a href="/packing" class="btn btn-warning w-100">
-                                <i class="bi bi-box-seam"></i> Packa Order
+                                <i class="bi bi-box-seam"></i> {{ _("Pack Orders") }}
                             </a>
                         </div>
                         <div class="col-md-3">
                             <a href="/search" class="btn btn-info w-100">
-                                <i class="bi bi-search"></i> Sök Produkt
+                                <i class="bi bi-search"></i> {{ _("Search Products") }}
                             </a>
                         </div>
                     </div>
@@ -159,16 +159,16 @@
         <div class="col">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title"><i class="bi bi-activity"></i> Senaste Aktivitet</h5>
+                    <h5 class="card-title"><i class="bi bi-activity"></i> {{ _("Recent Activity") }}</h5>
                     <div class="table-responsive">
                         <table class="table table-hover">
                             <thead>
                                 <tr>
-                                    <th>Tid</th>
-                                    <th>Åtgärd</th>
+                                    <th>{{ _("Time") }}</th>
+                                    <th>{{ _("Action") }}</th>
                                     <th>Inventory ID</th>
-                                    <th>Operatör</th>
-                                    <th>Detaljer</th>
+                                    <th>{{ _("Operator") }}</th>
+                                    <th>{{ _("Details") }}</th>
                                 </tr>
                             </thead>
                             <tbody id="activity-log">

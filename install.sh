@@ -7,7 +7,7 @@
 # GitHub: https://github.com/404-homelab/warehouse_system
 #
 # Quick Install:
-#   curl -sSL https://raw.githubusercontent.com/404-homelab/warehouse_system/main/install.sh | sudo bash
+#   curl -sSL https://raw.githubusercontent.com/404-homelab/warehouse_system/master/install.sh | sudo bash
 #
 
 set -e
@@ -136,7 +136,7 @@ setup_python_environment() {
     print_info "Python version: $PYTHON_VER"
     
     # Warn if Python 3.13+
-    if [[ $(echo "$PYTHON_VER >= 3.13" | bc -l) -eq 1 ]]; then
+    if [[ $(echo "$PYTHON_VER >= 3.13" | bc -l 2>/dev/null || echo "0") -eq 1 ]]; then
         print_warning "Python 3.13+ detected. Some packages may have issues."
         print_info "Installing with pip --use-pep517..."
     fi
@@ -218,6 +218,36 @@ set_permissions() {
     print_success "Permissions set"
 }
 
+setup_git_permissions() {
+    print_step "Configuring Git for auto-updates..."
+    cd "$INSTALL_DIR"
+    
+    if [ -d ".git" ]; then
+        # Ensure git directory is owned by service user
+        chown -R $SERVICE_USER:$SERVICE_USER .git
+        
+        # Mark directory as safe for git operations
+        sudo -u $SERVICE_USER git config --global --add safe.directory "$INSTALL_DIR"
+        
+        # Verify remote is set
+        REMOTE=$(sudo -u $SERVICE_USER git config --get remote.origin.url 2>/dev/null || echo "")
+        if [ -z "$REMOTE" ]; then
+            print_warning "Setting git remote..."
+            sudo -u $SERVICE_USER git remote add origin "$GIT_REPO"
+        fi
+        
+        # Set branch tracking
+        sudo -u $SERVICE_USER git branch --set-upstream-to=origin/$GIT_BRANCH $GIT_BRANCH 2>/dev/null || true
+        
+        print_success "Git configured for auto-updates"
+        print_info "Remote: $(sudo -u $SERVICE_USER git config --get remote.origin.url)"
+        print_info "Branch: $(sudo -u $SERVICE_USER git branch --show-current)"
+    else
+        print_warning "Not a git repository - auto-updates will not work"
+        print_info "Install using: curl -sSL https://raw.githubusercontent.com/404-homelab/warehouse_system/master/install.sh | sudo bash"
+    fi
+}
+
 create_update_config() {
     print_step "Creating update configuration..."
     cd "$INSTALL_DIR"
@@ -265,9 +295,10 @@ print_summary() {
     echo ""
     echo -e "${BLUE}Next Steps:${NC}"
     echo "  1. Open http://$IP:$APP_PORT"
-    echo "  2. Go to Admin → Locations"
-    echo "  3. Create locations & print barcodes"
-    echo "  4. Start registering products!"
+    echo "  2. Go to Admin → Updates (Git auto-update enabled!)"
+    echo "  3. Go to Admin → Locations"
+    echo "  4. Create locations & print barcodes"
+    echo "  5. Start registering products!"
     echo ""
     echo -e "${BLUE}GitHub:${NC} https://github.com/404-homelab/warehouse_system"
     echo ""
@@ -314,7 +345,7 @@ update_installation() {
     cp warehouse.db warehouse.db.backup.$(date +%Y%m%d_%H%M%S) 2>/dev/null || true
     
     print_info "Pulling latest changes..."
-    git pull origin "$GIT_BRANCH" || {
+    sudo -u $SERVICE_USER git pull origin "$GIT_BRANCH" || {
         print_error "Git pull failed"
         systemctl start warehouse
         exit 1
@@ -345,7 +376,7 @@ show_help() {
     echo "  --dir DIR    Set directory (default: /opt/warehouse)"
     echo ""
     echo "Quick install:"
-    echo "  curl -sSL https://raw.githubusercontent.com/404-homelab/warehouse_system/main/install.sh | sudo bash"
+    echo "  curl -sSL https://raw.githubusercontent.com/404-homelab/warehouse_system/master/install.sh | sudo bash"
     echo ""
 }
 
@@ -388,6 +419,7 @@ main() {
     setup_database
     configure_systemd
     set_permissions
+    setup_git_permissions
     create_update_config
     echo ""
     print_summary

@@ -2,24 +2,24 @@
 {% block title %}Admin - Warehouse System{% endblock %}
 {% block content %}
 <div class="container">
-    <h1 class="display-4 mb-4"><i class="bi bi-gear"></i> Administration</h1>
-    
-    <ul class="nav nav-tabs mb-4" id="adminTabs" role="tablist">
-        <li class="nav-item" role="presentation">
-            <button class="nav-link active" id="locations-tab" data-bs-toggle="tab" data-bs-target="#locations" type="button">Hyllplatser</button>
-        </li>
-        <li class="nav-item" role="presentation">
-            <button class="nav-link" id="boxes-tab" data-bs-toggle="tab" data-bs-target="#boxes" type="button">Kartongstorlekar</button>
-        </li>
-        <li class="nav-item" role="presentation">
-            <button class="nav-link" id="shipping-tab" data-bs-toggle="tab" data-bs-target="#shipping" type="button">Fraktmetoder</button>
-        </li>
-        <li class="nav-item" role="presentation">
-            <button class="nav-link" id="barcodes-tab" data-bs-toggle="tab" data-bs-target="#barcodes" type="button">Bulk Streckkoder</button>
-        </li>
+    <h1 class="display-4 mb-4"><i class="bi bi-gear"></i> {{ _("Administration") }}</h1>
+
+        <ul class="nav nav-tabs mb-4" id="adminTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="locations-tab" data-bs-toggle="tab" data-bs-target="#locations" type="button">{{ _("Locations") }}</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="boxes-tab" data-bs-toggle="tab" data-bs-target="#boxes" type="button">{{ _("Box Sizes") }}</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="shipping-tab" data-bs-toggle="tab" data-bs-target="#shipping" type="button">{{ _("Shipping Methods") }}</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="barcodes-tab" data-bs-toggle="tab" data-bs-target="#barcodes" type="button">{{ _("Bulk Barcodes") }}</button>
+            </li>
         <li class="nav-item" role="presentation">
             <a class="nav-link" href="/admin/updates">
-                <i class="bi bi-arrow-repeat"></i> Updates
+                <i class="bi bi-arrow-repeat"></i> {{ _("Updates") }}
             </a>
         </li>
     </ul>
@@ -31,24 +31,24 @@
                 <div class="col-md-4">
                     <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title">Skapa Hyllplats</h5>
+                            <h5 class="card-title">{{ _("Create Location") }}</h5>
                             <form id="create-location-form">
                                 <div class="mb-3">
-                                    <label class="form-label">Platskod *</label>
+                                    <label class="form-label">{{ _("Location Code") }} *</label>
                                     <input type="text" class="form-control" id="location-code" placeholder="A1" required>
                                     <small class="text-muted">T.ex. A1, B2, C3</small>
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label">Streckkod *</label>
+                                    <label class="form-label">{{ _("Barcode") }} *</label>
                                     <input type="text" class="form-control" id="location-barcode" placeholder="LOC-A1-001" required>
-                                    <small class="text-muted">Egen streckkod (måste vara unik)</small>
+                                    <small class="text-muted">{{ _("Own barcode (must be unique)") }}</small>
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label">Beskrivning</label>
-                                    <input type="text" class="form-control" id="location-desc" placeholder="Hylla A, rad 1">
+                                    <label class="form-label">{{ _("Description") }}</label>
+                                    <input type="text" class="form-control" id="location-desc" placeholder="{{ _('Shelf A, row 1') }}">
                                 </div>
                                 <button type="submit" class="btn btn-primary w-100">
-                                    <i class="bi bi-plus-circle"></i> Skapa Hyllplats
+                                    <i class="bi bi-plus-circle"></i> {{ _("Create Location") }}
                                 </button>
                             </form>
                         </div>
@@ -58,25 +58,25 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="d-flex justify-content-between align-items-center mb-3">
-                                <h5 class="card-title mb-0">Hyllplatser</h5>
+                                <h5 class="card-title mb-0">{{ _("Locations") }}</h5>
                                 <div class="btn-group">
                                     <button class="btn btn-sm btn-success" id="print-all-locations-btn">
-                                        <i class="bi bi-printer"></i> Skriv ut Alla
+                                        <i class="bi bi-printer"></i> {{ _("Print All") }}
                                     </button>
                                     <button class="btn btn-sm btn-info" id="print-selected-locations-btn" disabled>
-                                        <i class="bi bi-printer-fill"></i> Skriv ut Valda (<span id="selected-count">0</span>)
+                                        <i class="bi bi-printer-fill"></i> {{ _("Print Selected") }} (<span id="selected-count">0</span>)
                                     </button>
                                 </div>
-                            </div>
-                            <div class="table-responsive">
-                                <table class="table table-hover">
-                                    <thead>
-                                        <tr>
-                                            <th><input type="checkbox" id="select-all-locations"></th>
-                                            <th>Kod</th>
-                                            <th>Streckkod</th>
-                                            <th>Beskrivning</th>
-                                            <th>Åtgärd</th>
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th><input type="checkbox" id="select-all-locations"></th>
+                                                <th>{{ _("Code") }}</th>
+                                                <th>{{ _("Barcode") }}</th>
+                                                <th>{{ _("Description") }}</th>
+                                                <th>{{ _("Action") }}</th>
                                         </tr>
                                     </thead>
                                     <tbody id="locations-list"></tbody>
@@ -94,31 +94,31 @@
                 <div class="col-md-4">
                     <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title">Skapa Kartongstorlek</h5>
+                            <h5 class="card-title">{{ _("Create Box Size") }}</h5>
                             <form id="create-box-form">
                                 <div class="mb-3">
-                                    <label class="form-label">Namn</label>
-                                    <input type="text" class="form-control" id="box-name" placeholder="Stor kartong" required>
+                                    <label class="form-label">{{ _("Name") }}</label>
+                                    <input type="text" class="form-control" id="box-name" placeholder="{{ _('Large box') }}" required>
                                 </div>
                                 <div class="row">
                                     <div class="col-4 mb-3">
-                                        <label class="form-label">Längd (cm)</label>
+                                        <label class="form-label">{{ _("Length (cm)") }}</label>
                                         <input type="number" class="form-control" id="box-length" step="0.1" required>
                                     </div>
                                     <div class="col-4 mb-3">
-                                        <label class="form-label">Bredd (cm)</label>
+                                        <label class="form-label">{{ _("Width (cm)") }}</label>
                                         <input type="number" class="form-control" id="box-width" step="0.1" required>
                                     </div>
                                     <div class="col-4 mb-3">
-                                        <label class="form-label">Höjd (cm)</label>
+                                        <label class="form-label">{{ _("Height (cm)") }}</label>
                                         <input type="number" class="form-control" id="box-height" step="0.1" required>
                                     </div>
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label">Max Vikt (kg)</label>
+                                    <label class="form-label">{{ _("Max Weight (kg)") }}</label>
                                     <input type="number" class="form-control" id="box-weight" step="0.1" required>
                                 </div>
-                                <button type="submit" class="btn btn-primary w-100">Skapa</button>
+                                <button type="submit" class="btn btn-primary w-100">{{ _("Create") }}</button>
                             </form>
                         </div>
                     </div>
@@ -126,14 +126,14 @@
                 <div class="col-md-8">
                     <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title">Kartongstorlekar</h5>
+                            <h5 class="card-title">{{ _("Box Sizes") }}</h5>
                             <table class="table">
                                 <thead>
                                     <tr>
-                                        <th>Namn</th>
-                                        <th>Mått (L×B×H cm)</th>
-                                        <th>Max Vikt (kg)</th>
-                                        <th>Åtgärd</th>
+                                        <th>{{ _("Name") }}</th>
+                                        <th>{{ _("Dimensions (L×W×H cm)") }}</th>
+                                        <th>{{ _("Max Weight (kg)") }}</th>
+                                        <th>{{ _("Action") }}</th>
                                     </tr>
                                 </thead>
                                 <tbody id="boxes-list"></tbody>
@@ -150,18 +150,18 @@
                 <div class="col-md-4">
                     <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title">Lägg till Fraktmetod</h5>
+                            <h5 class="card-title">{{ _("Add Shipping Method") }}</h5>
                             <form id="create-shipping-form">
                                 <div class="mb-3">
-                                    <label class="form-label">Namn</label>
-                                    <input type="text" class="form-control" id="shipping-name" required placeholder="T.ex. PostNord">
+                                    <label class="form-label">{{ _("Name") }}</label>
+                                    <input type="text" class="form-control" id="shipping-name" required placeholder="{{ _('E.g. PostNord') }}">
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label">Beskrivning</label>
-                                    <input type="text" class="form-control" id="shipping-description" placeholder="T.ex. Standard paketleverans">
+                                    <label class="form-label">{{ _("Description") }}</label>
+                                    <input type="text" class="form-control" id="shipping-description" placeholder="{{ _('E.g. Standard package delivery') }}">
                                 </div>
                                 <button type="submit" class="btn btn-success w-100">
-                                    <i class="bi bi-plus-circle"></i> Lägg till
+                                    <i class="bi bi-plus-circle"></i> {{ _("Add") }}
                                 </button>
                             </form>
                         </div>
@@ -171,14 +171,14 @@
                 <div class="col-md-8">
                     <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title">Fraktmetoder</h5>
+                            <h5 class="card-title">{{ _("Shipping Methods") }}</h5>
                             <table class="table">
                                 <thead>
                                     <tr>
-                                        <th>Namn</th>
-                                        <th>Beskrivning</th>
-                                        <th>Status</th>
-                                        <th>Åtgärd</th>
+                                        <th>{{ _("Name") }}</th>
+                                        <th>{{ _("Description") }}</th>
+                                        <th>{{ _("Status") }}</th>
+                                        <th>{{ _("Action") }}</th>
                                     </tr>
                                 </thead>
                                 <tbody id="shipping-methods-list"></tbody>
@@ -195,46 +195,45 @@
                 <div class="col-md-6 mx-auto">
                     <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title">Generera Bulk Streckkoder</h5>
+                            <h5 class="card-title">{{ _("Generate Bulk Barcodes") }}</h5>
                             
                             <!-- History Info -->
                             <div id="barcode-history" class="alert alert-info" style="display:none;">
                                 <i class="bi bi-info-circle"></i> 
-                                <strong>Senaste:</strong> <span id="last-prefix"></span> 
+                                <strong>{{ _("Latest:") }}</strong> <span id="last-prefix"></span> 
                                 (<span id="last-range"></span>) - 
-                                <span id="last-count"></span> st
+                                <span id="last-count"></span> {{ _("pcs") }}
                                 <button type="button" class="btn btn-sm btn-link float-end" id="use-last-btn">
-                                    Använd samma
+                                    {{ _("Use same") }}
                                 </button>
                             </div>
-                            
                             <form id="generate-barcodes-form">
                                 <div class="mb-3">
-                                    <label class="form-label">Prefix</label>
-                                    <input type="text" class="form-control" id="barcode-prefix" placeholder="CODE" required>
-                                    <small class="text-muted">T.ex. ITEM, PROD, SKU</small>
+                                    <label class="form-label">{{ _("Prefix") }}</label>
+                                    <input type="text" class="form-control" id="barcode-prefix" placeholder="INV" required>
+                                    <small class="text-muted">{{ _("E.g. ITEM, PROD, SKU") }}</small>
                                 </div>
                                 <div class="row">
                                     <div class="col-6 mb-3">
-                                        <label class="form-label">Start Nummer</label>
+                                        <label class="form-label">{{ _("Start Number") }}</label>
                                         <input type="number" class="form-control" id="barcode-start" value="1" required>
                                     </div>
                                     <div class="col-6 mb-3">
-                                        <label class="form-label">Slut Nummer</label>
+                                        <label class="form-label">{{ _("End Number") }}</label>
                                         <input type="number" class="form-control" id="barcode-end" value="30" required>
                                     </div>
                                 </div>
                                 
                                 <!-- Auto-calculate count -->
                                 <div class="alert alert-secondary mb-3">
-                                    <strong>Antal streckkoder:</strong> <span id="barcode-count-display">30</span> st
+                                    <strong>{{ _("Number of barcodes:") }}</strong> <span id="barcode-count-display">30</span> {{ _("pcs") }}
                                     <br>
-                                    <small class="text-muted">Format: <span id="barcode-format-preview">CODE-000001 till CODE-000030</span></small>
+                                    <small class="text-muted">Format: <span id="barcode-format-preview">INV-000001 to INV-000030</span></small>
                                 </div>
                                 
                                 <!-- Quick actions -->
                                 <div class="mb-3">
-                                    <label class="form-label">Snabbval:</label>
+                                    <label class="form-label">{{ _("Quick select:") }}</label>
                                     <div class="btn-group w-100" role="group">
                                         <button type="button" class="btn btn-outline-secondary btn-sm" onclick="setQuickCount(10)">10 st</button>
                                         <button type="button" class="btn btn-outline-secondary btn-sm" onclick="setQuickCount(30)">30 st</button>
@@ -251,21 +250,21 @@
                                 </div>
                                 
                                 <button type="submit" class="btn btn-success w-100">
-                                    <i class="bi bi-file-pdf"></i> Generera PDF
+                                    <i class="bi bi-file-pdf"></i> {{ _("Generate PDF") }}
                                 </button>
                             </form>
                             
                             <!-- Generation History -->
                             <div class="mt-4">
-                                <h6>Tidigare Genererade:</h6>
+                                <h6>{{ _("Previously Generated:") }}</h6>
                                 <div class="table-responsive" style="max-height: 300px; overflow-y: auto;">
                                     <table class="table table-sm">
                                         <thead>
                                             <tr>
-                                                <th>Tid</th>
-                                                <th>Prefix</th>
-                                                <th>Range</th>
-                                                <th>Antal</th>
+                                                <th>{{ _("Time") }}</th>
+                                                <th>{{ _("Prefix") }}</th>
+                                                <th>{{ _("Range") }}</th>
+                                                <th>{{ _("Quantity") }}</th>
                                             </tr>
                                         </thead>
                                         <tbody id="barcode-history-list"></tbody>
@@ -396,7 +395,7 @@ function loadHistoryItem(item) {
 }
 
 function updateBarcodePreview() {
-    const prefix = $('#barcode-prefix').val() || 'CODE';
+    const prefix = $('#barcode-prefix').val() || 'INV';
     const start = parseInt($('#barcode-start').val()) || 1;
     const end = parseInt($('#barcode-end').val()) || 30;
     const count = end - start + 1;
@@ -436,7 +435,7 @@ function loadLocations() {
         tbody.empty();
         
         if (!data.locations || data.locations.length === 0) {
-            tbody.append('<tr><td colspan="5" class="text-center text-muted">Inga hyllplatser</td></tr>');
+            tbody.append('<tr><td colspan="5" class="text-center text-muted">{{ _("No locations") }}</td></tr>');
             return;
         }
         
@@ -609,7 +608,7 @@ function loadBoxes() {
         tbody.empty();
         
         if (!data.boxes || data.boxes.length === 0) {
-            tbody.append('<tr><td colspan="4" class="text-center text-muted">Inga kartongstorlekar</td></tr>');
+            tbody.append('<tr><td colspan="4" class="text-center text-muted">{{ _("No box sizes") }}</td></tr>');
             return;
         }
         

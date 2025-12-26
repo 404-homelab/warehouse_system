@@ -22,7 +22,7 @@
     <div class="row mb-4">
         <div class="col">
             <h1 class="display-4"><i class="bi bi-graph-up"></i> Rapporter & Analys</h1>
-            <p class="lead">Insikter och statistik om din verksamhet</p>
+            <p class="lead">{{ _("View statistics and reports") }}</p>
         </div>
     </div>
 
@@ -33,16 +33,16 @@
                 <div class="card-body">
                     <div class="btn-group" role="group">
                         <button type="button" class="btn btn-outline-primary period-btn active" data-period="day">
-                            Idag
+                            {{ _("Today") }}
                         </button>
                         <button type="button" class="btn btn-outline-primary period-btn" data-period="week">
-                            Denna Vecka
+                            {{ _("This Week") }}
                         </button>
                         <button type="button" class="btn btn-outline-primary period-btn" data-period="month">
-                            Denna Månad
+                            {{ _("This Month") }}
                         </button>
                         <button type="button" class="btn btn-outline-primary period-btn" data-period="year">
-                            Detta År
+                            {{ _("This Year") }}
                         </button>
                     </div>
                 </div>
@@ -56,7 +56,7 @@
             <div class="card report-card">
                 <div class="card-body text-center">
                     <i class="bi bi-cart-check text-success" style="font-size: 3rem;"></i>
-                    <h6 class="text-muted mt-2">Sålda Produkter</h6>
+                    <h6 class="text-muted mt-2">{{ _("Products Sold") }}</h6>
                     <h2 class="mb-0" id="total-items-sold">-</h2>
                 </div>
             </div>
@@ -65,7 +65,7 @@
             <div class="card report-card">
                 <div class="card-body text-center">
                     <i class="bi bi-currency-exchange text-primary" style="font-size: 3rem;"></i>
-                    <h6 class="text-muted mt-2">Total Intäkt</h6>
+                    <h6 class="text-muted mt-2">{{ _("Total Revenue") }}</h6>
                     <h2 class="mb-0" id="total-revenue">-</h2>
                 </div>
             </div>
@@ -74,7 +74,7 @@
             <div class="card report-card">
                 <div class="card-body text-center">
                     <i class="bi bi-graph-up-arrow text-info" style="font-size: 3rem;"></i>
-                    <h6 class="text-muted mt-2">Genomsnittspris</h6>
+                    <h6 class="text-muted mt-2">{{ _("Average Price") }}</h6>
                     <h2 class="mb-0" id="avg-price">-</h2>
                 </div>
             </div>
@@ -86,7 +86,7 @@
         <div class="col-md-8">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title"><i class="bi bi-graph-up"></i> Försäljningstrend</h5>
+                    <h5 class="card-title"><i class="bi bi-graph-up"></i> {{ _("Sales Trend") }}</h5>
                     <div class="chart-container">
                         <canvas id="salesChart"></canvas>
                     </div>
@@ -96,7 +96,7 @@
         <div class="col-md-4">
             <div class="card h-100">
                 <div class="card-body">
-                    <h5 class="card-title"><i class="bi bi-pie-chart"></i> Försäljning per Dag</h5>
+                    <h5 class="card-title"><i class="bi bi-pie-chart"></i> {{ _("Sales per Day") }}</h5>
                     <div id="daily-sales-list" style="max-height: 300px; overflow-y: auto;">
                         <div class="text-center">
                             <div class="spinner-border spinner-border-sm" role="status"></div>
@@ -112,16 +112,16 @@
         <div class="col-md-6">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title"><i class="bi bi-trophy"></i> Mest Sålda Produkter</h5>
+                    <h5 class="card-title"><i class="bi bi-trophy"></i> {{ _("Top Selling Products") }}</h5>
                     <div class="table-responsive">
                         <table class="table table-hover">
                             <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>Artikelkod</th>
-                                    <th>Beskrivning</th>
-                                    <th>Antal Sålda</th>
-                                    <th>Intäkt</th>
+                                    <th>{{ _("Article Code") }}</th>
+                                    <th>{{ _("Description") }}</th>
+                                    <th>{{ _("Number Sold") }}</th>
+                                    <th>{{ _("Revenue") }}</th>
                                 </tr>
                             </thead>
                             <tbody id="top-items-table">
@@ -141,14 +141,14 @@
         <div class="col-md-6">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title"><i class="bi bi-box-seam"></i> Lagervärde per Plats</h5>
+                    <h5 class="card-title"><i class="bi bi-box-seam"></i> {{ _("Inventory Value per Location") }}</h5>
                     <div class="table-responsive">
                         <table class="table table-hover">
                             <thead>
                                 <tr>
-                                    <th>Hyllplats</th>
-                                    <th>Antal Produkter</th>
-                                    <th>Totalt Värde</th>
+                                    <th>{{ _("Location") }}</th>
+                                    <th>{{ _("Number of Products") }}</th>
+                                    <th>{{ _("Total Value") }}</th>
                                 </tr>
                             </thead>
                             <tbody id="location-value-table">
@@ -170,22 +170,22 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title"><i class="bi bi-clipboard-data"></i> Lagerstatus</h5>
+                    <h5 class="card-title"><i class="bi bi-clipboard-data"></i> {{ _("Inventory Status") }}</h5>
                     <div class="row">
                         <div class="col-md-3 text-center">
-                            <h6 class="text-muted">I Lager</h6>
+                            <h6 class="text-muted">{{ _("In Storage") }}</h6>
                             <h3 class="text-success" id="status-in-stock">-</h3>
                         </div>
                         <div class="col-md-3 text-center">
-                            <h6 class="text-muted">Uppladdat</h6>
+                            <h6 class="text-muted">{{ _("Uploaded") }}</h6>
                             <h3 class="text-info" id="status-uploaded">-</h3>
                         </div>
                         <div class="col-md-3 text-center">
-                            <h6 class="text-muted">Sålt</h6>
+                            <h6 class="text-muted">{{ _("Sold") }}</h6>
                             <h3 class="text-primary" id="status-sold">-</h3>
                         </div>
                         <div class="col-md-3 text-center">
-                            <h6 class="text-muted">Skickat</h6>
+                            <h6 class="text-muted">{{ _("Shipped") }}</h6>
                             <h3 class="text-warning" id="status-shipped">-</h3>
                         </div>
                     </div>
@@ -243,7 +243,7 @@ function updateDailySalesList(dailySales) {
     list.empty();
     
     if (dailySales.length === 0) {
-        list.append('<p class="text-muted text-center">Ingen försäljning under denna period</p>');
+        list.append('<p class="text-muted text-center">{{ _("No sales during this period") }}</p>');
         return;
     }
     
@@ -280,14 +280,14 @@ function updateSalesChart(dailySales) {
         data: {
             labels: labels,
             datasets: [{
-                label: 'Intäkt (SEK)',
+                label: '{{ _("Revenue (SEK)") }}',
                 data: revenues,
                 borderColor: 'rgb(102, 126, 234)',
                 backgroundColor: 'rgba(102, 126, 234, 0.1)',
                 yAxisID: 'y',
                 tension: 0.4
             }, {
-                label: 'Antal Sålda',
+                label: '{{ _("Items Sold") }}',
                 data: items,
                 borderColor: 'rgb(118, 75, 162)',
                 backgroundColor: 'rgba(118, 75, 162, 0.1)',
@@ -309,7 +309,7 @@ function updateSalesChart(dailySales) {
                     position: 'left',
                     title: {
                         display: true,
-                        text: 'Intäkt (SEK)'
+                        text: '{{ _("Revenue (SEK)") }}'
                     }
                 },
                 y1: {
@@ -318,7 +318,7 @@ function updateSalesChart(dailySales) {
                     position: 'right',
                     title: {
                         display: true,
-                        text: 'Antal Produkter'
+                        text: '{{ _("Items Sold") }}'
                     },
                     grid: {
                         drawOnChartArea: false,
@@ -336,7 +336,7 @@ function loadTopItems() {
             tbody.empty();
             
             if (data.items.length === 0) {
-                tbody.append('<tr><td colspan="5" class="text-center text-muted">Ingen försäljningsdata än</td></tr>');
+                tbody.append('<tr><td colspan="5" class="text-center text-muted">{{ _("No sales data yet") }}</td></tr>');
                 return;
             }
             
@@ -365,7 +365,7 @@ function loadInventoryValue() {
             const locations = data.report.by_location || [];
             
             if (locations.length === 0) {
-                tbody.append('<tr><td colspan="3" class="text-center text-muted">Ingen lagerdata</td></tr>');
+                tbody.append('<tr><td colspan="3" class="text-center text-muted">{{ _("No inventory data") }}</td></tr>');
                 return;
             }
             

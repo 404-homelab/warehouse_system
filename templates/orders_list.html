@@ -6,12 +6,12 @@
 <div class="container">
     <div class="row mb-4">
         <div class="col">
-            <h1 class="display-4"><i class="bi bi-list-check"></i> Ordrar</h1>
-            <p class="lead">Hantera och följ upp alla ordrar</p>
+            <h1 class="display-4"><i class="bi bi-list-check"></i> {{ _("Orders") }}</h1>
+            <p class="lead">{{ _("Manage and track all orders") }}</p>
         </div>
         <div class="col-auto">
             <a href="/orders/new" class="btn btn-success btn-lg">
-                <i class="bi bi-plus-circle"></i> Skapa Ny Order
+                <i class="bi bi-plus-circle"></i> {{ _("Create New Order") }}
             </a>
         </div>
     </div>
@@ -23,32 +23,32 @@
                 <div class="card-body">
                     <div class="row align-items-center">
                         <div class="col-md-3">
-                            <label class="form-label">Filtrera på status:</label>
+                            <label class="form-label">{{ _("Filter by status:") }}</label>
                             <select class="form-select" id="status-filter">
-                                <option value="">Alla ordrar</option>
-                                <option value="pending">Väntande</option>
-                                <option value="confirmed">Bekräftad</option>
-                                <option value="packed">Packad</option>
-                                <option value="shipped">Skickad</option>
+                                <option value="">{{ _("All orders") }}</option>
+                                <option value="pending">{{ _("Pending") }}</option>
+                                <option value="confirmed">{{ _("Confirmed") }}</option>
+                                <option value="packed">{{ _("Packed") }}</option>
+                                <option value="shipped">{{ _("Shipped") }}</option>
                             </select>
                         </div>
                         <div class="col-md-3">
-                            <label class="form-label">Betalningsstatus:</label>
+                            <label class="form-label">{{ _("Payment status:") }}</label>
                             <select class="form-select" id="payment-filter">
-                                <option value="">Alla</option>
-                                <option value="unpaid">Obetald</option>
-                                <option value="paid">Betald</option>
-                                <option value="partial">Delvis betald</option>
+                                <option value="">{{ _("All") }}</option>
+                                <option value="unpaid">{{ _("Unpaid") }}</option>
+                                <option value="paid">{{ _("Paid") }}</option>
+                                <option value="partial">{{ _("Partial") }}</option>
                             </select>
                         </div>
                         <div class="col-md-4">
-                            <label class="form-label">Sök:</label>
-                            <input type="text" class="form-control" id="search-input" placeholder="Ordernummer, kundnamn...">
+                            <label class="form-label">{{ _("Search:") }}</label>
+                            <input type="text" class="form-control" id="search-input" placeholder="{{ _('Order number, customer name...') }}">
                         </div>
                         <div class="col-md-2">
                             <label class="form-label">&nbsp;</label>
                             <button class="btn btn-primary w-100" id="apply-filters-btn">
-                                <i class="bi bi-funnel"></i> Filtrera
+                                <i class="bi bi-funnel"></i> {{ _("Filter") }}
                             </button>
                         </div>
                     </div>
@@ -62,7 +62,7 @@
         <div class="col-md-3">
             <div class="card bg-warning text-white">
                 <div class="card-body">
-                    <h6 class="card-title">Väntande</h6>
+                    <h6 class="card-title">{{ _("Pending") }}</h6>
                     <h2 class="mb-0" id="stat-pending">0</h2>
                 </div>
             </div>
@@ -70,7 +70,7 @@
         <div class="col-md-3">
             <div class="card bg-info text-white">
                 <div class="card-body">
-                    <h6 class="card-title">Bekräftade</h6>
+                    <h6 class="card-title">{{ _("Confirmed") }}</h6>
                     <h2 class="mb-0" id="stat-confirmed">0</h2>
                 </div>
             </div>
@@ -78,7 +78,7 @@
         <div class="col-md-3">
             <div class="card bg-primary text-white">
                 <div class="card-body">
-                    <h6 class="card-title">Packade</h6>
+                    <h6 class="card-title">{{ _("Packed") }}</h6>
                     <h2 class="mb-0" id="stat-packed">0</h2>
                 </div>
             </div>
@@ -86,7 +86,7 @@
         <div class="col-md-3">
             <div class="card bg-success text-white">
                 <div class="card-body">
-                    <h6 class="card-title">Skickade</h6>
+                    <h6 class="card-title">{{ _("Shipped") }}</h6>
                     <h2 class="mb-0" id="stat-shipped">0</h2>
                 </div>
             </div>
@@ -100,14 +100,14 @@
                 <table class="table table-hover">
                     <thead>
                         <tr>
-                            <th>Ordernr</th>
-                            <th>Kund</th>
-                            <th>Antal varor</th>
-                            <th>Belopp</th>
-                            <th>Betalning</th>
-                            <th>Status</th>
-                            <th>Skapad</th>
-                            <th>Åtgärder</th>
+                            <th>{{ _("Order#") }}</th>
+                            <th>{{ _("Customer") }}</th>
+                            <th>{{ _("Items") }}</th>
+                            <th>{{ _("Amount") }}</th>
+                            <th>{{ _("Payment") }}</th>
+                            <th>{{ _("Status") }}</th>
+                            <th>{{ _("Created") }}</th>
+                            <th>{{ _("Actions") }}</th>
                         </tr>
                     </thead>
                     <tbody id="orders-table-body">
@@ -137,7 +137,7 @@
                 <!-- Loaded dynamically -->
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Stäng</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ _("Close") }}</button>
                 <a href="#" class="btn btn-primary" id="edit-order-btn">
                     <i class="bi bi-pencil"></i> Redigera
                 </a>
@@ -167,6 +167,17 @@
 
 {% block extra_js %}
 <script>
+// Translations
+const t = {
+    'pending': "{{ _('Pending') }}",
+    'confirmed': "{{ _('Confirmed') }}",
+    'packed': "{{ _('Packed') }}",
+    'shipped': "{{ _('Shipped') }}",
+    'unpaid': "{{ _('Unpaid') }}",
+    'paid': "{{ _('Paid') }}",
+    'partial': "{{ _('Partial') }}"
+};
+
 let allOrders = [];
 let currentOrder = null;
 
@@ -274,19 +285,19 @@ function displayOrders(orders) {
 
 function getStatusBadge(status) {
     const badges = {
-        'pending': '<span class="badge bg-warning badge-status">Väntande</span>',
-        'confirmed': '<span class="badge bg-info badge-status">Bekräftad</span>',
-        'packed': '<span class="badge bg-primary badge-status">Packad</span>',
-        'shipped': '<span class="badge bg-success badge-status">Skickad</span>'
+        'pending': `<span class="badge bg-warning badge-status">${t.pending}</span>`,
+        'confirmed': `<span class="badge bg-info badge-status">${t.confirmed}</span>`,
+        'packed': `<span class="badge bg-primary badge-status">${t.packed}</span>`,
+        'shipped': `<span class="badge bg-success badge-status">${t.shipped}</span>`
     };
     return badges[status] || '<span class="badge bg-secondary badge-status">' + status + '</span>';
 }
 
 function getPaymentBadge(payment) {
     const badges = {
-        'unpaid': '<span class="badge bg-danger">Obetald</span>',
-        'paid': '<span class="badge bg-success">Betald</span>',
-        'partial': '<span class="badge bg-warning">Delvis</span>'
+        'unpaid': `<span class="badge bg-danger">${t.unpaid}</span>`,
+        'paid': `<span class="badge bg-success">${t.paid}</span>`,
+        'partial': `<span class="badge bg-warning">${t.partial}</span>`
     };
     return badges[payment] || '<span class="badge bg-secondary">' + payment + '</span>';
 }

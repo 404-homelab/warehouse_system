@@ -2,14 +2,14 @@
 {% block title %}Packning - Warehouse System{% endblock %}
 {% block content %}
 <div class="container">
-    <h1 class="display-4 mb-4"><i class="bi bi-box-seam"></i> Packning</h1>
+    <h1 class="display-4 mb-4"><i class="bi bi-box-seam"></i> {{ _("Packing") }}</h1>
     
     <div class="row">
         <div class="col-md-12">
             <div class="card mb-3">
                 <div class="card-body">
                     <button id="load-next-order-btn" class="btn btn-primary btn-lg w-100">
-                        <i class="bi bi-arrow-right-circle"></i> Hämta Nästa Order
+                        <i class="bi bi-arrow-right-circle"></i> {{ _("Load Next Order") }}
                     </button>
                 </div>
             </div>
@@ -21,19 +21,19 @@
             <div class="col-md-6">
                 <div class="card">
                     <div class="card-body">
-                        <h5><i class="bi bi-info-circle"></i> Orderinformation</h5>
-                        <p class="mb-1"><strong>Ordernummer:</strong> <span id="order-number"></span></p>
-                        <p class="mb-1"><strong>Köpare:</strong> <span id="order-buyer"></span></p>
-                        <p class="mb-1"><strong>Adress:</strong> <span id="order-address"></span></p>
-                        <p class="mb-0"><strong>Antal produkter:</strong> <span id="order-item-count"></span></p>
+                        <h5><i class="bi bi-info-circle"></i> {{ _("Order Information") }}</h5>
+                        <p class="mb-1"><strong>{{ _("Order Number:") }}</strong> <span id="order-number"></span></p>
+                        <p class="mb-1"><strong>{{ _("Buyer:") }}</strong> <span id="order-buyer"></span></p>
+                        <p class="mb-1"><strong>{{ _("Address:") }}</strong> <span id="order-address"></span></p>
+                        <p class="mb-0"><strong>{{ _("Number of products:") }}</strong> <span id="order-item-count"></span></p>
                     </div>
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="card">
                     <div class="card-body">
-                        <h5><i class="bi bi-box"></i> Kartongförslag</h5>
-                        <div id="box-suggestion">Laddar...</div>
+                        <h5><i class="bi bi-box"></i> {{ _("Box Suggestion") }}</h5>
+                        <div id="box-suggestion">{{ _("Loading...") }}</div>
                     </div>
                 </div>
             </div>
@@ -47,15 +47,15 @@
                         <i class="bi bi-upc-scan" style="font-size: 3rem; color: #0d6efd;"></i>
                     </div>
                     <div class="col-md-7">
-                        <label class="form-label mb-1"><strong>Scanna produkt:</strong></label>
+                        <label class="form-label mb-1"><strong>{{ _("Scan product:") }}</strong></label>
                         <input type="text" class="form-control form-control-lg" id="scan-input" 
-                               placeholder="Scanna produkter eller 'SHIPPED' när klar..." autofocus>
-                        <small class="text-muted">Scanna alla produkter, sedan scanna <strong>"SHIPPED"</strong> för att färdigställa.</small>
+                               placeholder="{{ _('Scan products or SHIPPED when done...') }}" autofocus>
+                        <small class="text-muted">{{ _("Scan all products, then scan") }} <strong>"SHIPPED"</strong> {{ _("to complete.") }}</small>
                     </div>
                     <div class="col-md-3 text-center">
                         <div class="progress-circle">
                             <h2 class="mb-0"><span id="scanned-count">0</span> / <span id="total-count">0</span></h2>
-                            <small class="text-muted">Produkter packade</small>
+                            <small class="text-muted">{{ _("Products packed") }}</small>
                         </div>
                     </div>
                 </div>
@@ -64,19 +64,19 @@
         
         <div class="card mb-3">
             <div class="card-body">
-                <h5><i class="bi bi-list-check"></i> Produkter att Packa</h5>
+                <h5><i class="bi bi-list-check"></i> {{ _("Products to Pack") }}</h5>
                 <div id="packing-items-list"></div>
             </div>
         </div>
         
         <div class="card">
             <div class="card-body">
-                <h5><i class="bi bi-check-circle"></i> Färdigställ Order</h5>
+                <h5><i class="bi bi-check-circle"></i> {{ _("Complete Order") }}</h5>
                 <div id="completion-status" class="alert alert-warning">
-                    <i class="bi bi-exclamation-triangle"></i> Scanna alla produkter innan du färdigställer
+                    <i class="bi bi-exclamation-triangle"></i> {{ _("Scan all products before completing") }}
                 </div>
                 <button id="complete-order-btn" class="btn btn-success btn-lg w-100" disabled>
-                    <i class="bi bi-check-circle"></i> Markera som Skickad
+                    <i class="bi bi-check-circle"></i> {{ _("Mark as Shipped") }}
                 </button>
             </div>
         </div>
@@ -91,8 +91,8 @@
             <div class="celebration-icon">
                 <i class="bi bi-check-circle-fill"></i>
             </div>
-            <h1 class="celebration-title">🎉 Grattis!</h1>
-            <h2 class="celebration-subtitle">Alla ordrar är packade!</h2>
+            <h1 class="celebration-title">🎉 {{ _("Congratulations!") }}</h1>
+            <h2 class="celebration-subtitle">{{ _("All orders are packed!") }}</h2>
             <p class="celebration-text">
                 Det finns inga fler ordrar att packa just nu.
                 <br>
@@ -101,18 +101,18 @@
             <div class="celebration-stats" id="celebration-stats">
                 <div class="stat-item">
                     <div class="stat-number" id="total-packed-today">0</div>
-                    <div class="stat-label">Packade idag</div>
+                    <div class="stat-label">{{ _("Packed today") }}</div>
                 </div>
                 <div class="stat-item">
                     <div class="stat-number" id="items-packed-today">0</div>
-                    <div class="stat-label">Produkter packade</div>
+                    <div class="stat-label">{{ _("Products packed") }}</div>
                 </div>
             </div>
             <button class="btn-celebration" onclick="checkForNewOrders()">
-                <i class="bi bi-arrow-repeat"></i> Kolla efter nya ordrar
+                <i class="bi bi-arrow-repeat"></i> {{ _("Check for new orders") }}
             </button>
             <button class="btn-celebration-secondary" onclick="goToDashboard()">
-                <i class="bi bi-house"></i> Gå till Dashboard
+                <i class="bi bi-house"></i> {{ _("Go to Dashboard") }}
             </button>
         </div>
     </div>
@@ -369,6 +369,29 @@
 
 {% block extra_js %}
 <script>
+// Translations
+const t = {
+    'unknown_customer': "{{ _('Unknown customer') }}",
+    'no_address': "{{ _('No address') }}",
+    'product_not_in_order': "{{ _('Product not in this order!') }}",
+    'already_fully_scanned': "{{ _('already fully scanned!') }}",
+    'fully_packed': "{{ _('fully packed!') }}",
+    'scanned': "{{ _('scanned') }}",
+    'all_products_must_scan': "{{ _('All products must be scanned first!') }}",
+    'no_order_selected': "{{ _('No order selected') }}",
+    'completing_order': "{{ _('Completing order and loading next...') }}",
+    'order_shipped': "{{ _('Order shipped!') }}",
+    'error_completing': "{{ _('Error completing order') }}",
+    'all_products_scanned': "{{ _('All products scanned!') }}",
+    'scan_shipped_to_complete': "{{ _('Scan SHIPPED to complete and load next order.') }}",
+    'items_left_to_scan': "{{ _('items left to scan') }}",
+    'all_scanned_scan_shipped': "{{ _('All products scanned! Scan SHIPPED to complete.') }}",
+    'no_box_suggestion': "{{ _('No box suggestion available') }}",
+    'loading': "{{ _('Loading...') }}",
+    'st': "{{ _('st') }}",
+    'pcs': "{{ _('pcs') }}"
+};
+
 let currentOrderId = null;
 let orderItems = [];
 let scannedItems = new Map(); // Changed to Map to track quantities: inventory_id -> scanned_count
@@ -427,7 +450,7 @@ function displayOrder(order) {
     $.get(`/api/orders/${order.id}`, function(data) {
         if (data.success && data.order) {
             const o = data.order;
-            $('#order-buyer').text(o.customer_name || 'Okänd kund');
+            $('#order-buyer').text(o.customer_name || t.unknown_customer);
             
             const address = [
                 o.address,
@@ -435,7 +458,7 @@ function displayOrder(order) {
                 o.country
             ].filter(Boolean).join(', ');
             
-            $('#order-address').text(address || 'Ingen adress');
+            $('#order-address').text(address || t.no_address);
         }
     });
     
@@ -480,7 +503,7 @@ function displayItems() {
             statusText = `<div class="text-info small"><strong>${scannedQty}/${qty} scannade</strong></div>`;
         } else {
             statusIcon = '<i class="bi bi-circle text-warning" style="font-size: 2rem;"></i>';
-            statusText = '<div class="text-muted small">Väntar...</div>';
+            statusText = '<div class="text-muted small">{{ _("Waiting...") }}</div>';
         }
         
         // Determine image path
@@ -532,7 +555,7 @@ function handleScan(scannedCode) {
     if (!item) {
         // Not in this order
         playErrorSound();
-        showToast(`Produkt ${scannedCode} finns inte i denna order!`, 'error');
+        showToast(`${t.product_not_in_order} (${scannedCode})`, 'error');
         return;
     }
     
@@ -542,7 +565,7 @@ function handleScan(scannedCode) {
     if (scannedQty >= qty) {
         // Already fully scanned
         playErrorSound();
-        showToast(`${item.inventory_id} redan fullständigt scannad! (${qty}/${qty})`, 'warning');
+        showToast(`${item.inventory_id} ${t.already_fully_scanned} (${qty}/${qty})`, 'warning');
         return;
     }
     
@@ -560,9 +583,9 @@ function handleScan(scannedCode) {
     displayItems();
     
     if (newScannedQty >= qty) {
-        showToast(`✓ ${item.inventory_id} fullständigt packad! (${qty} st)`, 'success');
+        showToast(`✓ ${item.inventory_id} ${t.fully_packed} (${qty} ${t.st})`, 'success');
     } else {
-        showToast(`✓ ${item.inventory_id} scannad (${newScannedQty}/${qty})`, 'success');
+        showToast(`✓ ${item.inventory_id} ${t.scanned} (${newScannedQty}/${qty})`, 'success');
     }
     
     // Check if all scanned
@@ -576,19 +599,19 @@ function handleShippedScan() {
     
     if (totalScanned < totalNeeded) {
         playErrorSound();
-        showToast(`⚠️ Alla produkter måste scannas först! (${totalScanned}/${totalNeeded} st)`, 'error');
+        showToast(`⚠️ ${t.all_products_must_scan} (${totalScanned}/${totalNeeded} ${t.st})`, 'error');
         return;
     }
     
     if (!currentOrderId) {
         playErrorSound();
-        showToast('Ingen order vald', 'error');
+        showToast(t.no_order_selected, 'error');
         return;
     }
     
     // Show confirmation
     playSuccessSound();
-    showToast('📦 Färdigställer order och laddar nästa...', 'info');
+    showToast('📦 ' + t.completing_order, 'info');
     
     // Ship the order
     $.ajax({
@@ -598,7 +621,7 @@ function handleShippedScan() {
         data: JSON.stringify({ operator: 'User' }),
         success: function(data) {
             if (data.success) {
-                showToast('✅ Order skickad!', 'success');
+                showToast('✅ ' + t.order_shipped, 'success');
                 
                 // Reset current state
                 currentOrderId = null;
@@ -613,7 +636,7 @@ function handleShippedScan() {
         },
         error: function() {
             playErrorSound();
-            showToast('Fel vid färdigställning', 'error');
+            showToast(t.error_completing, 'error');
         }
     });
 }
@@ -630,12 +653,12 @@ function updateProgress() {
     
     if (totalScanned >= totalNeeded && totalNeeded > 0) {
         $('#completion-status').removeClass('alert-warning').addClass('alert-success')
-            .html('<i class="bi bi-check-circle"></i> <strong>Alla produkter scannade!</strong><br>Scanna <strong>"SHIPPED"</strong> för att färdigställa och ladda nästa order.');
+            .html('<i class="bi bi-check-circle"></i> <strong>' + t.all_products_scanned + '</strong><br>' + t.scan_shipped_to_complete);
         $('#complete-order-btn').prop('disabled', false);
     } else {
         const remaining = totalNeeded - totalScanned;
         $('#completion-status').removeClass('alert-success').addClass('alert-warning')
-            .html(`<i class="bi bi-exclamation-triangle"></i> ${remaining} st kvar att scanna`);
+            .html(`<i class="bi bi-exclamation-triangle"></i> ${remaining} ${t.items_left_to_scan}`);
         $('#complete-order-btn').prop('disabled', true);
     }
 }
@@ -651,7 +674,7 @@ function checkAllScanned() {
 
 function allItemsScanned() {
     playSuccessSound();
-    showToast('🎉 Alla produkter scannade! Scanna "SHIPPED" för att färdigställa.', 'success');
+    showToast('🎉 ' + t.all_scanned_scan_shipped, 'success');
     
     // Highlight the scan input to draw attention
     $('#scan-input').addClass('border-success').css('border-width', '3px');
@@ -672,19 +695,19 @@ function loadBoxSuggestion(orderId) {
                 <p class="mb-0">Max vikt: ${box.max_weight} kg</p>
             `);
         } else {
-            container.html('<p class="text-muted">Ingen kartong passar</p>');
+            container.html('<p class="text-muted">{{ _("No box fits") }}</p>');
         }
     });
 }
 
 function completeOrder() {
     if (!currentOrderId) {
-        showToast('Ingen order vald', 'error');
+        showToast(t.no_order_selected, 'error');
         return;
     }
     
     if (scannedItems.size !== orderItems.length) {
-        showToast('Alla produkter måste scannas först!', 'error');
+        showToast(t.all_products_must_scan, 'error');
         return;
     }
     
@@ -699,7 +722,7 @@ function completeOrder() {
         data: JSON.stringify({ operator: 'User' }),
         success: function(data) {
             if (data.success) {
-                showToast('✓ Order skickad!', 'success');
+                showToast('✓ ' + t.order_shipped, 'success');
                 $('#packing-content').hide();
                 currentOrderId = null;
                 scannedItems.clear();
@@ -712,7 +735,7 @@ function completeOrder() {
             }
         },
         error: function() {
-            showToast('Fel vid färdigställning', 'error');
+            showToast(t.error_completing, 'error');
         }
     });
 }

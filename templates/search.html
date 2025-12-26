@@ -6,8 +6,8 @@
 <div class="container-fluid">
     <div class="row mb-4">
         <div class="col">
-            <h1 class="display-4"><i class="bi bi-search"></i> Sök Produkter</h1>
-            <p class="lead">Sök och filtrera i hela lagret</p>
+            <h1 class="display-4"><i class="bi bi-search"></i> {{ _("Search Products") }}</h1>
+            <p class="lead">{{ _("Search and filter inventory") }}</p>
         </div>
     </div>
 
@@ -17,18 +17,18 @@
             <div class="input-group input-group-lg">
                 <span class="input-group-text"><i class="bi bi-search"></i></span>
                 <input type="text" class="form-control" id="search-input" 
-                       placeholder="Sök på INV-ID, artikelnummer, beskrivning..." 
+                       placeholder="{{ _('Search by INV-ID, article number, description...') }}"
                        autofocus>
-                <button class="btn btn-primary" id="search-btn">Sök</button>
+                <button class="btn btn-primary" id="search-btn">{{ _("Search") }}</button>
             </div>
-            <div class="form-text">Tips: Sök på INV-000001, artikelnummer, eller produktbeskrivning. Tryck Enter för att söka.</div>
+            <div class="form-text">{{ _("Tip: Search by INV-000001, article number, or product description. Press Enter to search.") }}</div>
         </div>
         <div class="col-md-4">
             <button class="btn btn-outline-secondary w-100 mb-2" id="advanced-toggle">
-                <i class="bi bi-funnel"></i> Avancerade Filter
+                <i class="bi bi-funnel"></i> {{ _("Advanced Filters") }}
             </button>
             <button class="btn btn-outline-info w-100" id="clear-filters-btn">
-                <i class="bi bi-x-circle"></i> Rensa Allt
+                <i class="bi bi-x-circle"></i> {{ _("Clear All") }}
             </button>
         </div>
     </div>
@@ -36,58 +36,58 @@
     <!-- Advanced Filters -->
     <div class="card mb-4" id="advanced-filters" style="display:none;">
         <div class="card-body">
-            <h5 class="card-title">Avancerade Filter</h5>
+            <h5 class="card-title">{{ _("Advanced Filter") }}</h5>
             <div class="row">
                 <div class="col-md-3">
-                    <label class="form-label">Status</label>
+                    <label class="form-label">{{ _("Status") }}</label>
                     <select class="form-select" id="filter-status">
-                        <option value="">Alla</option>
-                        <option value="in_stock">I lager</option>
-                        <option value="uploaded">Upplagd</option>
-                        <option value="sold">Såld</option>
-                        <option value="shipped">Skickad</option>
+                        <option value="">{{ _("All") }}</option>
+                        <option value="in_stock">{{ _("In stock") }}</option>
+                        <option value="uploaded">{{ _("Listed") }}</option>
+                        <option value="sold">{{ _("Sold") }}</option>
+                        <option value="shipped">{{ _("Shipped") }}</option>
                     </select>
                 </div>
                 <div class="col-md-3">
-                    <label class="form-label">Plats</label>
+                    <label class="form-label">{{ _("Location") }}</label>
                     <select class="form-select" id="filter-location">
-                        <option value="">Alla platser</option>
+                        <option value="">{{ _("All locations") }}</option>
                     </select>
                 </div>
                 <div class="col-md-3">
-                    <label class="form-label">Pris (min)</label>
+                    <label class="form-label">{{ _("Price (min)") }}</label>
                     <input type="number" class="form-control" id="filter-price-min" placeholder="0">
                 </div>
                 <div class="col-md-3">
-                    <label class="form-label">Pris (max)</label>
+                    <label class="form-label">{{ _("Price (max)") }}</label>
                     <input type="number" class="form-control" id="filter-price-max" placeholder="999999">
                 </div>
             </div>
             <div class="row mt-3">
                 <div class="col-md-3">
-                    <label class="form-label">Sortera efter</label>
+                    <label class="form-label">{{ _("Sort by") }}</label>
                     <select class="form-select" id="sort-by">
-                        <option value="created_desc">Nyast först</option>
-                        <option value="created_asc">Äldst först</option>
-                        <option value="price_desc">Högst pris</option>
-                        <option value="price_asc">Lägst pris</option>
-                        <option value="inventory_asc">INV-ID (A-Ö)</option>
-                        <option value="inventory_desc">INV-ID (Ö-A)</option>
+                        <option value="created_desc">{{ _("Newest first") }}</option>
+                        <option value="created_asc">{{ _("Oldest first") }}</option>
+                        <option value="price_desc">{{ _("Highest price") }}</option>
+                        <option value="price_asc">{{ _("Lowest price") }}</option>
+                        <option value="inventory_asc">{{ _("INV-ID (A-Z)") }}</option>
+                        <option value="inventory_desc">{{ _("INV-ID (Z-A)") }}</option>
                     </select>
                 </div>
                 <div class="col-md-3">
-                    <label class="form-label">Visa endast</label>
+                    <label class="form-label">{{ _("Show only") }}</label>
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" id="filter-has-image">
                         <label class="form-check-label" for="filter-has-image">
-                            Med bilder
+                            {{ _("With images") }}
                         </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="filter-bulk">
-                        <label class="form-check-label" for="filter-bulk">
-                            Bulk (flera st)
-                        </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="filter-bulk">
+                            <label class="form-check-label" for="filter-bulk">
+                                {{ _("Bulk (multiple pcs)") }}
+                            </label>
                     </div>
                 </div>
             </div>
@@ -98,7 +98,7 @@
     <div class="row mb-3" id="results-summary" style="display:none;">
         <div class="col">
             <div class="alert alert-info mb-0">
-                <strong><span id="results-count">0</span> produkter</strong> 
+                <strong><span id="results-count">0</span> {{ _("products") }}</strong> 
                 <span id="results-details"></span>
             </div>
         </div>
@@ -120,9 +120,9 @@
                 <!-- Loaded dynamically -->
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Stäng</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ _("Close") }}</button>
                 <a href="#" class="btn btn-primary" id="modal-edit-btn">
-                    <i class="bi bi-pencil"></i> Redigera
+                    <i class="bi bi-pencil"></i> {{ _("Edit") }}
                 </a>
             </div>
         </div>
@@ -209,7 +209,7 @@ function loadLocations() {
 function performSearch() {
     const query = $('#search-input').val().trim();
     if (!query) {
-        showToast('Ange sökterm', 'warning');
+        showToast('{{ _("Enter search term") }}', 'warning');
         return;
     }
     
@@ -300,7 +300,7 @@ function displayResults(items) {
     container.empty();
     
     if (items.length === 0) {
-        container.html('<div class="alert alert-warning">Inga produkter hittades med valda filter</div>');
+        container.html('<div class="alert alert-warning">Inga {{ _("products") }} hittades med valda filter</div>');
         $('#results-summary').hide();
         return;
     }
@@ -316,7 +316,7 @@ function displayResults(items) {
     const totalValue = items.reduce((sum, item) => sum + (item.price || 0) * (item.quantity || 1), 0);
     const totalQty = items.reduce((sum, item) => sum + (item.quantity || 1), 0);
     
-    details.push(`• ${totalQty} enheter`);
+    details.push(`• ${totalQty} {{ _("units") }}`);
     details.push(`• Totalt värde: ${Math.round(totalValue).toLocaleString('sv-SE')} kr`);
     
     $('#results-details').html(details.join(' '));

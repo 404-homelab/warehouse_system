@@ -1,13 +1,13 @@
 {% extends "base.html" %}
 
-{% block title %}Skapa Order - Warehouse System{% endblock %}
+{% block title %}{{ _("Create Order") }} - Warehouse System{% endblock %}
 
 {% block content %}
 <div class="container">
     <div class="row mb-4">
         <div class="col">
-            <h1 class="display-4"><i class="bi bi-cart-plus"></i> Skapa Order</h1>
-            <p class="lead">3-stegs orderprocess: Kund → Varor → Bekräfta</p>
+            <h1 class="display-4"><i class="bi bi-cart-plus"></i> {{ _("Create Order") }}</h1>
+            <p class="lead">{{ _("3-step order process: Customer → Items → Confirm") }}</p>
         </div>
     </div>
 
@@ -17,17 +17,17 @@
             <div class="d-flex justify-content-between">
                 <div class="step-item active" id="step1-indicator">
                     <div class="step-number">1</div>
-                    <div class="step-label">Kundinfo</div>
+                    <div class="step-label">{{ _("Customer Info") }}</div>
                 </div>
                 <div class="step-line"></div>
                 <div class="step-item" id="step2-indicator">
                     <div class="step-number">2</div>
-                    <div class="step-label">Lägg till varor</div>
+                    <div class="step-label">{{ _("Add Items") }}</div>
                 </div>
                 <div class="step-line"></div>
                 <div class="step-item" id="step3-indicator">
                     <div class="step-number">3</div>
-                    <div class="step-label">Bekräfta</div>
+                    <div class="step-label">{{ _("Confirm") }}</div>
                 </div>
             </div>
         </div>
@@ -39,22 +39,22 @@
             <div class="col-md-8 mx-auto">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title"><i class="bi bi-person"></i> Kunduppgifter</h5>
+                        <h5 class="card-title"><i class="bi bi-person"></i> {{ _("Customer Details") }}</h5>
                         
                         <!-- Search existing customer -->
                         <div class="mb-4">
-                            <label class="form-label">Sök befintlig kund</label>
+                            <label class="form-label">{{ _("Search existing customer") }}</label>
                             <div class="input-group">
-                                <input type="text" class="form-control" id="customer-search" placeholder="Namn, e-post eller telefon...">
+                                <input type="text" class="form-control" id="customer-search" placeholder="{{ _('Name, email or phone...') }}">
                                 <button class="btn btn-outline-secondary" type="button" id="search-customer-btn">
-                                    <i class="bi bi-search"></i> Sök
+                                    <i class="bi bi-search"></i> {{ _("Search") }}
                                 </button>
                             </div>
                             <div id="customer-results" class="mt-2" style="display:none;"></div>
                         </div>
 
                         <div class="text-center mb-3">
-                            <strong>ELLER</strong>
+                            <strong>{{ _("OR") }}</strong>
                         </div>
 
                         <!-- New customer form -->
@@ -62,50 +62,50 @@
                             <input type="hidden" id="customer-id">
                             
                             <div class="mb-3">
-                                <label class="form-label">Namn *</label>
+                                <label class="form-label">{{ _("Name") }} *</label>
                                 <input type="text" class="form-control" id="customer-name" required>
                             </div>
 
                             <div class="mb-3">
-                                <label class="form-label">Adress *</label>
+                                <label class="form-label">{{ _("Address") }} *</label>
                                 <input type="text" class="form-control" id="customer-address" required>
                             </div>
 
                             <div class="row">
                                 <div class="col-md-4 mb-3">
-                                    <label class="form-label">Postnummer *</label>
+                                    <label class="form-label">{{ _("Postal Code") }} *</label>
                                     <input type="text" class="form-control" id="customer-postal" required>
                                 </div>
                                 <div class="col-md-8 mb-3">
-                                    <label class="form-label">Stad *</label>
+                                    <label class="form-label">{{ _("City") }} *</label>
                                     <input type="text" class="form-control" id="customer-city" required>
                                 </div>
                             </div>
 
                             <div class="mb-3">
-                                <label class="form-label">Land</label>
-                                <input type="text" class="form-control" id="customer-country" value="Sverige">
+                                <label class="form-label">{{ _("Country") }}</label>
+                                <input type="text" class="form-control" id="customer-country" value="{{ _('Sweden') }}">
                             </div>
 
                             <div class="row">
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label">Telefon</label>
+                                    <label class="form-label">{{ _("Phone") }}</label>
                                     <input type="tel" class="form-control" id="customer-phone">
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label">E-post</label>
+                                    <label class="form-label">{{ _("Email") }}</label>
                                     <input type="email" class="form-control" id="customer-email">
                                 </div>
                             </div>
 
                             <div class="mb-3">
-                                <label class="form-label">Anteckningar</label>
+                                <label class="form-label">{{ _("Notes") }}</label>
                                 <textarea class="form-control" id="customer-notes" rows="2"></textarea>
                             </div>
 
                             <div class="d-grid gap-2">
                                 <button type="submit" class="btn btn-primary btn-lg">
-                                    <i class="bi bi-arrow-right"></i> Nästa: Lägg till varor
+                                    <i class="bi bi-arrow-right"></i> {{ _("Next: Add Items") }}
                                 </button>
                             </div>
                         </form>
@@ -121,19 +121,19 @@
             <div class="col-md-4">
                 <div class="card mb-3">
                     <div class="card-body">
-                        <h5 class="card-title"><i class="bi bi-search"></i> Sök vara</h5>
+                        <h5 class="card-title"><i class="bi bi-search"></i> {{ _("Search Item") }}</h5>
                         
                         <div class="mb-3">
-                            <label class="form-label">Inventory ID eller Beskrivning</label>
-                            <input type="text" class="form-control" id="item-search" placeholder="INV-000001 eller sök text...">
+                            <label class="form-label">{{ _("Inventory ID or Description") }}</label>
+                            <input type="text" class="form-control" id="item-search" placeholder="{{ _('INV-000001 or search text...') }}">
                         </div>
 
                         <div class="d-grid gap-2">
                             <button class="btn btn-primary" id="search-item-btn">
-                                <i class="bi bi-search"></i> Sök
+                                <i class="bi bi-search"></i> {{ _("Search") }}
                             </button>
                             <button class="btn btn-outline-primary" id="scan-item-btn">
-                                <i class="bi bi-upc-scan"></i> Scanna Streckkod
+                                <i class="bi bi-upc-scan"></i> {{ _("Scan Barcode") }}
                             </button>
                         </div>
 
@@ -144,7 +144,7 @@
                 <!-- Customer Summary -->
                 <div class="card">
                     <div class="card-body">
-                        <h6 class="card-title">Kund</h6>
+                        <h6 class="card-title">{{ _("Customer") }}</h6>
                         <p class="mb-1"><strong id="summary-customer-name"></strong></p>
                         <p class="mb-1 small text-muted" id="summary-customer-address"></p>
                     </div>
@@ -154,32 +154,32 @@
             <div class="col-md-8">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title"><i class="bi bi-cart"></i> Varor i order</h5>
+                        <h5 class="card-title"><i class="bi bi-cart"></i> {{ _("Items in Order") }}</h5>
                         
                         <div id="order-items-list">
                             <div class="text-center text-muted p-4">
                                 <i class="bi bi-inbox" style="font-size: 3rem;"></i>
-                                <p>Inga varor tillagda ännu</p>
+                                <p>{{ _("No items added yet") }}</p>
                             </div>
                         </div>
 
                         <hr>
 
                         <div class="d-flex justify-content-between align-items-center mb-3">
-                            <h5 class="mb-0">Total:</h5>
+                            <h5 class="mb-0">{{ _("Total:") }}</h5>
                             <h4 class="mb-0"><span id="order-total">0</span> kr</h4>
                         </div>
 
                         <div class="alert alert-info">
-                            <strong>Antal varor:</strong> <span id="order-item-count">0</span> st
+                            <strong>{{ _("Number of items:") }}</strong> <span id="order-item-count">0</span> {{ _("pcs") }}
                         </div>
 
                         <div class="d-grid gap-2">
                             <button class="btn btn-secondary" id="back-to-step1-btn">
-                                <i class="bi bi-arrow-left"></i> Tillbaka till kundinfo
+                                <i class="bi bi-arrow-left"></i> {{ _("Back to Customer Info") }}
                             </button>
                             <button class="btn btn-success btn-lg" id="proceed-to-step3-btn" disabled>
-                                <i class="bi bi-arrow-right"></i> Nästa: Granska order
+                                <i class="bi bi-arrow-right"></i> {{ _("Next: Review Order") }}
                             </button>
                         </div>
                     </div>
@@ -194,10 +194,10 @@
             <div class="col-md-8 mx-auto">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title"><i class="bi bi-check-circle"></i> Granska och bekräfta order</h5>
+                        <h5 class="card-title"><i class="bi bi-check-circle"></i> {{ _("Review and confirm order") }}</h5>
                         
                         <!-- Customer Info -->
-                        <h6 class="mt-3">Kunduppgifter:</h6>
+                        <h6 class="mt-3">{{ _("Customer Details:") }}</h6>
                         <div class="alert alert-light">
                             <strong id="confirm-customer-name"></strong><br>
                             <span id="confirm-customer-address"></span><br>
@@ -207,50 +207,46 @@
                         </div>
 
                         <!-- Order Items -->
-                        <h6 class="mt-3">Varor (<span id="confirm-item-count"></span> st):</h6>
+                        <h6 class="mt-3">{{ _("Items") }} (<span id="confirm-item-count"></span> {{ _("pcs") }}):</h6>
                         <div id="confirm-items-list"></div>
 
                         <!-- Payment & Shipping -->
-                        <h6 class="mt-3">Betalning & Frakt:</h6>
+                        <h6 class="mt-3">{{ _("Payment & Shipping:") }}</h6>
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Betalningsstatus</label>
+                                <label class="form-label">{{ _("Payment Status") }}</label>
                                 <select class="form-select" id="payment-status">
-                                    <option value="unpaid">Obetald</option>
-                                    <option value="paid">Betald</option>
-                                    <option value="partial">Delvis betald</option>
+                                    <option value="unpaid">{{ _("Unpaid") }}</option>
+                                    <option value="paid">{{ _("Paid") }}</option>
+                                    <option value="partial">{{ _("Partial") }}</option>
                                 </select>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Fraktmetod</label>
+                                <label class="form-label">{{ _("Shipping Method") }}</label>
                                 <select class="form-select" id="shipping-method">
-                                    <option value="">Välj fraktmetod...</option>
+                                    <option value="">{{ _("Choose shipping method...") }}</option>
                                 </select>
                             </div>
                         </div>
-
                         <div class="mb-3">
-                            <label class="form-label">Spårningsnummer</label>
-                            <input type="text" class="form-control" id="tracking-number" placeholder="Lägg till senare om du vill">
+                            <label class="form-label">{{ _("Tracking Number") }}</label>
+                            <input type="text" class="form-control" id="tracking-number" placeholder="{{ _('Add later if you want') }}">
                         </div>
-
                         <div class="mb-3">
-                            <label class="form-label">Anteckningar</label>
-                            <textarea class="form-control" id="order-notes" rows="2" placeholder="Extra information om ordern..."></textarea>
+                            <label class="form-label">{{ _("Notes") }}</label>
+                            <textarea class="form-control" id="order-notes" rows="2" placeholder="{{ _('Extra information about the order...') }}"></textarea>
                         </div>
-
                         <!-- Total -->
                         <div class="alert alert-success">
-                            <h5 class="mb-0">Total belopp: <strong><span id="confirm-total"></span> kr</strong></h5>
+                            <h5 class="mb-0">{{ _("Total amount:") }} <strong><span id="confirm-total"></span> kr</strong></h5>
                         </div>
-
                         <!-- Actions -->
                         <div class="d-grid gap-2">
                             <button class="btn btn-secondary" id="back-to-step2-btn">
-                                <i class="bi bi-arrow-left"></i> Tillbaka till varor
+                                <i class="bi bi-arrow-left"></i> {{ _("Back to Items") }}
                             </button>
                             <button class="btn btn-success btn-lg" id="create-order-btn">
-                                <i class="bi bi-check-circle"></i> Skapa Order
+                                <i class="bi bi-check-circle"></i> {{ _("Create Order") }}
                             </button>
                         </div>
                     </div>
@@ -266,28 +262,28 @@
                 <div class="card border-success">
                     <div class="card-body text-center">
                         <i class="bi bi-check-circle-fill text-success" style="font-size: 4rem;"></i>
-                        <h3 class="mt-3">Order skapad!</h3>
+                        <h3 class="mt-3">{{ _("Order created!") }}</h3>
                         <h4 class="text-muted" id="created-order-number"></h4>
                         
                         <div class="alert alert-light mt-3">
-                            <div class="mb-2">✓ Kundinfo sparad</div>
-                            <div class="mb-2">✓ <span id="success-item-count"></span> varor tillagda</div>
-                            <div class="mb-2">✓ Varor markerade som "sold"</div>
-                            <div id="marketplace-update-msg">✓ Marketplace-listings uppdaterade</div>
+                            <div class="mb-2">✓ {{ _("Customer info saved") }}</div>
+                            <div class="mb-2">✓ <span id="success-item-count"></span> {{ _("items added") }}</div>
+                            <div class="mb-2">✓ {{ _("Items marked as sold") }}</div>
+                            <div id="marketplace-update-msg">✓ {{ _("Marketplace listings updated") }}</div>
                         </div>
 
                         <div class="d-grid gap-2 mt-4">
                             <a href="/packing" class="btn btn-primary">
-                                <i class="bi bi-box-seam"></i> Gå till Packning
+                                <i class="bi bi-box-seam"></i> {{ _("Go to Packing") }}
                             </a>
                             <button class="btn btn-outline-primary" id="print-packing-slip-btn">
-                                <i class="bi bi-printer"></i> Skriv ut Packlista
+                                <i class="bi bi-printer"></i> {{ _("Print Packing List") }}
                             </button>
                             <button class="btn btn-success" id="create-another-order-btn">
-                                <i class="bi bi-plus-circle"></i> Skapa Ny Order
+                                <i class="bi bi-plus-circle"></i> {{ _("Create New Order") }}
                             </button>
                             <a href="/orders" class="btn btn-secondary">
-                                <i class="bi bi-list"></i> Se Alla Ordrar
+                                <i class="bi bi-list"></i> {{ _("See All Orders") }}
                             </a>
                         </div>
                     </div>
@@ -385,6 +381,42 @@
 
 {% block extra_js %}
 <script>
+// Translations
+const t = {
+    'customer_selected': "{{ _('Customer selected:') }}",
+    'no_customer_found': "{{ _('No customer found') }}",
+    'in_stock': "{{ _('in stock') }}",
+    'out_of_stock': "{{ _('Out of stock') }}",
+    'no_item_found': "{{ _('No item found') }}",
+    'scan_barcode': "{{ _('Scan barcode...') }}",
+    'out_of_stock_item': "{{ _('Out of stock!') }}",
+    'added': "{{ _('added') }}",
+    'removed': "{{ _('removed') }}",
+    'enter_valid_quantity': "{{ _('Enter a valid quantity (minimum 1)') }}",
+    'increased_to': "{{ _('Increased to') }}",
+    'decreased_to': "{{ _('Decreased to') }}",
+    'no_items_yet': "{{ _('No items added yet') }}",
+    'location': "{{ _('Location:') }}",
+    'decrease_qty': "{{ _('Decrease quantity') }}",
+    'increase_qty': "{{ _('Increase quantity') }}",
+    'per_unit': "{{ _('per unit') }}",
+    'remove': "{{ _('Remove') }}",
+    'tel': "{{ _('Tel:') }}",
+    'email_label': "{{ _('Email:') }}",
+    'creating': "{{ _('Creating...') }}",
+    'order_created': "{{ _('Order created!') }}",
+    'error_creating': "{{ _('Error creating order') }}",
+    'pcs': "{{ _('pcs') }}",
+    'st': "{{ _('st') }}",
+    'choose_shipping': "{{ _('Choose shipping method...') }}",
+    'max_available': "{{ _('Max') }}",
+    'available_in_stock': "{{ _('available in stock') }}",
+    'enter_qty': "{{ _('Enter quantity') }}",
+    'now_in_order': "{{ _('Now in order:') }}",
+    'qty_available': "{{ _('available') }}",
+    'qty_in_order': "{{ _('already in order') }}"
+};
+
 let currentStep = 1;
 let customerData = {};
 let orderItems = [];
@@ -399,7 +431,7 @@ function loadShippingMethods() {
     $.get('/api/shipping-methods?active_only=true', function(data) {
         const select = $('#shipping-method');
         select.empty();
-        select.append('<option value="">Välj fraktmetod...</option>');
+        select.append('<option value="">' + t.choose_shipping + '</option>');
         
         if (data.methods && data.methods.length > 0) {
             data.methods.forEach(function(method) {
@@ -480,7 +512,7 @@ function searchCustomers() {
                 results.append(item);
             });
         } else {
-            results.html('<div class="alert alert-info">Ingen kund hittades</div>').show();
+            results.html(`<div class="alert alert-info">${t.no_customer_found}</div>`).show();
         }
     });
 }
@@ -496,7 +528,7 @@ function selectCustomer(customer) {
     $('#customer-email').val(customer.email || '');
     $('#customer-notes').val(customer.notes || '');
     $('#customer-results').hide();
-    showToast(`Kund vald: ${customer.name}`, 'success');
+    showToast(`${t.customer_selected} ${customer.name}`, 'success');
 }
 
 function saveCustomerAndProceed(e) {
@@ -538,8 +570,8 @@ function searchItems() {
                 
                 const available = item.quantity_available || item.quantity || 1;
                 const stockBadge = available > 0 
-                    ? `<span class="badge bg-success">${available} st i lager</span>` 
-                    : `<span class="badge bg-danger">Slut i lager</span>`;
+                    ? `<span class="badge bg-success">${available} ${t.st} ${t.in_stock}</span>` 
+                    : `<span class="badge bg-danger">${t.out_of_stock}</span>`;
                 
                 // Determine image source
                 let imageSrc = '/static/uploads/placeholder.svg';
@@ -622,7 +654,7 @@ function addItemToOrder(item) {
     orderItems.push(item);
     updateOrderItemsList();
     $('#item-search').val('').focus();
-    showToast(`✓ 1 st ${item.inventory_id} tillagd`, 'success');
+    showToast(`✓ 1 ${t.st} ${item.inventory_id} ${t.added}`, 'success');
 }
 
 function removeItemFromOrder(index) {
@@ -854,7 +886,7 @@ function createOrder() {
                 }
                 
                 goToStep(4); // Success screen
-                showToast('Order skapad!', 'success');
+                showToast(t.order_created, 'success');
             }
         },
         error: function() {

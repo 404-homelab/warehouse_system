@@ -1,0 +1,1706 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language: en\n"
+
+# Navigation (same as msgid, but explicit)
+msgid "Home"
+msgstr "Home"
+
+msgid "Register"
+msgstr "Register"
+
+msgid "Orders"
+msgstr "Orders"
+
+msgid "Packing"
+msgstr "Packing"
+
+msgid "Marketplace"
+msgstr "Marketplace"
+
+msgid "Search"
+msgstr "Search"
+
+msgid "Reports"
+msgstr "Reports"
+
+msgid "Admin"
+msgstr "Admin"
+
+# Common
+msgid "Save"
+msgstr "Save"
+
+msgid "Cancel"
+msgstr "Cancel"
+
+msgid "Delete"
+msgstr "Delete"
+
+msgid "Edit"
+msgstr "Edit"
+
+msgid "Close"
+msgstr "Close"
+
+msgid "Back"
+msgstr "Back"
+
+msgid "Next"
+msgstr "Next"
+
+msgid "Previous"
+msgstr "Previous"
+
+msgid "Loading..."
+msgstr "Loading..."
+
+msgid "Success!"
+msgstr "Success!"
+
+msgid "Error"
+msgstr "Error"
+
+msgid "Warning"
+msgstr "Warning"
+
+msgid "Confirm"
+msgstr "Confirm"
+
+msgid "Yes"
+msgstr "Yes"
+
+msgid "No"
+msgstr "No"
+
+msgid "Total"
+msgstr "Total"
+
+msgid "Status"
+msgstr "Status"
+
+msgid "Date"
+msgstr "Date"
+
+msgid "Time"
+msgstr "Time"
+
+msgid "Actions"
+msgstr "Actions"
+
+msgid "Export"
+msgstr "Export"
+
+msgid "Print"
+msgstr "Print"
+
+msgid "Download"
+msgstr "Download"
+
+# Register Page
+msgid "Register Product"
+msgstr "Register Product"
+
+msgid "Photograph and register new products"
+msgstr "Photograph and register new products"
+
+msgid "Quick registration: Fill in description, condition and price → Scan shelf location → Product registered automatically!"
+msgstr "Quick registration: Fill in description, condition and price → Scan shelf location → Product registered automatically!"
+
+msgid "Camera"
+msgstr "Camera"
+
+msgid "images"
+msgstr "images"
+
+msgid "Start Camera"
+msgstr "Start Camera"
+
+msgid "Stop Camera"
+msgstr "Stop Camera"
+
+msgid "Capture Image"
+msgstr "Capture Image"
+
+msgid "Upload Images"
+msgstr "Upload Images"
+
+msgid "Camera does not work over HTTP network"
+msgstr "Camera does not work over HTTP network"
+
+msgid "Use Upload Image to take pictures from another device"
+msgstr "Use Upload Image to take pictures from another device"
+
+msgid "Click Start Camera or Upload Images"
+msgstr "Click Start Camera or Upload Images"
+
+msgid "Product Information"
+msgstr "Product Information"
+
+msgid "Description"
+msgstr "Description"
+
+msgid "Condition"
+msgstr "Condition"
+
+msgid "New"
+msgstr "New"
+
+msgid "Very Good"
+msgstr "Very Good"
+
+msgid "Good"
+msgstr "Good"
+
+msgid "Used"
+msgstr "Used"
+
+msgid "Defect"
+msgstr "Defect"
+
+msgid "Price"
+msgstr "Price"
+
+msgid "Price (SEK)"
+msgstr "Price (SEK)"
+
+msgid "Shelf Location"
+msgstr "Shelf Location"
+
+msgid "Scan location"
+msgstr "Scan location"
+
+msgid "Scan or type shelf location"
+msgstr "Scan or type shelf location"
+
+msgid "Bulk Location"
+msgstr "Bulk Location"
+
+msgid "Length (cm)"
+msgstr "Length (cm)"
+
+msgid "Width (cm)"
+msgstr "Width (cm)"
+
+msgid "Height (cm)"
+msgstr "Height (cm)"
+
+msgid "Weight (kg)"
+msgstr "Weight (kg)"
+
+msgid "Article Number"
+msgstr "Article Number"
+
+msgid "Notes"
+msgstr "Notes"
+
+msgid "Clear Form"
+msgstr "Clear Form"
+
+# Orders
+msgid "Manage customer orders"
+msgstr "Manage customer orders"
+
+msgid "Create Order"
+msgstr "Create Order"
+
+msgid "New Order"
+msgstr "New Order"
+
+msgid "Order Number"
+msgstr "Order Number"
+
+msgid "Customer"
+msgstr "Customer"
+
+msgid "Customer Name"
+msgstr "Customer Name"
+
+msgid "Customer Email"
+msgstr "Customer Email"
+
+msgid "Customer Phone"
+msgstr "Customer Phone"
+
+msgid "Shipping Address"
+msgstr "Shipping Address"
+
+msgid "Order Date"
+msgstr "Order Date"
+
+msgid "Order Status"
+msgstr "Order Status"
+
+msgid "Pending"
+msgstr "Pending"
+
+msgid "Processing"
+msgstr "Processing"
+
+msgid "Packed"
+msgstr "Packed"
+
+msgid "Shipped"
+msgstr "Shipped"
+
+msgid "Delivered"
+msgstr "Delivered"
+
+msgid "Cancelled"
+msgstr "Cancelled"
+
+msgid "Add Product"
+msgstr "Add Product"
+
+msgid "Remove"
+msgstr "Remove"
+
+msgid "Quantity"
+msgstr "Quantity"
+
+msgid "Unit Price"
+msgstr "Unit Price"
+
+msgid "Subtotal"
+msgstr "Subtotal"
+
+msgid "Shipping Cost"
+msgstr "Shipping Cost"
+
+msgid "Total Amount"
+msgstr "Total Amount"
+
+msgid "Payment Status"
+msgstr "Payment Status"
+
+msgid "Paid"
+msgstr "Paid"
+
+msgid "Unpaid"
+msgstr "Unpaid"
+
+# Packing
+msgid "Pack Orders"
+msgstr "Pack Orders"
+
+msgid "Pack and ship orders"
+msgstr "Pack and ship orders"
+
+msgid "Scan Order"
+msgstr "Scan Order"
+
+msgid "Scan order barcode"
+msgstr "Scan order barcode"
+
+msgid "Items to Pack"
+msgstr "Items to Pack"
+
+msgid "Scan Item"
+msgstr "Scan Item"
+
+msgid "Mark as Packed"
+msgstr "Mark as Packed"
+
+msgid "Complete Packing"
+msgstr "Complete Packing"
+
+msgid "Print Shipping Label"
+msgstr "Print Shipping Label"
+
+msgid "Box Size"
+msgstr "Box Size"
+
+msgid "Small"
+msgstr "Small"
+
+msgid "Medium"
+msgstr "Medium"
+
+msgid "Large"
+msgstr "Large"
+
+msgid "Shipping Method"
+msgstr "Shipping Method"
+
+msgid "Tracking Number"
+msgstr "Tracking Number"
+
+msgid "Packed By"
+msgstr "Packed By"
+
+msgid "Packing Date"
+msgstr "Packing Date"
+
+msgid "All items packed!"
+msgstr "All items packed!"
+
+msgid "Congratulations!"
+msgstr "Congratulations!"
+
+msgid "All orders are packed!"
+msgstr "All orders are packed!"
+
+msgid "Packed today"
+msgstr "Packed today"
+
+msgid "Check for new orders"
+msgstr "Check for new orders"
+
+# Search
+msgid "Search Products"
+msgstr "Search Products"
+
+msgid "Search by name, SKU, or barcode"
+msgstr "Search by name, SKU, or barcode"
+
+msgid "Filters"
+msgstr "Filters"
+
+msgid "All Conditions"
+msgstr "All Conditions"
+
+msgid "All Locations"
+msgstr "All Locations"
+
+msgid "Clear Filters"
+msgstr "Clear Filters"
+
+msgid "Results"
+msgstr "Results"
+
+msgid "No results found"
+msgstr "No results found"
+
+msgid "items found"
+msgstr "items found"
+
+msgid "Sort by"
+msgstr "Sort by"
+
+msgid "Name"
+msgstr "Name"
+
+msgid "Date Added"
+msgstr "Date Added"
+
+msgid "Price Low to High"
+msgstr "Price Low to High"
+
+msgid "Price High to Low"
+msgstr "Price High to Low"
+
+# Marketplace
+msgid "Marketplace Listings"
+msgstr "Marketplace Listings"
+
+msgid "Manage online listings"
+msgstr "Manage online listings"
+
+msgid "Create Listing"
+msgstr "Create Listing"
+
+msgid "Platform"
+msgstr "Platform"
+
+msgid "Listing Title"
+msgstr "Listing Title"
+
+msgid "Listing Description"
+msgstr "Listing Description"
+
+msgid "Listing Price"
+msgstr "Listing Price"
+
+msgid "Listed"
+msgstr "Listed"
+
+msgid "Sold"
+msgstr "Sold"
+
+msgid "Draft"
+msgstr "Draft"
+
+msgid "Publish"
+msgstr "Publish"
+
+msgid "Unpublish"
+msgstr "Unpublish"
+
+msgid "Views"
+msgstr "Views"
+
+msgid "Watchers"
+msgstr "Watchers"
+
+# Reports
+msgid "Reports & Analytics"
+msgstr "Reports & Analytics"
+
+msgid "View statistics and reports"
+msgstr "View statistics and reports"
+
+msgid "Inventory Report"
+msgstr "Inventory Report"
+
+msgid "Sales Report"
+msgstr "Sales Report"
+
+msgid "Revenue Report"
+msgstr "Revenue Report"
+
+msgid "Product Performance"
+msgstr "Product Performance"
+
+msgid "Date Range"
+msgstr "Date Range"
+
+msgid "From"
+msgstr "From"
+
+msgid "To"
+msgstr "To"
+
+msgid "Generate Report"
+msgstr "Generate Report"
+
+msgid "Export to PDF"
+msgstr "Export to PDF"
+
+msgid "Export to Excel"
+msgstr "Export to Excel"
+
+msgid "Total Products"
+msgstr "Total Products"
+
+msgid "Total Value"
+msgstr "Total Value"
+
+msgid "Total Sales"
+msgstr "Total Sales"
+
+msgid "Revenue"
+msgstr "Revenue"
+
+msgid "Profit"
+msgstr "Profit"
+
+msgid "Top Selling Products"
+msgstr "Top Selling Products"
+
+# Admin
+msgid "Administration"
+msgstr "Administration"
+
+msgid "System settings and configuration"
+msgstr "System settings and configuration"
+
+msgid "Locations"
+msgstr "Locations"
+
+msgid "Location Name"
+msgstr "Location Name"
+
+msgid "Location Type"
+msgstr "Location Type"
+
+msgid "Shelf"
+msgstr "Shelf"
+
+msgid "Bulk Storage"
+msgstr "Bulk Storage"
+
+msgid "Add Location"
+msgstr "Add Location"
+
+msgid "Shipping Methods"
+msgstr "Shipping Methods"
+
+msgid "Method Name"
+msgstr "Method Name"
+
+msgid "Base Cost"
+msgstr "Base Cost"
+
+msgid "Active"
+msgstr "Active"
+
+msgid "Inactive"
+msgstr "Inactive"
+
+msgid "Settings"
+msgstr "Settings"
+
+msgid "General Settings"
+msgstr "General Settings"
+
+msgid "Company Name"
+msgstr "Company Name"
+
+msgid "Contact Email"
+msgstr "Contact Email"
+
+msgid "Phone Number"
+msgstr "Phone Number"
+
+msgid "Address"
+msgstr "Address"
+
+msgid "Currency"
+msgstr "Currency"
+
+msgid "Tax Rate"
+msgstr "Tax Rate"
+
+msgid "Language"
+msgstr "Language"
+
+msgid "Timezone"
+msgstr "Timezone"
+
+msgid "Database"
+msgstr "Database"
+
+msgid "Backup Database"
+msgstr "Backup Database"
+
+msgid "Restore Database"
+msgstr "Restore Database"
+
+msgid "Reset Database"
+msgstr "Reset Database"
+
+msgid "Are you sure?"
+msgstr "Are you sure?"
+
+msgid "This action cannot be undone"
+msgstr "This action cannot be undone"
+
+# Dashboard
+msgid "Dashboard"
+msgstr "Dashboard"
+
+msgid "Welcome to Warehouse System"
+msgstr "Welcome to Warehouse System"
+
+msgid "Quick Stats"
+msgstr "Quick Stats"
+
+msgid "Recent Activity"
+msgstr "Recent Activity"
+
+msgid "Low Stock Alert"
+msgstr "Low Stock Alert"
+
+msgid "Pending Orders"
+msgstr "Pending Orders"
+
+msgid "Recent Products"
+msgstr "Recent Products"
+
+msgid "View All"
+msgstr "View All"
+
+# Messages
+msgid "Product registered successfully"
+msgstr "Product registered successfully"
+
+msgid "Order created successfully"
+msgstr "Order created successfully"
+
+msgid "Order updated successfully"
+msgstr "Order updated successfully"
+
+msgid "Product not found"
+msgstr "Product not found"
+
+msgid "Invalid barcode"
+msgstr "Invalid barcode"
+
+msgid "Location already exists"
+msgstr "Location already exists"
+
+msgid "Please fill in all required fields"
+msgstr "Please fill in all required fields"
+
+msgid "Changes saved"
+msgstr "Changes saved"
+
+msgid "Operation completed"
+msgstr "Operation completed"
+
+msgid "Something went wrong"
+msgstr "Something went wrong"
+
+msgid "In Stock"
+msgstr "In Stock"
+
+msgid "Packed Today"
+msgstr "Packed Today"
+
+msgid "Manage customer orders"
+msgstr "Manage and track all orders"
+
+msgid "Manage online listings"
+msgstr "Manage listings on Blocket and Tradera"
+
+msgid "Search and filter inventory"
+msgstr "Search and filter entire inventory"
+
+msgid "View statistics and reports"
+msgstr "Insights and statistics about your business"
+
+msgid "System settings and configuration"
+msgstr "System settings and configuration"
+
+msgid "Pack and ship orders"
+msgstr "Pack and ship orders"
+
+msgid "Fetch Next Order"
+msgstr "Fetch Next Order"
+
+msgid "Go to Dashboard"
+msgstr "Go to Dashboard"
+
+msgid "Check for new orders"
+msgstr "Check for new orders"
+
+msgid "Advanced Filter"
+msgstr "Advanced Filter"
+
+msgid "Clear All"
+msgstr "Clear All"
+
+# Packing page
+msgid "Order Information"
+msgstr "Order Information"
+
+msgid "Order Number:"
+msgstr "Order Number:"
+
+msgid "Buyer:"
+msgstr "Buyer:"
+
+msgid "Address:"
+msgstr "Address:"
+
+msgid "Number of products:"
+msgstr "Number of products:"
+
+msgid "Box Suggestion"
+msgstr "Box Suggestion"
+
+msgid "No box fits"
+msgstr "No box fits"
+
+msgid "Scan product:"
+msgstr "Scan product:"
+
+msgid "Products packed"
+msgstr "Products packed"
+
+msgid "Products to Pack"
+msgstr "Products to Pack"
+
+msgid "Complete Order"
+msgstr "Complete Order"
+
+msgid "item left to scan"
+msgstr "item left to scan"
+
+msgid "Mark as Shipped"
+msgstr "Mark as Shipped"
+
+msgid "Waiting"
+msgstr "Waiting"
+
+# Marketplace
+msgid "Not Listed"
+msgstr "Not Listed"
+
+msgid "items in stock"
+msgstr "items in stock"
+
+msgid "active ads"
+msgstr "active ads"
+
+msgid "through marketplace"
+msgstr "through marketplace"
+
+msgid "Active Ads"
+msgstr "Active Ads"
+
+msgid "Add to Marketplace"
+msgstr "Add to Marketplace"
+
+msgid "Mark All"
+msgstr "Mark All"
+
+msgid "Search product..."
+msgstr "Search product..."
+
+msgid "No items to list. All items are already listed or sold!"
+msgstr "No items to list. All items are already listed or sold!"
+
+# Admin
+msgid "Locations"
+msgstr "Locations"
+
+msgid "Box Sizes"
+msgstr "Box Sizes"
+
+msgid "Shipping Methods"
+msgstr "Shipping Methods"
+
+msgid "Bulk Barcodes"
+msgstr "Bulk Barcodes"
+
+msgid "Updates"
+msgstr "Updates"
+
+msgid "Create Location"
+msgstr "Create Location"
+
+msgid "Location Code *"
+msgstr "Location Code *"
+
+msgid "Barcode *"
+msgstr "Barcode *"
+
+msgid "Description"
+msgstr "Description"
+
+msgid "Own barcode (must be unique)"
+msgstr "Own barcode (must be unique)"
+
+msgid "Print All"
+msgstr "Print All"
+
+msgid "Print Selected"
+msgstr "Print Selected"
+
+msgid "Code"
+msgstr "Code"
+
+msgid "Barcode"
+msgstr "Barcode"
+
+msgid "Action"
+msgstr "Action"
+
+msgid "No locations"
+msgstr "No locations"
+
+msgid "Create Box Size"
+msgstr "Create Box Size"
+
+msgid "Name"
+msgstr "Name"
+
+msgid "Length (cm)"
+msgstr "Length (cm)"
+
+msgid "Width (cm)"
+msgstr "Width (cm)"
+
+msgid "Height (cm)"
+msgstr "Height (cm)"
+
+msgid "Max Weight (kg)"
+msgstr "Max Weight (kg)"
+
+msgid "Create"
+msgstr "Create"
+
+msgid "Dimensions (L×W×H cm)"
+msgstr "Dimensions (L×W×H cm)"
+
+msgid "No box sizes"
+msgstr "No box sizes"
+
+msgid "Add Shipping Method"
+msgstr "Add Shipping Method"
+
+msgid "Add"
+msgstr "Add"
+
+msgid "Active"
+msgstr "Active"
+
+msgid "Generate Bulk Barcodes"
+msgstr "Generate Bulk Barcodes"
+
+msgid "Prefix"
+msgstr "Prefix"
+
+msgid "Start Number"
+msgstr "Start Number"
+
+msgid "End Number"
+msgstr "End Number"
+
+msgid "Number of barcodes:"
+msgstr "Number of barcodes:"
+
+msgid "Quick select:"
+msgstr "Quick select:"
+
+msgid "Generate PDF"
+msgstr "Generate PDF"
+
+msgid "Previously Generated:"
+msgstr "Previously Generated:"
+
+msgid "Time"
+msgstr "Time"
+
+msgid "Range"
+msgstr "Range"
+
+msgid "Number"
+msgstr "Number"
+
+# Orders
+msgid "Filter by status:"
+msgstr "Filter by status:"
+
+msgid "Payment status:"
+msgstr "Payment status:"
+
+msgid "Search:"
+msgstr "Search:"
+
+msgid "All orders"
+msgstr "All orders"
+
+msgid "All"
+msgstr "All"
+
+msgid "Filter"
+msgstr "Filter"
+
+msgid "Confirmed"
+msgstr "Confirmed"
+
+msgid "Order#"
+msgstr "Order#"
+
+msgid "Items"
+msgstr "Items"
+
+msgid "Amount"
+msgstr "Amount"
+
+msgid "Payment"
+msgstr "Payment"
+
+msgid "Created"
+msgstr "Created"
+
+msgid "No orders found"
+msgstr "No orders found"
+
+msgid "Create New Order"
+msgstr "Create New Order"
+
+# Dashboard
+msgid "Sales This Month"
+msgstr "Sales This Month"
+
+msgid "Sold Products"
+msgstr "Sold Products"
+
+msgid "Revenue"
+msgstr "Revenue"
+
+msgid "Quick Links"
+msgstr "Quick Links"
+
+msgid "Recent Activity"
+msgstr "Recent Activity"
+
+msgid "Action"
+msgstr "Action"
+
+msgid "Details"
+msgstr "Details"
+
+msgid "User"
+msgstr "User"
+
+msgid "Created item:"
+msgstr "Created item:"
+
+# Register
+msgid "Choose condition"
+msgstr "Choose condition"
+
+msgid "Describe product..."
+msgstr "Describe product..."
+
+msgid "Clear Form"
+msgstr "Clear Form"
+
+msgid "Or choose manually..."
+msgstr "Or choose manually..."
+
+msgid "Create multiple identical products"
+msgstr "Create multiple identical products"
+
+msgid "Extra information..."
+msgstr "Extra information..."
+
+# Packing
+msgid "Fetch Next Order"
+msgstr "Fetch Next Order"
+
+msgid "Waiting..."
+msgstr "Waiting..."
+
+msgid "No location"
+msgstr "No location"
+
+# Search
+msgid "products"
+msgstr "products"
+
+msgid "units"
+msgstr "units"
+
+msgid "Total value:"
+msgstr "Total value:"
+
+# Reports
+msgid "Today"
+msgstr "Today"
+
+msgid "This Week"
+msgstr "This Week"
+
+msgid "This Month"
+msgstr "This Month"
+
+msgid "This Year"
+msgstr "This Year"
+
+msgid "Sales Trend"
+msgstr "Sales Trend"
+
+msgid "Sales per Day"
+msgstr "Sales per Day"
+
+msgid "No sales during this period"
+msgstr "No sales during this period"
+
+msgid "Inventory Status"
+msgstr "Inventory Status"
+
+msgid "In Storage"
+msgstr "In Storage"
+
+msgid "Uploaded"
+msgstr "Uploaded"
+
+msgid "Stuck"
+msgstr "Stuck"
+
+msgid "Stock Status"
+msgstr "Stock Status"
+
+msgid "Good"
+msgstr "Good"
+
+msgid "Average Price"
+msgstr "Average Price"
+
+msgid "Inventory Value per Location"
+msgstr "Inventory Value per Location"
+
+msgid "Location"
+msgstr "Location"
+
+msgid "Number of Products"
+msgstr "Number of Products"
+
+msgid "No inventory data"
+msgstr "No inventory data"
+
+msgid "Best Selling Products"
+msgstr "Best Selling Products"
+
+msgid "Article Code"
+msgstr "Article Code"
+
+msgid "Number Sold"
+msgstr "Number Sold"
+
+msgid "No sales data yet"
+msgstr "No sales data yet"
+
+# Orders_new
+msgid "Create Order"
+msgstr "Create Order"
+
+msgid "3-step order process: Customer → Items → Confirm"
+msgstr "3-step order process: Customer → Items → Confirm"
+
+msgid "Customer Info"
+msgstr "Customer Info"
+
+msgid "Add Items"
+msgstr "Add Items"
+
+msgid "Confirm"
+msgstr "Confirm"
+
+msgid "Customer Details"
+msgstr "Customer Details"
+
+msgid "Search existing customer"
+msgstr "Search existing customer"
+
+msgid "OR"
+msgstr "OR"
+
+msgid "Postal Code"
+msgstr "Postal Code"
+
+msgid "City"
+msgstr "City"
+
+msgid "Country"
+msgstr "Country"
+
+msgid "Sweden"
+msgstr "Sweden"
+
+msgid "Phone"
+msgstr "Phone"
+
+msgid "Email"
+msgstr "Email"
+
+msgid "Next: Add Items"
+msgstr "Next: Add Items"
+
+msgid "Search Item"
+msgstr "Search Item"
+
+msgid "Inventory ID or Description"
+msgstr "Inventory ID or Description"
+
+msgid "Items in Order"
+msgstr "Items in Order"
+
+msgid "No items added yet"
+msgstr "No items added yet"
+
+msgid "Number of items:"
+msgstr "Number of items:"
+
+msgid "Back to Customer Info"
+msgstr "Back to Customer Info"
+
+msgid "Next: Review Order"
+msgstr "Next: Review Order"
+
+msgid "Review Order"
+msgstr "Review Order"
+
+msgid "pcs"
+msgstr "pcs"
+
+# Search
+msgid "Price (min)"
+msgstr "Price (min)"
+
+msgid "Price (max)"
+msgstr "Price (max)"
+
+msgid "All locations"
+msgstr "All locations"
+
+msgid "Newest first"
+msgstr "Newest first"
+
+msgid "Oldest first"
+msgstr "Oldest first"
+
+msgid "Show only"
+msgstr "Show only"
+
+msgid "With images"
+msgstr "With images"
+
+msgid "Bulk (multiple)"
+msgstr "Bulk (multiple)"
+
+msgid "Condition: New"
+msgstr "Condition: New"
+
+# Reports
+msgid "Revenue (SEK)"
+msgstr "Revenue (SEK)"
+
+msgid "Total Revenue"
+msgstr "Total Revenue"
+
+# Packing
+msgid "Scan products or SHIPPED when done..."
+msgstr "Scan products or SHIPPED when done..."
+
+# Dashboard
+msgid "No activity yet"
+msgstr "No activity yet"
+
+msgid "Operator"
+msgstr "Operator"
+
+# Register page detailed
+msgid "Article Number"
+msgstr "Article Number"
+
+msgid "Choose condition"
+msgstr "Choose condition"
+
+msgid "Length (cm)"
+msgstr "Length (cm)"
+
+msgid "Width (cm)"
+msgstr "Width (cm)"
+
+msgid "Height (cm)"
+msgstr "Height (cm)"
+
+msgid "Weight (kg)"
+msgstr "Weight (kg)"
+
+msgid "Quantity (bulk)"
+msgstr "Quantity (bulk)"
+
+# Orders page JavaScript
+msgid "Product added"
+msgstr "Product added"
+
+msgid "Product not found"
+msgstr "Product not found"
+
+msgid "No products yet"
+msgstr "No products yet"
+
+msgid "Add at least one product"
+msgstr "Add at least one product"
+
+msgid "Order created:"
+msgstr "Order created:"
+
+msgid "No orders"
+msgstr "No orders"
+
+msgid "No buyer"
+msgstr "No buyer"
+
+msgid "Existing Orders"
+msgstr "Existing Orders"
+
+msgid "Scan Item"
+msgstr "Scan Item"
+
+# Orders_list page
+msgid "Manage and track all orders"
+msgstr "Manage and track all orders"
+
+msgid "Order number, customer name..."
+msgstr "Order number, customer name..."
+
+msgid "Unpaid"
+msgstr "Unpaid"
+
+msgid "Partially paid"
+msgstr "Partially paid"
+
+msgid "Pending"
+msgstr "Pending"
+
+# Orders_new page
+msgid "Name, Email or Phone..."
+msgstr "Name, Email or Phone..."
+
+msgid "INV-000001 or search text..."
+msgstr "INV-000001 or search text..."
+
+msgid "Scan Barcode"
+msgstr "Scan Barcode"
+
+msgid "Review and confirm order"
+msgstr "Review and confirm order"
+
+msgid "Customer Details:"
+msgstr "Customer Details:"
+
+msgid "Payment & Shipping:"
+msgstr "Payment & Shipping:"
+
+msgid "Payment Status"
+msgstr "Payment Status"
+
+msgid "Shipping Method"
+msgstr "Shipping Method"
+
+msgid "Choose shipping method..."
+msgstr "Choose shipping method..."
+
+msgid "Tracking Number"
+msgstr "Tracking Number"
+
+msgid "Add later if you want"
+msgstr "Add later if you want"
+
+msgid "Extra information about the order..."
+msgstr "Extra information about the order..."
+
+msgid "Total amount:"
+msgstr "Total amount:"
+
+msgid "Back to Items"
+msgstr "Back to Items"
+
+msgid "Order created!"
+msgstr "Order created!"
+
+msgid "Customer info saved"
+msgstr "Customer info saved"
+
+msgid "items added"
+msgstr "items added"
+
+msgid "Items marked as sold"
+msgstr "Items marked as sold"
+
+msgid "Marketplace listings updated"
+msgstr "Marketplace listings updated"
+
+msgid "Go to Packing"
+msgstr "Go to Packing"
+
+msgid "Print Packing List"
+msgstr "Print Packing List"
+
+msgid "See All Orders"
+msgstr "See All Orders"
+
+# orders_new.html JavaScript strings
+msgid "Customer selected:"
+msgstr "Customer selected:"
+
+msgid "No customer found"
+msgstr "No customer found"
+
+msgid "in stock"
+msgstr "in stock"
+
+msgid "Out of stock"
+msgstr "Out of stock"
+
+msgid "No item found"
+msgstr "No item found"
+
+msgid "Scan barcode..."
+msgstr "Scan barcode..."
+
+msgid "Out of stock!"
+msgstr "Out of stock!"
+
+msgid "added"
+msgstr "added"
+
+msgid "removed"
+msgstr "removed"
+
+msgid "Enter a valid quantity (minimum 1)"
+msgstr "Enter a valid quantity (minimum 1)"
+
+msgid "Increased to"
+msgstr "Increased to"
+
+msgid "Decreased to"
+msgstr "Decreased to"
+
+msgid "No items added yet"
+msgstr "No items added yet"
+
+msgid "Location:"
+msgstr "Location:"
+
+msgid "Decrease quantity"
+msgstr "Decrease quantity"
+
+msgid "Increase quantity"
+msgstr "Increase quantity"
+
+msgid "per unit"
+msgstr "per unit"
+
+msgid "Creating..."
+msgstr "Creating..."
+
+msgid "Error creating order"
+msgstr "Error creating order"
+
+msgid "Tel:"
+msgstr "Tel:"
+
+msgid "Email:"
+msgstr "Email:"
+
+msgid "Choose shipping method..."
+msgstr "Choose shipping method..."
+
+msgid "Max"
+msgstr "Max"
+
+msgid "available in stock"
+msgstr "available in stock"
+
+msgid "Enter quantity"
+msgstr "Enter quantity"
+
+msgid "Now in order:"
+msgstr "Now in order:"
+
+msgid "available"
+msgstr "available"
+
+msgid "already in order"
+msgstr "already in order"
+
+# Packing page
+msgid "Packing"
+msgstr "Packing"
+
+msgid "Load Next Order"
+msgstr "Load Next Order"
+
+msgid "Order Information"
+msgstr "Order Information"
+
+msgid "Box Suggestion"
+msgstr "Box Suggestion"
+
+msgid "Scan products or SHIPPED when done..."
+msgstr "Scan products or SHIPPED when done..."
+
+msgid "Scan all products, then scan"
+msgstr "Scan all products, then scan"
+
+msgid "to complete."
+msgstr "to complete."
+
+msgid "Products to Pack"
+msgstr "Products to Pack"
+
+msgid "Complete Order"
+msgstr "Complete Order"
+
+msgid "Scan all products before completing"
+msgstr "Scan all products before completing"
+
+msgid "Mark as Shipped"
+msgstr "Mark as Shipped"
+
+msgid "Congratulations!"
+msgstr "Congratulations!"
+
+msgid "There are no more orders to pack right now."
+msgstr "There are no more orders to pack right now."
+
+msgid "Good job!"
+msgstr "Good job!"
+
+msgid "Packed today"
+msgstr "Packed today"
+
+msgid "Check for new orders"
+msgstr "Check for new orders"
+
+msgid "Go to Dashboard"
+msgstr "Go to Dashboard"
+
+msgid "Unknown customer"
+msgstr "Unknown customer"
+
+msgid "No address"
+msgstr "No address"
+
+msgid "Product not in this order!"
+msgstr "Product not in this order!"
+
+msgid "Product %s not in this order!"
+msgstr "Product %s not in this order!"
+
+msgid "already fully scanned!"
+msgstr "already fully scanned!"
+
+msgid "fully packed!"
+msgstr "fully packed!"
+
+msgid "All products must be scanned first!"
+msgstr "All products must be scanned first!"
+
+msgid "No order selected"
+msgstr "No order selected"
+
+msgid "Completing order and loading next..."
+msgstr "Completing order and loading next..."
+
+msgid "Order shipped!"
+msgstr "Order shipped!"
+
+msgid "Error completing order"
+msgstr "Error completing order"
+
+msgid "All products scanned!"
+msgstr "All products scanned!"
+
+msgid "Scan SHIPPED to complete and load next order."
+msgstr "Scan SHIPPED to complete and load next order."
+
+msgid "Scan \"SHIPPED\" to complete and load next order."
+msgstr "Scan \"SHIPPED\" to complete and load next order."
+
+msgid "items left to scan"
+msgstr "items left to scan"
+
+msgid "All products scanned! Scan SHIPPED to complete."
+msgstr "All products scanned! Scan SHIPPED to complete."
+
+msgid "All products scanned! Scan \"SHIPPED\" to complete."
+msgstr "All products scanned! Scan \"SHIPPED\" to complete."
+
+msgid "No box suggestion available"
+msgstr "No box suggestion available"
+
+# Marketplace
+msgid "Marketplace Management"
+msgstr "Marketplace Management"
+
+msgid "Sold"
+msgstr "Sold"
+
+msgid "Active Ads"
+msgstr "Active Ads"
+
+msgid "List Selected"
+msgstr "List Selected"
+
+msgid "Select All"
+msgstr "Select All"
+
+msgid "List on Marketplace"
+msgstr "List on Marketplace"
+
+msgid "Blocket"
+msgstr "Blocket"
+
+msgid "Tradera"
+msgstr "Tradera"
+
+msgid "List"
+msgstr "List"
+
+msgid "items on Marketplace"
+msgstr "items on Marketplace"
+
+msgid "List All"
+msgstr "List All"
+
+# Search
+msgid "Search Products"
+msgstr "Search Products"
+
+msgid "Search by INV-ID, article number, description..."
+msgstr "Search by INV-ID, article number, description..."
+
+msgid "Tip: Search by INV-000001, article number, or product description. Press Enter to search."
+msgstr "Tip: Search by INV-000001, article number, or product description. Press Enter to search."
+
+msgid "Advanced Filters"
+msgstr "Advanced Filters"
+
+msgid "Clear All"
+msgstr "Clear All"
+
+msgid "In stock"
+msgstr "In stock"
+
+msgid "Listed"
+msgstr "Listed"
+
+msgid "All locations"
+msgstr "All locations"
+
+msgid "Price (min)"
+msgstr "Price (min)"
+
+msgid "Price (max)"
+msgstr "Price (max)"
+
+msgid "Sort by"
+msgstr "Sort by"
+
+msgid "Newest first"
+msgstr "Newest first"
+
+msgid "Oldest first"
+msgstr "Oldest first"
+
+msgid "Highest price"
+msgstr "Highest price"
+
+msgid "Lowest price"
+msgstr "Lowest price"
+
+msgid "INV-ID (A-Z)"
+msgstr "INV-ID (A-Z)"
+
+msgid "INV-ID (Z-A)"
+msgstr "INV-ID (Z-A)"
+
+msgid "Show only"
+msgstr "Show only"
+
+msgid "With images"
+msgstr "With images"
+
+msgid "Bulk (multiple pcs)"
+msgstr "Bulk (multiple pcs)"
+
+# Reports
+msgid "Reports & Analysis"
+msgstr "Reports & Analysis"
+
+msgid "Today"
+msgstr "Today"
+
+msgid "This Week"
+msgstr "This Week"
+
+msgid "This Month"
+msgstr "This Month"
+
+msgid "This Year"
+msgstr "This Year"
+
+msgid "Products Sold"
+msgstr "Products Sold"
+
+msgid "Total Revenue"
+msgstr "Total Revenue"
+
+msgid "Sales Trend"
+msgstr "Sales Trend"
+
+msgid "Sales per Day"
+msgstr "Sales per Day"
+
+# Admin
+msgid "E.g. A1, B2, C3"
+msgstr "E.g. A1, B2, C3"
+
+msgid "E.g. PostNord"
+msgstr "E.g. PostNord"
+
+msgid "E.g. Standard package delivery"
+msgstr "E.g. Standard package delivery"
+
+msgid "Add"
+msgstr "Add"
+
+msgid "E.g. ITEM, PROD, SKU"
+msgstr "E.g. ITEM, PROD, SKU"
+
+msgid "Delete this location?"
+msgstr "Delete this location?"
+
+msgid "Delete this box size?"
+msgstr "Delete this box size?"
+
+msgid "Delete this shipping method?"
+msgstr "Delete this shipping method?"
+
+msgid "to"
+msgstr "to"
+
+# Status translations
+msgid "Pending"
+msgstr "Pending"
+
+msgid "Confirmed"
+msgstr "Confirmed"
+
+msgid "Packed"
+msgstr "Packed"
+
+msgid "Unpaid"
+msgstr "Unpaid"
+
+msgid "Partial"
+msgstr "Partial"
+
+msgid "3-step order process: Customer → Items → Confirm"
+msgstr "3-step order process: Customer → Items → Confirm"
+
+msgid "Name, email or phone..."
+msgstr "Name, email or phone..."
+
+# orders_new.html additional translations
+msgid "Customer Info"
+msgstr "Customer Info"
+
+msgid "Add Items"
+msgstr "Add Items"
+
+msgid "Search existing customer"
+msgstr "Search existing customer"
+
+msgid "Search Item"
+msgstr "Search Item"
+
+msgid "Inventory ID or Description"
+msgstr "Inventory ID or Description"
+
+msgid "Items in Order"
+msgstr "Items in Order"
+
+msgid "Review and confirm order"
+msgstr "Review and confirm order"
+
+msgid "Customer Details:"
+msgstr "Customer Details:"
+
+msgid "Payment & Shipping:"
+msgstr "Payment & Shipping:"
+
+msgid "Add later if you want"
+msgstr "Add later if you want"
+
+msgid "Extra information about the order..."
+msgstr "Extra information about the order..."
+
+msgid "No items added yet"
+msgstr "No items added yet"
+
+msgid "Inventory Value"
+msgstr "Inventory Value"
+
+msgid "Inventory Value per Location"
+msgstr "Inventory Value per Location"
+
+msgid "INV-000001 or search text..."
+msgstr "INV-000001 or search text..."
+
+msgid "Create Order"
+msgstr "Create Order"
+
+msgid "Sweden"
+msgstr "Sweden"

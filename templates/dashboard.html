@@ -230,7 +230,7 @@ function loadActivity() {
             tbody.empty();
             
             if (data.activity.length === 0) {
-                tbody.append('<tr><td colspan="5" class="text-center text-muted">Ingen aktivitet än</td></tr>');
+                tbody.append('<tr><td colspan="5" class="text-center text-muted">{{ _("No activity yet") }}</td></tr>');
                 return;
             }
             

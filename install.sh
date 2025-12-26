@@ -113,19 +113,44 @@ download_application() {
     mkdir -p "$INSTALL_DIR"
     
     if [ ! -z "$GIT_REPO" ]; then
-        git clone -b "$GIT_BRANCH" "$GIT_REPO" "$INSTALL_DIR" || {
-            print_error "Failed to clone from GitHub"
-            print_info "Trying local copy..."
+        print_info "Cloning from GitHub..."
+        if git clone -b "$GIT_BRANCH" "$GIT_REPO" "$INSTALL_DIR"; then
+            print_success "Repository cloned from GitHub"
+        else
+            print_warning "Git clone failed - trying alternative method..."
+            
+            # Remove failed clone attempt
+            rm -rf "$INSTALL_DIR"
+            mkdir -p "$INSTALL_DIR"
+            
+            # Try local copy if running from source directory
             if [ -f "./app.py" ]; then
+                print_info "Copying from local directory..."
                 cp -r ./* "$INSTALL_DIR/"
+                
+                # Initialize git repo and connect to remote
+                print_info "Initializing git repository..."
+                cd "$INSTALL_DIR"
+                git init
+                git remote add origin "$GIT_REPO"
+                
+                # Create initial commit
+                git add .
+                git commit -m "Initial installation from local copy"
+                
+                # Try to fetch from remote
+                if git fetch origin; then
+                    git branch --set-upstream-to=origin/$GIT_BRANCH $GIT_BRANCH 2>/dev/null || true
+                    print_success "Git repository initialized and connected"
+                else
+                    print_warning "Could not connect to GitHub - updates will not work until network is available"
+                fi
             else
-                print_error "No source available"
+                print_error "No source available - cannot continue"
                 exit 1
             fi
-        }
+        fi
     fi
-    
-    print_success "Application downloaded"
 }
 
 setup_python_environment() {
